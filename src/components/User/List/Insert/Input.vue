@@ -11,7 +11,7 @@
           v-model="form.email"
           type="email"
           required
-          placeholder="Nhập tên đăng nhập"
+          placeholder="Nhập email"
         ></b-form-input>
       </b-form-group>
 
@@ -53,14 +53,14 @@
       </b-form-group>
 
       <b-form-group id="input-group-5" label="Active:" label-for="input-5">
-        <b-form-checkbox size="lg" v-model="form.actived" id="input-5" name="check-button" switch>
+        <b-form-checkbox v-model="form.actived" id="input-5" name="check-button" switch>
           <span v-if="form.actived !== true">Khóa</span>
           <span v-else>Mở</span>
         </b-form-checkbox>
       </b-form-group>
 
       <b-form-group id="input-group-6" label="Khóa tài khoản:" label-for="input-6">
-        <b-form-checkbox size="lg" v-model="form.is_lock" id="input-6" name="check-button" switch>
+        <b-form-checkbox v-model="form.is_lock" id="input-6" name="check-button" switch>
           <span v-if="form.is_lock !== true">Không khóa</span>
           <span v-else>Khóa</span>
         </b-form-checkbox>
@@ -73,6 +73,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default {
     name: 'Input',
     data() {
@@ -84,14 +86,61 @@
           permission: 'Sinh viên',
           actived: true,
           is_lock: false,
+          password: '',
         },
         show: true,
         permission_opt: ['Admin', 'Sinh viên', 'Giảng viên'],
       }
     },
     methods: {
-      onSubmit() {
-        alert(JSON.stringify(this.form))
+      async onSubmit() {
+        try {
+          const response = await axios({
+            url: 'http://localhost:5000/user/create-record',
+            method: 'post',
+            changeOrigin: true,
+            data: {
+              new_username: this.form.username,
+              new_name: this.form.name,
+              new_email: this.form.email,
+              new_permission: this.form.permission,
+              new_actived: this.form.actived,
+              new_is_lock: this.form.is_lock,
+            },
+          });
+          if (response.status === 200) {
+            this.$bvToast.toast(`Tạo người dùng thành công!`, {
+              title: `Thành công`,
+              variant: 'success',
+              solid: true,
+              appendToast: true,
+            });
+
+            this.form.username = '';
+            this.form.name = '';
+            this.form.email = '';
+            this.form.permission = 'Sinh viên';
+            this.form.actived = true;
+            this.form.is_lock = false;
+          }
+          else if (response.status === 202) {
+            this.$bvToast.toast(`Trùng lặp dữ liệu!`, {
+              title: `Oops`,
+              variant: 'warning',
+              solid: true,
+              appendToast: true,
+            });
+          }
+        } catch (e) {
+            this.$bvToast.toast(`Gặp lỗi khi ${e} tạo người dùng thất bại!`, {
+                title: `Thành công`,
+                variant: 'danger',
+                solid: true,
+                appendToast: true,
+            });
+        } finally {
+            console.log('BEBE');
+        }
       },
       onReset() {
         // Reset our form values

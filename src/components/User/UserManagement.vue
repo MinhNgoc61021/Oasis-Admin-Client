@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2 class="mb-3">Quản lý người dùng</h2>
+        <h3 class="mb-3">Quản lý người dùng</h3>
         <b-card no-body>
             <b-tabs card>
                 <b-tab title="Quản lý danh sách" active>

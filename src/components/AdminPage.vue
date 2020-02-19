@@ -1,6 +1,5 @@
 <template>
-    <b-container fluid="xl">
-    <!--header-->
+    <div>
       <b-row class="mb-3">
         <b-col align-self="start">
           <b-navbar toggleable="xl" sticky type="light" variant="light">
@@ -19,39 +18,43 @@
           </b-navbar>
         </b-col>
       </b-row>
+      <div>
+      <!--header-->
 
-      <!--content-->
-      <b-row class="mb-2">
-        <b-col>
-          <div>
-            <b-list-group>
-              <b-list-group-item to="/user-management">Quản lý người dùng</b-list-group-item>
-              <b-list-group-item to="/student-management">Quản lý sinh viên</b-list-group-item>
-            </b-list-group>
-          </div>
-        </b-col>
-        <b-col align-self="center" cols="9">
-          <router-view></router-view>
-        </b-col>
-      </b-row>
 
-      <!--footer-->
-      <b-row class="mb-3">
-        <b-col align-self="end">
-          <!-- Footer -->
-          <footer class="page-footer font-small blue">
-
-            <!-- Copyright -->
-            <div class="footer-copyright text-center py-3">© 2020 Copyright:
-              <a href="#"> Oasis Admin</a>
+        <!--content-->
+        <b-row class="m-3">
+          <b-col>
+            <div>
+              <b-list-group>
+                <b-list-group-item to="/user-management">Quản lý người dùng</b-list-group-item>
+                <b-list-group-item to="/student-management">Quản lý sinh viên</b-list-group-item>
+              </b-list-group>
             </div>
-            <!-- Copyright -->
+          </b-col>
+          <b-col align-self="center" cols="9">
+            <router-view></router-view>
+          </b-col>
+        </b-row>
 
-          </footer>
-          <!-- Footer -->
-        </b-col>
-      </b-row>
-    </b-container>
+        <!--footer-->
+        <b-row class="mb-3">
+          <b-col align-self="end">
+            <!-- Footer -->
+            <footer class="page-footer font-small blue">
+
+              <!-- Copyright -->
+              <div class="footer-copyright text-center py-3">© 2020 Copyright:
+                <a href="#"> Oasis Admin</a>
+              </div>
+              <!-- Copyright -->
+
+            </footer>
+            <!-- Footer -->
+          </b-col>
+        </b-row>
+      </div>
+    </div>
 </template>
 
 <script>
