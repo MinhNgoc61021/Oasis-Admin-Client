@@ -12,7 +12,7 @@ export const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    { path: '/admin', name: 'admin', redirect: '/student-management', component: AdminPage,
+    { path: '/admin', name: 'admin', redirect: '/user-management', component: AdminPage,
       children: [
           { path: '/student-management', name: 'student-management', component: StudentManagement },
           { path: '/user-management', name: 'user-management', component: UserManagement },

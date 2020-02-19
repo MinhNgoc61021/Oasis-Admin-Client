@@ -6,7 +6,6 @@
           <b-navbar toggleable="xl" sticky type="light" variant="light">
             <b-navbar-brand>Oasis Admin</b-navbar-brand>
 
-
             <b-navbar-nav class="ml-auto">
               <b-nav-item-dropdown right>
                 <!-- Using 'button-content' slot -->

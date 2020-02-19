@@ -47,16 +47,12 @@
                     </template>
                     <template v-slot:cell(actions)="row">
                         <div class="text-center text-danger my-2">
-                            <b-button variant="outline-warning" size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
-                            <b-icon icon="pencil">
-
-                            </b-icon>
-                        </b-button>
-                            <b-button variant="outline-danger" size="sm"  class="mr-1">
-                            <b-icon icon="trash">
-
-                            </b-icon>
-                        </b-button>
+                            <b-button variant="outline-warning" size="sm" @click="updateUser(row.item, row.index, $event.target)" class="mr-1">
+                                <b-icon icon="pencil"></b-icon>
+                            </b-button>
+                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteUser(row.item)">
+                                <b-icon icon="trash"></b-icon>
+                            </b-button>
                         </div>
                     </template>
                 </b-table>
@@ -189,10 +185,50 @@
 
                 }
             },
-            info(item, index, button) {
+            updateUser(item, index, button) {
                 this.infoModal.title = `Row index: ${index}`;
                 this.infoModal.content = JSON.stringify(item, null, 2);
                 this.$root.$emit('bv::show::modal', this.infoModal.id, button);
+            },
+            deleteUser(item) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa người dùng có tên đăng nhập ${item.username}?`, {
+                    title: 'Xác nhận xóa',
+                    size: 'md',
+                    buttonSize: 'md',
+                    okVariant: 'danger',
+                    okTitle: 'Có',
+                    cancelTitle: 'Không',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true,
+                }).then(async (value) => {
+                    if (value === true) {
+                        try {
+                            const response = await axios({
+                                url: 'http://localhost:5000/user/delete-record',
+                                method: 'delete',
+                                data: {
+                                    delUserID: item.user_id
+                                },
+                            });
+                            if (response.status === 200) {
+                                this.$bvToast.toast(`Xóa người dùng có tên đăng nhập ${item.username} thành công!`, {
+                                  title: `Thành công`,
+                                  variant: 'success',
+                                  solid: true
+                                })
+                            }
+                        } catch (e) {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa người dùng có tên đăng nhập ${item.username}`, {
+                                title: `Thất bại`,
+                                variant: 'danger',
+                                solid: true
+                            })
+                        } finally {
+                            this.getUserRecordData();
+                        }
+                    }
+                })
             },
             sortUserRecordData(sort) {
                 this.sortBy = sort.sortBy;

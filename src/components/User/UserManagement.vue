@@ -10,6 +10,7 @@
                 </b-tab>
                 <b-tab title="Nhập">
                     <b-card-body>
+                        <component :is="Insert"></component>
                     </b-card-body>
                 </b-tab>
             </b-tabs>
@@ -19,14 +20,16 @@
 
 <script>
     import UserList from "@/components/User/List/UserList";
+    import Insert from '@/components/User/List/Insert';
+
     export default {
         name: "StudentManagement",
         component: {
-            UserList
+            UserList, Insert
         },
         data() {
             return {
-                UserList
+                UserList, Insert
             }
         },
     }

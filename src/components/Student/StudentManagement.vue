@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import Import from "@/components/Student/Import";
+    import Import from "@/components/Student/List/Import";
     import StudentList from "@/components/Student/List/StudentList";
 
     export default {

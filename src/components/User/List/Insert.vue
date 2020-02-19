@@ -1,0 +1,35 @@
+<template>
+    <b-tabs content-class="mt-3" align="center">
+        <b-tab title="Nhập gõ" active>
+            <b-card-body>
+                <component :is="Input"></component>
+            </b-card-body>
+        </b-tab>
+        <b-tab title="Nhập Excel">
+            <b-card-body>
+                <component :is="Import"></component>
+            </b-card-body>
+        </b-tab>
+    </b-tabs>
+</template>
+
+<script>
+    import Input from '@/components/User/List/Insert/Input';
+    import Import from '@/components/User/List/Insert/Import';
+
+    export default {
+        name: "Insert",
+        component: {
+            Import, Input
+        },
+        data() {
+            return {
+                Import, Input
+            }
+        },
+    }
+</script>
+
+<style scoped>
+
+</style>
