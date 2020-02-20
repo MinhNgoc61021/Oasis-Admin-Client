@@ -1,8 +1,8 @@
 <template>
     <div>
-      <b-row class="mb-3">
+      <b-row>
         <b-col align-self="start">
-          <b-navbar toggleable="xl" sticky type="light" variant="light">
+          <b-navbar toggleable="xl" sticky type="dark" variant="dark">
             <b-navbar-brand>Oasis Admin</b-navbar-brand>
 
             <b-navbar-nav class="ml-auto">
@@ -18,13 +18,11 @@
           </b-navbar>
         </b-col>
       </b-row>
+
       <div>
-      <!--header-->
-
-
         <!--content-->
-        <b-row class="m-3">
-          <b-col>
+        <b-row class="m-2 mt-3">
+          <b-col class="col-3">
             <div>
               <b-list-group>
                 <b-list-group-item to="/user-management">Quản lý người dùng</b-list-group-item>
@@ -32,7 +30,7 @@
               </b-list-group>
             </div>
           </b-col>
-          <b-col align-self="center" cols="9">
+          <b-col class="col-9" align-self="center">
             <router-view></router-view>
           </b-col>
         </b-row>
@@ -69,7 +67,4 @@
 </script>
 
 <style scoped>
-    .layout-aside {
-    width: 16rem;
-}
 </style>

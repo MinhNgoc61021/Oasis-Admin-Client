@@ -134,13 +134,13 @@
 <script>
     import axios from 'axios';
     import moment from 'moment/moment';
+    import { eventBus } from "@/main";
 
     export default {
         name: "UserList",
         data() {
           return {
-              userItems: [
-              ],
+              userItems: [],
               perPage: 10,
               currentPage: 1,
               filter: '',
@@ -215,7 +215,7 @@
                       label: 'Hành động'
                   }
               ],
-              totalUser: '',
+              totalUser: 0,
               busy: false,
               EditModal: {
                   id: 'edit-modal',
@@ -266,13 +266,29 @@
 
                 }
             },
-            updateModal(item, index, button) {
+            async updateModal(item, index, button) {
                 this.EditModal.title = `Sửa thông tin người dùng có ID: ${item.user_id}`;
                 this.EditModal.UpdateUserForm.user_id = item.user_id;
                 this.EditModal.UpdateUserForm.username = item.username;
                 this.EditModal.UpdateUserForm.email = item.email;
                 this.EditModal.UpdateUserForm.name = item.name;
-                this.EditModal.UpdateUserForm.permission = item.permission;
+                const permission = await axios({
+                    url: 'http://localhost:5000/user/user_role',
+                    method: 'get',
+                    params: {
+                        user_id: item.user_id,
+                    },
+                    changeOrigin: true,
+                });
+                if (permission.data.role_id === 1) {
+                    this.EditModal.UpdateUserForm.permission = 'Sinh viên';
+                }
+                else if (permission.data.role_id === 2) {
+                    this.EditModal.UpdateUserForm.permission = 'Giảng viên';
+                }
+                else {
+                    this.EditModal.UpdateUserForm.permission = 'Admin';
+                }
                 this.EditModal.UpdateUserForm.actived = item.actived === 1;
                 this.EditModal.UpdateUserForm.is_lock = item.is_lock === 1;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
@@ -289,7 +305,7 @@
                             update_email: this.EditModal.UpdateUserForm.email,
                             update_permission: this.EditModal.UpdateUserForm.permission,
                             update_actived: this.EditModal.UpdateUserForm.actived,
-                            is_lock: this.EditModal.UpdateUserForm.is_lock,
+                            update_is_lock: this.EditModal.UpdateUserForm.is_lock,
                         },
                         changeOrigin: true,
                     });
@@ -334,13 +350,22 @@
                     hideHeaderClose: false,
                     centered: true,
                 }).then(async (value) => {
+                    const permission = await axios({
+                        url: 'http://localhost:5000/user/user_role',
+                        method: 'get',
+                        params: {
+                            user_id: item.user_id,
+                        },
+                        changeOrigin: true,
+                    });
                     if (value === true) {
                         try {
                             const response = await axios({
                                 url: 'http://localhost:5000/user/delete-record',
                                 method: 'delete',
                                 data: {
-                                    delUserID: item.user_id
+                                    delUserID: item.user_id,
+                                    delRoleID: permission.data.role_id,
                                 },
                             });
                             if (response.status === 200) {
@@ -359,6 +384,14 @@
                                 appendToast: true,
                             })
                         } finally {
+                            if (this.userItems.length === 1) {
+                                if ((this.totalUser / this.perPage) > 0) {
+                                    this.currentPage--;
+                                }
+                                else {
+                                    this.currentPage = 1;
+                                }
+                            }
                             this.getUserRecordData();
                         }
                     }
@@ -377,6 +410,9 @@
         },
         created() {
             this.getUserRecordData();
+            eventBus.$on('refreshUserRecordData', () => {
+                this.getUserRecordData();
+            });
         }
     }
 </script>
