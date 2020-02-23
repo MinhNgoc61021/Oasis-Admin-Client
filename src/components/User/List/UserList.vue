@@ -15,6 +15,9 @@
                   @input="getUserRecordData"
                 ></b-pagination-nav>
             </b-col>
+            <b-col class="ml-auto my-1">
+                <Search></Search>
+            </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
                 <b-button size="sm" variant="outline-success" @click="getUserRecordData">
                   <b-icon icon="arrow-repeat
@@ -68,6 +71,7 @@
                           id="edit-input-1"
                           v-model="EditModal.UpdateUserForm.email"
                           type="email"
+                          size="sm"
                           required
                           placeholder="Nhập tên đăng nhập"
                         ></b-form-input>
@@ -82,6 +86,7 @@
                           id="edit-input-2"
                           v-model="EditModal.UpdateUserForm.username"
                           type="text"
+                          size="sm"
                           required
                           placeholder="Nhập tên đăng nhập"
                         ></b-form-input>
@@ -96,6 +101,7 @@
                           id="edit-input-3"
                           v-model="EditModal.UpdateUserForm.name"
                           type="text"
+                          size="sm"
                           required
                           placeholder="Nhập họ tên"
                         ></b-form-input>
@@ -103,6 +109,7 @@
 
                       <b-form-group id="edit-input-group-4" label="Quyền:" label-for="edit-input-4">
                         <b-form-select
+                                size="sm"
                                 id="edit-input-4"
                             v-model="EditModal.UpdateUserForm.permission"
                             :options="EditModal.UpdateUserForm.permission_opt"
@@ -111,19 +118,19 @@
                       </b-form-group>
 
                       <b-form-group id="edit-input-group-5" label="Active:" label-for="edit-input-5">
-                        <b-form-checkbox v-model="EditModal.UpdateUserForm.actived" id="edit-input-5" name="check-button" switch>
+                        <b-form-checkbox v-model="EditModal.UpdateUserForm.actived" size="sm" id="edit-input-5" name="check-button" switch>
                           <span v-if="EditModal.UpdateUserForm.actived !== true">Không</span>
                           <span v-else>Có</span>
                         </b-form-checkbox>
                       </b-form-group>
 
                       <b-form-group id="edit-input-group-6" label="Khóa tài khoản:" label-for="edit-input-6">
-                        <b-form-checkbox v-model="EditModal.UpdateUserForm.is_lock" id="edit-input-6" name="check-button" switch>
+                        <b-form-checkbox v-model="EditModal.UpdateUserForm.is_lock" size="sm" id="edit-input-6" name="check-button" switch>
                           <span v-if="EditModal.UpdateUserForm.is_lock !== true">Không khóa</span>
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
-                        <b-button type="submit" variant="primary" style="float: right">Cập nhật</b-button>
+                        <b-button type="submit" size="sm" variant="primary" style="float: right">Cập nhật</b-button>
                     </b-form>
                 </b-modal>
             </b-col>
@@ -135,11 +142,16 @@
     import axios from 'axios';
     import moment from 'moment/moment';
     import { eventBus } from "@/main";
+    import Search from "@/components/User/List/Search";
 
     export default {
         name: "UserList",
+        components: {
+            Search,
+        },
         data() {
           return {
+              Search,
               userItems: [],
               perPage: 10,
               currentPage: 1,
@@ -412,6 +424,11 @@
             this.getUserRecordData();
             eventBus.$on('refreshUserRecordData', () => {
                 this.getUserRecordData();
+            });
+            eventBus.$on('userSearchSelected', (searchSelected) => {
+                this.userItems = [];
+                this.userItems.push(searchSelected);
+                this.totalPage = 1;
             });
         }
     }

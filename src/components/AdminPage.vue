@@ -11,8 +11,8 @@
                   <template v-slot:button-content>
                     <span>User</span>
                   </template>
-                  <b-dropdown-item >Profile</b-dropdown-item>
-                  <b-dropdown-item >Đăng xuất</b-dropdown-item>
+                  <b-dropdown-item>Profile</b-dropdown-item>
+                  <b-dropdown-item>Đăng xuất</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-navbar-nav>
           </b-navbar>
@@ -42,8 +42,8 @@
             <footer class="page-footer font-small blue">
 
               <!-- Copyright -->
-              <div class="footer-copyright text-center py-3">© 2020 Copyright:
-                <a href="#"> Oasis Admin</a>
+              <div class="footer-copyright text-center py-3"><b>© 2020 Copyright: </b>
+                <a href="#">Oasis Admin</a>
               </div>
               <!-- Copyright -->
 

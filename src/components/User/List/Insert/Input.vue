@@ -8,6 +8,7 @@
       >
         <b-form-input
           id="input-1"
+          size="sm"
           v-model="form.email"
           type="email"
           required
@@ -22,6 +23,7 @@
       >
         <b-form-input
           id="input-2"
+          size="sm"
           v-model="form.username"
           type="text"
           required
@@ -36,6 +38,7 @@
       >
         <b-form-input
           id="input-3"
+          size="sm"
           v-model="form.name"
           type="text"
           required
@@ -46,6 +49,7 @@
       <b-form-group id="input-group-4" label="Quyền:" label-for="input-4">
         <b-form-select
                 id="input-4"
+                size="sm"
             v-model="form.permission"
             :options="permission_opt"
             required
@@ -53,21 +57,21 @@
       </b-form-group>
 
       <b-form-group id="input-group-5" label="Active:" label-for="input-5">
-        <b-form-checkbox v-model="form.actived" id="input-5" name="check-button" switch>
+        <b-form-checkbox v-model="form.actived" id="input-5" size="sm" name="check-button" switch>
           <span v-if="form.actived !== true">Khóa</span>
           <span v-else>Mở</span>
         </b-form-checkbox>
       </b-form-group>
 
       <b-form-group id="input-group-6" label="Khóa tài khoản:" label-for="input-6">
-        <b-form-checkbox v-model="form.is_lock" id="input-6" name="check-button" switch>
+        <b-form-checkbox v-model="form.is_lock" id="input-6" size="sm" name="check-button" switch>
           <span v-if="form.is_lock !== true">Không khóa</span>
           <span v-else>Khóa</span>
         </b-form-checkbox>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Tạo</b-button>
-      <b-button type="reset" class="ml-2" variant="danger">Lại</b-button>
+      <b-button size="sm" type="submit" variant="primary">Tạo</b-button>
+      <b-button size="sm" type="reset" class="ml-2" variant="danger">Lại</b-button>
     </b-form>
   </div>
 </template>
