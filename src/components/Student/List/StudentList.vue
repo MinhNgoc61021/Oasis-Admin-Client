@@ -9,9 +9,10 @@
                   align="fill"
                   size="sm"
                   class="my-0 light"
-                  base-url="#"
                   first-number
                   last-number
+                  use-router
+                  :link-gen="linkGen"
                   @input="getUserRecordData"
                 ></b-pagination-nav>
             </b-col>
@@ -234,6 +235,12 @@
           }
         },
         methods: {
+            linkGen(pageNum) {
+                return {
+                    name: 'user-management',
+                    params: { current_index: pageNum}
+                }
+            },
             async getUserRecordData() {
                 this.busy = true;
                 try {
