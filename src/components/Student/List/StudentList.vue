@@ -11,16 +11,15 @@
                   class="my-0 light"
                   first-number
                   last-number
-                  use-router
-                  :link-gen="linkGen"
-                  @input="getUserRecordData"
+                  base-url="#"
+                  @input="getStudentRecordData"
                 ></b-pagination-nav>
             </b-col>
             <b-col class="ml-auto my-1">
                 <Search></Search>
             </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-success" @click="getUserRecordData">
+                <b-button size="sm" variant="outline-success" @click="getStudentRecordData">
                   <b-icon icon="arrow-repeat
                     "></b-icon>
                     <span>
@@ -36,11 +35,11 @@
                          head-variant="light"
                          :small="true"
                          size="sm"
-                         :items="userItems"
+                         :items="studentItems"
                          :fields="fields"
                          :per-page="perPage"
                          :sort-by.sync="sortBy"
-                         @sort-changed="sortUserRecordData"
+                         @sort-changed="sortStudentRecordData"
                          :sort-direction="sortOrder"
                          hover
                 >
@@ -55,14 +54,14 @@
                             <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
                                 <b-icon icon="pencil"></b-icon>
                             </b-button>
-                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteUser(row.item)">
+                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteStudent(row.item)">
                                 <b-icon icon="trash"></b-icon>
                             </b-button>
                         </div>
                     </template>
                 </b-table>
                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitUserUpdate" @reset.prevent="onReset">
+                    <b-form @submit.prevent="submitStudentUpdate" @reset.prevent="onReset">
                       <b-form-group
                         id="edit-input-group-1"
                         label="Email:"
@@ -141,38 +140,38 @@
 
 <script>
     import axios from 'axios';
-    // import moment from 'moment/moment';
+    import moment from 'moment/moment';
     import { eventBus } from "@/main";
     import Search from "@/components/User/List/Search";
 
     export default {
-        name: "UserList",
+        name: "StudentList",
         components: {
             Search,
         },
         data() {
           return {
               Search,
-              userItems: [],
+              studentItems: [],
               perPage: 10,
               currentPage: 1,
               filter: '',
               sortBy: 'user_id',
               sortOrder: 'asc',
               totalPage: 1,
-              ffields: [
+              fields: [
                   {
                       key: 'code',
                       label: 'Mã số sinh viên',
                       sortable: true,
                   },
                   {
-                      key: 'username',
+                      key: 'user.username',
                       label: 'Tên đăng nhập',
                       sortable: true,
                   },
                   {
-                      key: 'name',
+                      key: 'user.name',
                       label: 'Họ tên',
                       sortable: true,
                   },
@@ -180,9 +179,12 @@
                       key: 'dob',
                       label: 'Ngày sinh',
                       sortable: true,
+                      formatter: value => {
+                        return moment(value).format("L, LTS");
+                      }
                   },
                   {
-                      key: 'email',
+                      key: 'user.email',
                       label: 'Email',
                       sortable: true,
                   },
@@ -192,31 +194,53 @@
                       sortable: true,
                   },
                   {
-                      key: 'created_at',
+                      key: 'user.created_at',
                       label: 'Ngày tạo',
                       sortable: true,
+                      formatter: value => {
+                        return moment(value).format("L, LTS");
+                      }
                   },
                   {
-                      key: 'updated_at',
+                      key: 'user.updated_at',
                       label: 'Ngày cập nhật',
                       sortable: true,
+                      formatter: value => {
+                        return moment(value).format("L, LTS");
+                      }
                   },
                   {
-                      key: 'actived',
-                      label: 'Actived',
+                      key: 'user.actived',
+                      label: 'Quyền hoạt động',
                       sortable: true,
+                      formatter: value => {
+                          if (value === 1) {
+                              return `Có`
+                          }
+                          else {
+                              return `Không`
+                          }
+                      }
                   },
                   {
-                      key: 'is_lock',
-                      label: 'Is_lock',
+                      key: 'user.is_lock',
+                      label: 'Khóa',
                       sortable: true,
+                      formatter: value => {
+                          if (value === 1) {
+                              return `Có`
+                          }
+                          else {
+                              return `Không`
+                          }
+                      }
                   },
                   {
                       key: 'actions',
                       label: 'Hành động'
                   }
               ],
-              totalUser: 0,
+              totalStudent: 0,
               busy: false,
               EditModal: {
                   id: 'edit-modal',
@@ -235,17 +259,11 @@
           }
         },
         methods: {
-            linkGen(pageNum) {
-                return {
-                    name: 'user-management',
-                    params: { current_index: pageNum}
-                }
-            },
-            async getUserRecordData() {
+            async getStudentRecordData() {
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/user/records',
+                        url: 'http://localhost:5000/student/records',
                         method: 'get',
                         params: {
                             page_index: this.currentPage,
@@ -256,18 +274,18 @@
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.userItems = [];
-                        this.totalUser = response.data.total_results;
+                        this.studentItems = [];
+                        this.totalStudent = response.data.total_results;
                         this.totalPage = response.data.num_pages;
                         response.data.records.forEach((item) => {
-                            this.userItems.push(item);
+                            this.studentItems.push(item);
                         });
                         // console.log(this.data);
                         this.busy = false
                     }
                 } catch (error) {
-                    this.userItems = [];
-                    this.totalUser = 0;
+                    this.studentItems = [];
+                    this.totalStudent = 0;
                     this.busy = false;
                     throw error;
 
@@ -300,7 +318,7 @@
                 this.EditModal.UpdateUserForm.is_lock = item.is_lock === 1;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
-            async submitUserUpdate() {
+            async submitStudentUpdate() {
                 try {
                     const response = await axios({
                         url: 'http://localhost:5000/user/update-record',
@@ -342,10 +360,10 @@
                         appendToast: true,
                     })
                 } finally {
-                    this.getUserRecordData();
+                    this.getStudentRecordData();
                 }
             },
-            deleteUser(item) {
+            deleteStudent(item) {
                 this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa người dùng có ID: ${item.user_id}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
@@ -391,20 +409,20 @@
                                 appendToast: true,
                             })
                         } finally {
-                            if (this.userItems.length === 1) {
-                                if ((this.totalUser / this.perPage) > 0) {
+                            if (this.studentItems.length === 1) {
+                                if ((this.totalStudent / this.perPage) > 0) {
                                     this.currentPage--;
                                 }
                                 else {
                                     this.currentPage = 1;
                                 }
                             }
-                            this.getUserRecordData();
+                            this.getStudentRecordData();
                         }
                     }
                 })
             },
-            sortUserRecordData(sort) {
+            sortStudentRecordData(sort) {
                 this.sortBy = sort.sortBy;
                 if (sort.sortDesc === true) {
                     this.sortOrder = 'desc';
@@ -412,17 +430,17 @@
                 else {
                     this.sortOrder = 'asc';
                 }
-                this.getUserRecordData();
+                this.getStudentRecordData();
             }
         },
         created() {
-            this.getUserRecordData();
+            this.getStudentRecordData();
             eventBus.$on('refreshUserRecordData', () => {
-                this.getUserRecordData();
+                this.getStudentRecordData();
             });
             eventBus.$on('userSearchSelected', (searchSelected) => {
-                this.userItems = [];
-                this.userItems.push(searchSelected);
+                this.studentItems = [];
+                this.studentItems.push(searchSelected);
                 this.totalPage = 1;
             });
         }
