@@ -1,5 +1,5 @@
 <template>
-    <b-tabs content-class="mt-3" align="center">
+    <b-tabs content-class="mt-3" align="center" small>
         <b-tab title="Nhập gõ" active>
             <b-card-body>
                 <component :is="Input"></component>

@@ -1,11 +1,12 @@
 <template>
     <div>
         <b-form-file
-              v-model="file"
-              :state="Boolean(file)"
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              placeholder="Chọn hoặc kéo thả file..."
-              drop-placeholder="Thả file ở đây..."
+                size="sm"
+                v-model="file"
+                :state="Boolean(file)"
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                placeholder="Chọn hoặc kéo thả file..."
+                drop-placeholder="Thả file ở đây..."
         >
        </b-form-file>
     </div>

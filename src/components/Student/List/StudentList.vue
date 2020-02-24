@@ -142,7 +142,7 @@
     import axios from 'axios';
     import moment from 'moment/moment';
     import { eventBus } from "@/main";
-    import Search from "@/components/User/List/Search";
+    import Search from "@/components/Student/List/Search";
 
     export default {
         name: "StudentList",
@@ -156,7 +156,7 @@
               perPage: 10,
               currentPage: 1,
               filter: '',
-              sortBy: 'user_id',
+              sortBy: 'code',
               sortOrder: 'asc',
               totalPage: 1,
               fields: [
@@ -364,7 +364,7 @@
                 }
             },
             deleteStudent(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa người dùng có ID: ${item.user_id}?`, {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa sinh viên có MSSV: ${item.code}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -375,26 +375,17 @@
                     hideHeaderClose: false,
                     centered: true,
                 }).then(async (value) => {
-                    const permission = await axios({
-                        url: 'http://localhost:5000/user/user_role',
-                        method: 'get',
-                        params: {
-                            user_id: item.user_id,
-                        },
-                        changeOrigin: true,
-                    });
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/user/delete-record',
+                                url: 'http://localhost:5000/student/delete-record',
                                 method: 'delete',
                                 data: {
-                                    delUserID: item.user_id,
-                                    delRoleID: permission.data.role_id,
+                                    delStudentCode: item.code,
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa người dùng có ID: ${item.user_id} thành công!`, {
+                                this.$bvToast.toast(`Xóa sinh viên có MSSV: ${item.code} thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -402,7 +393,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa người dùng có ID: ${item.user_id}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi sinh viên có MSSV: ${item.code}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,
