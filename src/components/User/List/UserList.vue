@@ -107,7 +107,10 @@
                         ></b-form-input>
                       </b-form-group>
 
-                      <b-form-group id="edit-input-group-4" label="Quyền:" label-for="edit-input-4">
+                      <b-form-group
+                              id="edit-input-group-4"
+                              label="Quyền:"
+                              label-for="edit-input-4">
                         <b-form-select
                                 size="sm"
                                 id="edit-input-4"
@@ -117,15 +120,33 @@
                         ></b-form-select>
                       </b-form-group>
 
-                      <b-form-group id="edit-input-group-5" label="Active:" label-for="edit-input-5">
-                        <b-form-checkbox v-model="EditModal.UpdateUserForm.actived" size="sm" id="edit-input-5" name="check-button" switch>
+                      <b-form-group
+                              id="edit-input-group-5"
+                              label="Active:"
+                              label-for="edit-input-5">
+                        <b-form-checkbox
+                                v-model="EditModal.UpdateUserForm.actived"
+                                size="sm"
+                                id="edit-input-5"
+                                name="check-button"
+                                switch
+                        >
                           <span v-if="EditModal.UpdateUserForm.actived !== true">Không</span>
                           <span v-else>Có</span>
                         </b-form-checkbox>
                       </b-form-group>
 
-                      <b-form-group id="edit-input-group-6" label="Khóa tài khoản:" label-for="edit-input-6">
-                        <b-form-checkbox v-model="EditModal.UpdateUserForm.is_lock" size="sm" id="edit-input-6" name="check-button" switch>
+                      <b-form-group
+                              id="edit-input-group-6"
+                              label="Khóa tài khoản:"
+                              label-for="edit-input-6">
+                        <b-form-checkbox
+                                v-model="EditModal.UpdateUserForm.is_lock"
+                                size="sm"
+                                id="edit-input-6"
+                                name="check-button"
+                                switch
+                        >
                           <span v-if="EditModal.UpdateUserForm.is_lock !== true">Không khóa</span>
                           <span v-else>Khóa</span>
                         </b-form-checkbox>

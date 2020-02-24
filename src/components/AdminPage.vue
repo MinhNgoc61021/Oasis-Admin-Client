@@ -4,7 +4,6 @@
         <b-col align-self="start">
           <b-navbar toggleable="sm" sticky type="dark" variant="dark">
             <b-navbar-brand>Oasis Admin</b-navbar-brand>
-
             <b-navbar-nav class="ml-auto">
               <b-nav-item-dropdown right>
                 <!-- Using 'button-content' slot -->

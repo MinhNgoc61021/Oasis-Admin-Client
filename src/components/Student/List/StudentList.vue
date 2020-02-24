@@ -61,7 +61,22 @@
                     </template>
                 </b-table>
                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitStudentUpdate" @reset.prevent="onReset">
+                    <b-form @submit.prevent="submitStudentUpdate">
+                       <b-form-group
+                        id="edit-input-group-0"
+                        label="Mã số sinh viên:"
+                        label-for="edit-input-0"
+                       >
+                        <b-form-input
+                          id="edit-input-0"
+                          v-model="EditModal.UpdateStudentForm.code"
+                          type="text"
+                          size="sm"
+                          required
+                          placeholder="Nhập mã số sinh viên"
+                        ></b-form-input>
+                      </b-form-group>
+
                       <b-form-group
                         id="edit-input-group-1"
                         label="Email:"
@@ -69,7 +84,7 @@
                       >
                         <b-form-input
                           id="edit-input-1"
-                          v-model="EditModal.UpdateUserForm.email"
+                          v-model="EditModal.UpdateStudentForm.email"
                           type="email"
                           size="sm"
                           required
@@ -84,7 +99,7 @@
                       >
                         <b-form-input
                           id="edit-input-2"
-                          v-model="EditModal.UpdateUserForm.username"
+                          v-model="EditModal.UpdateStudentForm.username"
                           type="text"
                           size="sm"
                           required
@@ -99,34 +114,70 @@
                       >
                         <b-form-input
                           id="edit-input-3"
-                          v-model="EditModal.UpdateUserForm.name"
+                          v-model="EditModal.UpdateStudentForm.name"
                           type="text"
                           size="sm"
                           required
                           placeholder="Nhập họ tên"
-                        ></b-form-input>
+                        >
+                        </b-form-input>
                       </b-form-group>
 
-                      <b-form-group id="edit-input-group-4" label="Quyền:" label-for="edit-input-4">
-                        <b-form-select
-                                size="sm"
+                      <b-form-group
+                            id="edit-input-group-4"
+                            label="Ngày sinh:"
+                            label-for="edit-input-4"
+                      >
+                        <b-form-datepicker
                                 id="edit-input-4"
-                            v-model="EditModal.UpdateUserForm.permission"
-                            :options="EditModal.UpdateUserForm.permission_opt"
-                            required
-                        ></b-form-select>
+                                v-model="EditModal.UpdateStudentForm.dob"
+                                locale="vi"
+                                size="sm" class="mb-2">
+                        </b-form-datepicker>
                       </b-form-group>
 
-                      <b-form-group id="edit-input-group-5" label="Active:" label-for="edit-input-5">
-                        <b-form-checkbox v-model="EditModal.UpdateUserForm.actived" size="sm" id="edit-input-5" name="check-button" switch>
-                          <span v-if="EditModal.UpdateUserForm.actived !== true">Không</span>
+                      <b-form-group
+                        id="edit-input-group-5"
+                        label="Lớp:"
+                        label-for="edit-input-5"
+                      >
+                        <b-form-input
+                          id="edit-input-5"
+                          v-model="EditModal.UpdateStudentForm.class_course"
+                          type="text"
+                          size="sm"
+                          required
+                          placeholder="Nhập lớp"
+                        >
+                        </b-form-input>
+                      </b-form-group>
+
+                      <b-form-group
+                              id="edit-input-group-6"
+                              label="Active:"
+                              label-for="edit-input-6">
+                        <b-form-checkbox
+                                v-model="EditModal.UpdateStudentForm.actived"
+                                size="sm"
+                                id="edit-input-6"
+                                name="check-button"
+                                switch>
+                          <span v-if="EditModal.UpdateStudentForm.actived !== true">Không</span>
                           <span v-else>Có</span>
                         </b-form-checkbox>
                       </b-form-group>
 
-                      <b-form-group id="edit-input-group-6" label="Khóa tài khoản:" label-for="edit-input-6">
-                        <b-form-checkbox v-model="EditModal.UpdateUserForm.is_lock" size="sm" id="edit-input-6" name="check-button" switch>
-                          <span v-if="EditModal.UpdateUserForm.is_lock !== true">Không khóa</span>
+                      <b-form-group
+                              id="edit-input-group-7"
+                              label="Khóa tài khoản:"
+                              label-for="edit-input-7">
+                        <b-form-checkbox
+                                v-model="EditModal.UpdateStudentForm.is_lock"
+                                size="sm" id="edit-input-7"
+                                name="check-button"
+                                switch
+                        >
+                          <span v-if="EditModal.UpdateStudentForm.is_lock !== true">Không khóa</span>
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
@@ -143,6 +194,7 @@
     import moment from 'moment/moment';
     import { eventBus } from "@/main";
     import Search from "@/components/Student/List/Search";
+
 
     export default {
         name: "StudentList",
@@ -180,7 +232,7 @@
                       label: 'Ngày sinh',
                       sortable: true,
                       formatter: value => {
-                        return moment(value).format("L, LTS");
+                        return moment(value).format('MM/DD/YYYY');
                       }
                   },
                   {
@@ -245,15 +297,16 @@
               EditModal: {
                   id: 'edit-modal',
                   title: '',
-                  UpdateUserForm: {
+                  UpdateStudentForm: {
                       user_id: '',
+                      code: '',
                       username: '',
                       name: '',
+                      dob: '',
                       email: '',
-                      permission: 'Sinh viên',
+                      class_course: '',
                       actived: Boolean,
                       is_lock: Boolean,
-                      permission_opt: ['Admin', 'Sinh viên', 'Giảng viên'],
                   }
               }
           }
@@ -292,50 +345,39 @@
                 }
             },
             async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin người dùng có ID: ${item.user_id}`;
-                this.EditModal.UpdateUserForm.user_id = item.user_id;
-                this.EditModal.UpdateUserForm.username = item.username;
-                this.EditModal.UpdateUserForm.email = item.email;
-                this.EditModal.UpdateUserForm.name = item.name;
-                const permission = await axios({
-                    url: 'http://localhost:5000/user/user_role',
-                    method: 'get',
-                    params: {
-                        user_id: item.user_id,
-                    },
-                    changeOrigin: true,
-                });
-                if (permission.data.role_id === 1) {
-                    this.EditModal.UpdateUserForm.permission = 'Sinh viên';
-                }
-                else if (permission.data.role_id === 2) {
-                    this.EditModal.UpdateUserForm.permission = 'Giảng viên';
-                }
-                else {
-                    this.EditModal.UpdateUserForm.permission = 'Admin';
-                }
-                this.EditModal.UpdateUserForm.actived = item.actived === 1;
-                this.EditModal.UpdateUserForm.is_lock = item.is_lock === 1;
+                this.EditModal.title = `Sửa thông tin sinh viên có MSSV: ${item.code}`;
+                this.EditModal.UpdateStudentForm.code = item.code;
+                this.EditModal.UpdateStudentForm.user_id = item.user.user_id;
+                this.EditModal.UpdateStudentForm.username = item.user.username;
+                this.EditModal.UpdateStudentForm.name = item.user.name;
+                this.EditModal.UpdateStudentForm.dob = new Date(moment(item.dob).format('MM/DD/YYYY'));
+                this.EditModal.UpdateStudentForm.email = item.user.email;
+                this.EditModal.UpdateStudentForm.class_course = item.class_course;
+                this.EditModal.UpdateStudentForm.actived = item.user.actived === 1;
+                this.EditModal.UpdateStudentForm.is_lock = item.user.is_lock === 1;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
             async submitStudentUpdate() {
+                console.log();
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/user/update-record',
+                        url: 'http://localhost:5000/student/update-record',
                         method: 'put',
                         data: {
-                            user_id: this.EditModal.UpdateUserForm.user_id,
-                            update_username: this.EditModal.UpdateUserForm.username,
-                            update_name: this.EditModal.UpdateUserForm.name,
-                            update_email: this.EditModal.UpdateUserForm.email,
-                            update_permission: this.EditModal.UpdateUserForm.permission,
-                            update_actived: this.EditModal.UpdateUserForm.actived,
-                            update_is_lock: this.EditModal.UpdateUserForm.is_lock,
+                            user_id: this.EditModal.UpdateStudentForm.user_id,
+                            update_code: this.EditModal.UpdateStudentForm.code,
+                            update_username: this.EditModal.UpdateStudentForm.username,
+                            update_email: this.EditModal.UpdateStudentForm.email,
+                            update_name: this.EditModal.UpdateStudentForm.name,
+                            update_dob: moment(this.EditModal.UpdateStudentForm.dob).format('YYYY-MM-DD'),
+                            update_class_course: this.EditModal.UpdateStudentForm.class_course,
+                            update_actived: this.EditModal.UpdateStudentForm.actived,
+                            update_is_lock: this.EditModal.UpdateStudentForm.is_lock,
                         },
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.$bvToast.toast(`Cập nhật người dùng có ID ${this.EditModal.UpdateUserForm.user_id} thành công!`, {
+                        this.$bvToast.toast(`Cập nhật sinh viên có MSSV: ${this.EditModal.UpdateStudentForm.code} thành công!`, {
                             title: `Thành công`,
                             variant: 'success',
                             solid: true,
@@ -353,7 +395,7 @@
                         })
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateUserForm.user_id}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu sinh viên!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
@@ -426,10 +468,10 @@
         },
         created() {
             this.getStudentRecordData();
-            eventBus.$on('refreshUserRecordData', () => {
+            eventBus.$on('refreshStudentRecordData', () => {
                 this.getStudentRecordData();
             });
-            eventBus.$on('userSearchSelected', (searchSelected) => {
+            eventBus.$on('studentSearchSelected', (searchSelected) => {
                 this.studentItems = [];
                 this.studentItems.push(searchSelected);
                 this.totalPage = 1;

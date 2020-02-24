@@ -11,7 +11,7 @@
     "@vue/ui": "^0.11.6",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.4.0",
+    "bootstrap-vue": "^2.5.0",
     "core-js": "^3.6.4",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
