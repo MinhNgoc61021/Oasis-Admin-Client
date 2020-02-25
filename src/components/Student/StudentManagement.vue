@@ -10,7 +10,7 @@
                 </b-tab>
                 <b-tab title="Nhập">
                     <b-card-body>
-                        <component :is="Import"></component>
+                        <component :is="Insert"></component>
                     </b-card-body>
                 </b-tab>
             </b-tabs>
@@ -19,17 +19,17 @@
 </template>
 
 <script>
-    import Import from "@/components/Student/List/Import";
+    import Insert from "@/components/Student/List/Insert";
     import StudentList from "@/components/Student/List/StudentList";
 
     export default {
         name: "StudentManagement",
         component: {
-            Import, StudentList
+            Insert, StudentList
         },
         data() {
             return {
-                Import, StudentList
+                Insert, StudentList
             }
         },
     }

@@ -195,7 +195,6 @@
     import { eventBus } from "@/main";
     import Search from "@/components/Student/List/Search";
 
-
     export default {
         name: "StudentList",
         components: {
@@ -244,22 +243,6 @@
                       key: 'class_course',
                       label: 'Lớp',
                       sortable: true,
-                  },
-                  {
-                      key: 'user.created_at',
-                      label: 'Ngày tạo',
-                      sortable: true,
-                      formatter: value => {
-                        return moment(value).format("L, LTS");
-                      }
-                  },
-                  {
-                      key: 'user.updated_at',
-                      label: 'Ngày cập nhật',
-                      sortable: true,
-                      formatter: value => {
-                        return moment(value).format("L, LTS");
-                      }
                   },
                   {
                       key: 'user.actived',

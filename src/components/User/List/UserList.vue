@@ -161,7 +161,6 @@
 
 <script>
     import axios from 'axios';
-    import moment from 'moment/moment';
     import { eventBus } from "@/main";
     import Search from "@/components/User/List/Search";
 
@@ -200,22 +199,6 @@
                       key: 'email',
                       label: 'Email',
                       sortable: true,
-                  },
-                  {
-                      key: 'created_at',
-                      label: 'Ngày cấp',
-                      sortable: true,
-                      formatter: value => {
-                        return moment(value).format("L, LTS");
-                      }
-                  },
-                  {
-                      key: 'updated_at',
-                      label: 'Ngày cập nhật',
-                      sortable: true,
-                      formatter: value => {
-                        return moment(value).format("L, LTS");
-                      }
                   },
                   {
                       key: 'actived',
