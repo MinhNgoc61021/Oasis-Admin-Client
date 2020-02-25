@@ -217,7 +217,6 @@
         this.form.email = '';
         this.form.dob = '';
         this.form.class_course = '';
-        this.form.course = '';
         this.form.actived = true;
         this.form.is_lock = false;
         this.$nextTick(() => {
