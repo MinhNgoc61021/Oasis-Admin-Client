@@ -72,7 +72,6 @@
                           v-model="EditModal.UpdateStudentForm.code"
                           type="text"
                           size="sm"
-                          required
                           placeholder="Nhập mã số sinh viên"
                         ></b-form-input>
                       </b-form-group>
@@ -87,7 +86,6 @@
                           v-model="EditModal.UpdateStudentForm.email"
                           type="email"
                           size="sm"
-                          required
                           placeholder="Nhập tên đăng nhập"
                         ></b-form-input>
                       </b-form-group>
@@ -102,7 +100,6 @@
                           v-model="EditModal.UpdateStudentForm.username"
                           type="text"
                           size="sm"
-                          required
                           placeholder="Nhập tên đăng nhập"
                         ></b-form-input>
                       </b-form-group>
@@ -117,7 +114,6 @@
                           v-model="EditModal.UpdateStudentForm.name"
                           type="text"
                           size="sm"
-                          required
                           placeholder="Nhập họ tên"
                         >
                         </b-form-input>
@@ -146,20 +142,25 @@
                           v-model="EditModal.UpdateStudentForm.class_course"
                           type="text"
                           size="sm"
-                          required
                           placeholder="Nhập lớp"
                         >
                         </b-form-input>
                       </b-form-group>
-
                       <b-form-group
-                              id="edit-input-group-6"
+                        id="edit-input-group-6"
+                        label="Lớp:"
+                        label-for="edit-input-6"
+                      >
+                        <StudentCourseEdit id="input-6" :course-code="EditModal.UpdateStudentForm.course"></StudentCourseEdit>
+                      </b-form-group>
+                      <b-form-group
+                              id="edit-input-group-7"
                               label="Active:"
-                              label-for="edit-input-6">
+                              label-for="edit-input-7">
                         <b-form-checkbox
                                 v-model="EditModal.UpdateStudentForm.actived"
                                 size="sm"
-                                id="edit-input-6"
+                                id="edit-input-7"
                                 name="check-button"
                                 switch>
                           <span v-if="EditModal.UpdateStudentForm.actived !== true">Không</span>
@@ -168,12 +169,12 @@
                       </b-form-group>
 
                       <b-form-group
-                              id="edit-input-group-7"
+                              id="edit-input-group-8"
                               label="Khóa tài khoản:"
-                              label-for="edit-input-7">
+                              label-for="edit-input-8">
                         <b-form-checkbox
                                 v-model="EditModal.UpdateStudentForm.is_lock"
-                                size="sm" id="edit-input-7"
+                                size="sm" id="edit-input-8"
                                 name="check-button"
                                 switch
                         >
@@ -181,7 +182,8 @@
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
-                        <b-button type="submit" size="sm" variant="primary" style="float: right">Cập nhật</b-button>
+                      <b-alert :show="EditModal.UpdateStudentForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
+                      <b-button type="submit" size="sm" variant="primary" style="float: right">Cập nhật</b-button>
                     </b-form>
                 </b-modal>
             </b-col>
@@ -194,15 +196,16 @@
     import moment from 'moment/moment';
     import { eventBus } from "@/main";
     import Search from "@/components/Student/List/Search";
+    import StudentCourseEdit from "@/components/Student/List/StudentCourseEdit";
 
     export default {
         name: "StudentList",
         components: {
-            Search,
+            Search, StudentCourseEdit
         },
         data() {
           return {
-              Search,
+              Search, StudentCourseEdit,
               studentItems: [],
               perPage: 10,
               currentPage: 1,
@@ -281,6 +284,7 @@
                   id: 'edit-modal',
                   title: '',
                   UpdateStudentForm: {
+                      student_id: '',
                       user_id: '',
                       code: '',
                       username: '',
@@ -288,8 +292,10 @@
                       dob: '',
                       email: '',
                       class_course: '',
+                      course: Object,
                       actived: Boolean,
                       is_lock: Boolean,
+                      notFilled: false,
                   }
               }
           }
@@ -328,7 +334,8 @@
                 }
             },
             async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin sinh viên có MSSV: ${item.code}`;
+                this.EditModal.title = `Sửa thông tin sinh viên ${item.user.name}`;
+                this.EditModal.UpdateStudentForm.student_id = item.student_id;
                 this.EditModal.UpdateStudentForm.code = item.code;
                 this.EditModal.UpdateStudentForm.user_id = item.user.user_id;
                 this.EditModal.UpdateStudentForm.username = item.user.username;
@@ -336,60 +343,88 @@
                 this.EditModal.UpdateStudentForm.dob = new Date(moment(item.dob).format('MM/DD/YYYY'));
                 this.EditModal.UpdateStudentForm.email = item.user.email;
                 this.EditModal.UpdateStudentForm.class_course = item.class_course;
+                const course = await axios({
+                    url: 'http://localhost:5000/course/student-course',
+                    method: 'get',
+                    params: {
+                        student_id: item.student_id,
+                    },
+                    changeOrigin: true,
+                });
+
+                this.EditModal.UpdateStudentForm.course = course.data.course;
                 this.EditModal.UpdateStudentForm.actived = item.user.actived === 1;
                 this.EditModal.UpdateStudentForm.is_lock = item.user.is_lock === 1;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
             async submitStudentUpdate() {
-                console.log();
+                console.log(this.EditModal.UpdateStudentForm.course);
                 try {
-                    const response = await axios({
-                        url: 'http://localhost:5000/student/update-record',
-                        method: 'put',
-                        data: {
-                            user_id: this.EditModal.UpdateStudentForm.user_id,
-                            update_code: this.EditModal.UpdateStudentForm.code,
-                            update_username: this.EditModal.UpdateStudentForm.username,
-                            update_email: this.EditModal.UpdateStudentForm.email,
-                            update_name: this.EditModal.UpdateStudentForm.name,
-                            update_dob: moment(this.EditModal.UpdateStudentForm.dob).format('YYYY-MM-DD'),
-                            update_class_course: this.EditModal.UpdateStudentForm.class_course,
-                            update_actived: this.EditModal.UpdateStudentForm.actived,
-                            update_is_lock: this.EditModal.UpdateStudentForm.is_lock,
-                        },
-                        changeOrigin: true,
-                    });
-                    if (response.status === 200) {
-                        this.$bvToast.toast(`Cập nhật sinh viên có MSSV: ${this.EditModal.UpdateStudentForm.code} thành công!`, {
-                            title: `Thành công`,
-                            variant: 'success',
-                            solid: true,
-                            appendToast: true,
-                        });
-                        this.$root.$emit('bv::hide::modal', this.EditModal.id);
+                    if (String(this.EditModal.UpdateStudentForm.code).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateStudentForm.name).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateStudentForm.dob).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateStudentForm.class_course).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateStudentForm.username).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateStudentForm.dob).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateStudentForm.email).replace(' ', '') === ''
+                        || this.EditModal.UpdateStudentForm.course == null
+                    ) {
+                        this.EditModal.UpdateStudentForm.notFilled = true;
+                        setTimeout(() => {
+                            this.EditModal.UpdateStudentForm.notFilled = false;
+                        }, 3000);
 
                     }
-                    else if (response.status === 202) {
-                        this.$bvToast.toast(`Trùng dữ liệu!`, {
-                            title: `Oops!`,
-                            variant: 'warning',
-                            solid: true,
-                            appendToast: true,
-                        })
+                    else {
+                        const response = await axios({
+                            url: 'http://localhost:5000/student/update-record',
+                            method: 'put',
+                            data: {
+                                user_id: this.EditModal.UpdateStudentForm.user_id,
+                                student_id: this.EditModal.UpdateStudentForm.student_id,
+                                update_code: this.EditModal.UpdateStudentForm.code,
+                                update_username: this.EditModal.UpdateStudentForm.username,
+                                update_email: this.EditModal.UpdateStudentForm.email,
+                                update_name: this.EditModal.UpdateStudentForm.name,
+                                update_dob: moment(this.EditModal.UpdateStudentForm.dob).format('YYYY-MM-DD'),
+                                update_class_course: this.EditModal.UpdateStudentForm.class_course,
+                                update_course_id: this.EditModal.UpdateStudentForm.course.course_id,
+                                update_actived: this.EditModal.UpdateStudentForm.actived,
+                                update_is_lock: this.EditModal.UpdateStudentForm.is_lock,
+                            },
+                            changeOrigin: true,
+                        });
+                        if (response.status === 200) {
+                            this.$bvToast.toast(`Cập nhật thông tin sinh viên ${this.EditModal.UpdateStudentForm.name} thành công!`, {
+                                title: `Thành công`,
+                                variant: 'success',
+                                solid: true,
+                                appendToast: true,
+                            });
+                            this.$root.$emit('bv::hide::modal', this.EditModal.id);
+                            this.getStudentRecordData();
+                        }
+                        else if (response.status === 202) {
+                            this.$bvToast.toast(`Trùng dữ liệu!`, {
+                                title: `Oops!`,
+                                variant: 'warning',
+                                solid: true,
+                                appendToast: true,
+                            })
+                        }
                     }
+
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu sinh viên!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật thông tin sinh viên!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
                         appendToast: true,
                     })
-                } finally {
-                    this.getStudentRecordData();
                 }
             },
             deleteStudent(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa sinh viên có MSSV: ${item.code}?`, {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa sinh viên ${item.user.name}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -410,7 +445,7 @@
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa sinh viên có MSSV: ${item.code} thành công!`, {
+                                this.$bvToast.toast(`Xóa sinh viên ${item.user.name} thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -418,7 +453,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi sinh viên có MSSV: ${item.code}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi sinh viên ${item.user.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,
@@ -458,6 +493,9 @@
                 this.studentItems = [];
                 this.studentItems.push(searchSelected);
                 this.totalPage = 1;
+            });
+            eventBus.$on('courseEditSelected', (searchSelected) => {
+                this.EditModal.UpdateStudentForm.course = searchSelected;
             });
         }
     }

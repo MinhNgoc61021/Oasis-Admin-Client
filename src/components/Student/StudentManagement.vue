@@ -2,13 +2,13 @@
     <div>
         <h3 class="mb-3">Quản lý sinh viên</h3>
         <b-card no-body>
-            <b-tabs card>
+            <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>
                     <b-card-body>
                         <component :is="StudentList"></component>
                     </b-card-body>
                 </b-tab>
-                <b-tab title="Nhập">
+                <b-tab title="Thêm">
                     <b-card-body>
                         <component :is="Insert"></component>
                     </b-card-body>

@@ -14,8 +14,8 @@
 </template>
 
 <script>
-    import Input from '@/components/Student/List/Insert/Input';
-    import Import from '@/components/Student/List/Insert/Import';
+    import Input from '@/components/Lecturer/List/Insert/Input';
+    import Import from '@/components/Lecturer/List/Insert/Import';
 
     export default {
         name: "Insert",

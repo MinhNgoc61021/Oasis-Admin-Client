@@ -7,8 +7,8 @@
           :data="searchResults"
           @hit="searchSelect = $event"
           :maxMatches="range"
-          :minMatchingChars="minSearchChar"
           ref="typeahead"
+          :minMatchingChars="minSearchChar"
         >
             <template slot="suggestion" slot-scope="{ data }">
                 <span><b>Mã học phần: </b>{{ data.code }}</span><br>
@@ -25,7 +25,8 @@
     import { eventBus } from "@/main";
 
     export default {
-        name: "Search",
+        name: "StudentCourseEdit",
+        props: ['courseCode'],
         components: {
             VueBootstrapTypeahead
         },
@@ -44,7 +45,7 @@
                 this.onSearch();
             }, 500),
             searchSelect: function () {
-                eventBus.$emit('courseSearchSelected', this.searchSelect);
+                eventBus.$emit('courseEditSelected', this.searchSelect);
             }
         },
         methods: {
@@ -82,10 +83,14 @@
                 }
             },
         },
-        created() {
-            // eventBus.$on('clearCourse', () => {
-            //     this.$ref.typeahead.inputValue = '';
-            // });
+        mounted() {
+            if (this.courseCode !== null) {
+                this.$refs.typeahead.inputValue = this.courseCode.code;
+            }
+            else {
+                this.$refs.typeahead.inputValue = '';
+            }
+
         }
     }
 </script>

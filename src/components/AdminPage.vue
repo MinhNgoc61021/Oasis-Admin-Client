@@ -26,6 +26,7 @@
               <b-list-group>
                 <b-list-group-item to="/user-management">Quản lý người dùng</b-list-group-item>
                 <b-list-group-item to="/student-management">Quản lý sinh viên</b-list-group-item>
+                <b-list-group-item to="/lecturer-management">Quản lý giảng viên</b-list-group-item>
               </b-list-group>
             </div>
           </b-col>

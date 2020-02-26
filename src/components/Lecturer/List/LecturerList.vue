@@ -12,14 +12,14 @@
                   base-url="#"
                   first-number
                   last-number
-                  @input="getUserRecordData"
+                  @input="getLecturerRecordData"
                 ></b-pagination-nav>
             </b-col>
             <b-col class="ml-auto my-1">
                 <Search></Search>
             </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-success" @click="getUserRecordData">
+                <b-button size="sm" variant="outline-success" @click="getLecturerRecordData">
                   <b-icon icon="arrow-repeat
                     "></b-icon>
                     <span>
@@ -35,7 +35,7 @@
                          head-variant="light"
                          :small="true"
                          size="sm"
-                         :items="userItems"
+                         :items="lecturerItems"
                          :fields="fields"
                          :per-page="perPage"
                          :sort-by.sync="sortBy"
@@ -54,14 +54,14 @@
                             <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
                                 <b-icon icon="pencil"></b-icon>
                             </b-button>
-                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteUser(row.item)">
+                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteLecturer(row.item)">
                                 <b-icon icon="trash"></b-icon>
                             </b-button>
                         </div>
                     </template>
                 </b-table>
                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitUserUpdate" @reset.prevent="onReset">
+                    <b-form @submit.prevent="submitLecturerUpdate" @reset.prevent="onReset">
                       <b-form-group
                         id="edit-input-group-1"
                         label="Email:"
@@ -69,7 +69,7 @@
                       >
                         <b-form-input
                           id="edit-input-1"
-                          v-model="EditModal.UpdateUserForm.email"
+                          v-model="EditModal.UpdateLecturerForm.email"
                           type="email"
                           size="sm"
                           required
@@ -84,7 +84,7 @@
                       >
                         <b-form-input
                           id="edit-input-2"
-                          v-model="EditModal.UpdateUserForm.username"
+                          v-model="EditModal.UpdateLecturerForm.username"
                           type="text"
                           size="sm"
                           required
@@ -99,7 +99,7 @@
                       >
                         <b-form-input
                           id="edit-input-3"
-                          v-model="EditModal.UpdateUserForm.name"
+                          v-model="EditModal.UpdateLecturerForm.name"
                           type="text"
                           size="sm"
                           required
@@ -114,8 +114,8 @@
                         <b-form-select
                                 size="sm"
                                 id="edit-input-4"
-                            v-model="EditModal.UpdateUserForm.permission"
-                            :options="EditModal.UpdateUserForm.permission_opt"
+                            v-model="EditModal.UpdateLecturerForm.permission"
+                            :options="EditModal.UpdateLecturerForm.permission_opt"
                             required
                         ></b-form-select>
                       </b-form-group>
@@ -125,13 +125,13 @@
                               label="Active:"
                               label-for="edit-input-5">
                         <b-form-checkbox
-                                v-model="EditModal.UpdateUserForm.actived"
+                                v-model="EditModal.UpdateLecturerForm.actived"
                                 size="sm"
                                 id="edit-input-5"
                                 name="check-button"
                                 switch
                         >
-                          <span v-if="EditModal.UpdateUserForm.actived !== true">Không</span>
+                          <span v-if="EditModal.UpdateLecturerForm.actived !== true">Không</span>
                           <span v-else>Có</span>
                         </b-form-checkbox>
                       </b-form-group>
@@ -141,13 +141,13 @@
                               label="Khóa tài khoản:"
                               label-for="edit-input-6">
                         <b-form-checkbox
-                                v-model="EditModal.UpdateUserForm.is_lock"
+                                v-model="EditModal.UpdateLecturerForm.is_lock"
                                 size="sm"
                                 id="edit-input-6"
                                 name="check-button"
                                 switch
                         >
-                          <span v-if="EditModal.UpdateUserForm.is_lock !== true">Không khóa</span>
+                          <span v-if="EditModal.UpdateLecturerForm.is_lock !== true">Không khóa</span>
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
@@ -162,7 +162,7 @@
 <script>
     import axios from 'axios';
     import { eventBus } from "@/main";
-    import Search from "@/components/User/List/Search";
+    import Search from "@/components/Lecturer/List/Search";
 
     export default {
         name: "UserList",
@@ -172,7 +172,7 @@
         data() {
           return {
               Search,
-              userItems: [],
+              lecturerItems: [],
               perPage: 10,
               currentPage: 1,
               filter: '',
@@ -231,30 +231,28 @@
                       label: 'Hành động'
                   }
               ],
-              totalUser: 0,
+              totalLecturer: 0,
               busy: false,
               EditModal: {
                   id: 'edit-modal',
                   title: '',
-                  UpdateUserForm: {
+                  UpdateLecturerForm: {
                       user_id: '',
                       username: '',
                       name: '',
                       email: '',
-                      permission: 'Sinh viên',
                       actived: Boolean,
                       is_lock: Boolean,
-                      permission_opt: ['Admin', 'Sinh viên', 'Giảng viên'],
                   }
               }
           }
         },
         methods: {
-            async getUserRecordData() {
+            async getLecturerRecordData() {
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/user/records',
+                        url: 'http://localhost:5000/lecturer/records',
                         method: 'get',
                         params: {
                             page_index: this.currentPage,
@@ -265,18 +263,18 @@
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.userItems = [];
-                        this.totalUser = response.data.total_results;
+                        this.lecturerItems = [];
+                        this.totalLecturer = response.data.total_results;
                         this.totalPage = response.data.num_pages;
                         response.data.records.forEach((item) => {
-                            this.userItems.push(item);
+                            this.lecturerItems.push(item);
                         });
                         // console.log(this.data);
                         this.busy = false
                     }
                 } catch (error) {
-                    this.userItems = [];
-                    this.totalUser = 0;
+                    this.lecturerItems = [];
+                    this.totalLecturer = 0;
                     this.busy = false;
                     throw error;
 
@@ -284,10 +282,10 @@
             },
             async updateModal(item, index, button) {
                 this.EditModal.title = `Sửa thông tin người dùng có ID: ${item.user_id}`;
-                this.EditModal.UpdateUserForm.user_id = item.user_id;
-                this.EditModal.UpdateUserForm.username = item.username;
-                this.EditModal.UpdateUserForm.email = item.email;
-                this.EditModal.UpdateUserForm.name = item.name;
+                this.EditModal.UpdateLecturerForm.user_id = item.user_id;
+                this.EditModal.UpdateLecturerForm.username = item.username;
+                this.EditModal.UpdateLecturerForm.email = item.email;
+                this.EditModal.UpdateLecturerForm.name = item.name;
                 const permission = await axios({
                     url: 'http://localhost:5000/user/user-role',
                     method: 'get',
@@ -297,36 +295,36 @@
                     changeOrigin: true,
                 });
                 if (permission.data.role_id === 1) {
-                    this.EditModal.UpdateUserForm.permission = 'Sinh viên';
+                    this.EditModal.UpdateLecturerForm.permission = 'Sinh viên';
                 }
                 else if (permission.data.role_id === 2) {
-                    this.EditModal.UpdateUserForm.permission = 'Giảng viên';
+                    this.EditModal.UpdateLecturerForm.permission = 'Giảng viên';
                 }
                 else {
-                    this.EditModal.UpdateUserForm.permission = 'Admin';
+                    this.EditModal.UpdateLecturerForm.permission = 'Admin';
                 }
-                this.EditModal.UpdateUserForm.actived = item.actived === 1;
-                this.EditModal.UpdateUserForm.is_lock = item.is_lock === 1;
+                this.EditModal.UpdateLecturerForm.actived = item.actived === 1;
+                this.EditModal.UpdateLecturerForm.is_lock = item.is_lock === 1;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
-            async submitUserUpdate() {
+            async submitLecturerUpdate() {
                 try {
                     const response = await axios({
                         url: 'http://localhost:5000/user/update-record',
                         method: 'put',
                         data: {
-                            user_id: this.EditModal.UpdateUserForm.user_id,
-                            update_username: this.EditModal.UpdateUserForm.username,
-                            update_name: this.EditModal.UpdateUserForm.name,
-                            update_email: this.EditModal.UpdateUserForm.email,
-                            update_permission: this.EditModal.UpdateUserForm.permission,
-                            update_actived: this.EditModal.UpdateUserForm.actived,
-                            update_is_lock: this.EditModal.UpdateUserForm.is_lock,
+                            user_id: this.EditModal.UpdateLecturerForm.user_id,
+                            update_username: this.EditModal.UpdateLecturerForm.username,
+                            update_name: this.EditModal.UpdateLecturerForm.name,
+                            update_email: this.EditModal.UpdateLecturerForm.email,
+                            update_permission: this.EditModal.UpdateLecturerForm.permission,
+                            update_actived: this.EditModal.UpdateLecturerForm.actived,
+                            update_is_lock: this.EditModal.UpdateLecturerForm.is_lock,
                         },
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.$bvToast.toast(`Cập nhật người dùng có ID ${this.EditModal.UpdateUserForm.user_id} thành công!`, {
+                        this.$bvToast.toast(`Cập nhật người dùng có ID ${this.EditModal.UpdateLecturerForm.user_id} thành công!`, {
                             title: `Thành công`,
                             variant: 'success',
                             solid: true,
@@ -344,17 +342,17 @@
                         })
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateUserForm.user_id}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateLecturerForm.user_id}!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
                         appendToast: true,
                     })
                 } finally {
-                    this.getUserRecordData();
+                    this.getLecturerRecordData();
                 }
             },
-            deleteUser(item) {
+            deleteLecturer(item) {
                 this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa người dùng có ID: ${item.user_id}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
@@ -400,15 +398,15 @@
                                 appendToast: true,
                             })
                         } finally {
-                            if (this.userItems.length === 1) {
-                                if ((this.totalUser / this.perPage) > 0) {
+                            if (this.lecturerItems.length === 1) {
+                                if ((this.totalLecturer / this.perPage) > 0) {
                                     this.currentPage--;
                                 }
                                 else {
                                     this.currentPage = 1;
                                 }
                             }
-                            this.getUserRecordData();
+                            this.getLecturerRecordData();
                         }
                     }
                 })
@@ -421,17 +419,17 @@
                 else {
                     this.sortOrder = 'asc';
                 }
-                this.getUserRecordData();
+                this.getLecturerRecordData();
             }
         },
         created() {
-            this.getUserRecordData();
+            this.getLecturerRecordData();
             eventBus.$on('refreshUserRecordData', () => {
-                this.getUserRecordData();
+                this.getLecturerRecordData();
             });
             eventBus.$on('userSearchSelected', (searchSelected) => {
-                this.userItems = [];
-                this.userItems.push(searchSelected);
+                this.lecturerItems = [];
+                this.lecturerItems.push(searchSelected);
                 this.totalPage = 1;
             });
         }

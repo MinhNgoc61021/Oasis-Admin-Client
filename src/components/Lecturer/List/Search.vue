@@ -1,18 +1,19 @@
 <template>
     <div>
         <vue-bootstrap-typeahead
-          v-model="searchCourse" size="sm"
-          :serializer="s => s.code"
+          v-model="searchUsername" size="sm"
+          :serializer="s => s.username"
           :placeholder="message"
           :data="searchResults"
           @hit="searchSelect = $event"
           :maxMatches="range"
           :minMatchingChars="minSearchChar"
-          ref="typeahead"
         >
             <template slot="suggestion" slot-scope="{ data }">
-                <span><b>Mã học phần: </b>{{ data.code }}</span><br>
-                <span><b>Tên học phần: </b>{{ data.name }}</span><br>
+                <span><b>Tài khoản: </b>{{ data.username}}</span><br>
+                <span><b>Email: </b>{{ data.email}}</span><br>
+                <span><b>Họ tên: </b>{{ data.name }}</span>
+
             </template>
         </vue-bootstrap-typeahead>
     </div>
@@ -31,36 +32,36 @@
         },
         data() {
             return {
-                searchCourse: '',
+                searchUsername: '',
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm và nhập lớp học phần',
+                message: 'Tìm kiếm bằng tên tài khoản',
                 searchSelect: Object,
             }
         },
         watch: {
-            searchCourse: debounce(function () {
+            searchUsername: debounce(function () {
                 this.onSearch();
             }, 500),
             searchSelect: function () {
-                eventBus.$emit('courseSearchSelected', this.searchSelect);
+                eventBus.$emit('userSearchSelected', this.searchSelect);
             }
         },
         methods: {
             async onSearch() {
-                if (this.searchCourse.length > 16  || this.searchCourse.length === 0) {
+                if (this.searchUsername.length > 16  || this.searchUsername.length === 0) {
                     this.searchResults = [];
                 }
                 else {
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: 'http://localhost:5000/course/search',
+                        url: 'http://localhost:5000/user/search',
                         method: 'get',
                         changeOrigin: true,
                         params: {
-                            searchCourse: this.searchCourse,
+                            searchUsername: this.searchUsername,
                         },
                     });
                         if (response.status === 200) {
@@ -72,7 +73,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm lớp học phần có mã: ${this.searchCode}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm người dùng có tài khoản: ${this.searchUsername}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,
@@ -82,11 +83,6 @@
                 }
             },
         },
-        created() {
-            // eventBus.$on('clearCourse', () => {
-            //     this.$ref.typeahead.inputValue = '';
-            // });
-        }
     }
 </script>
 
