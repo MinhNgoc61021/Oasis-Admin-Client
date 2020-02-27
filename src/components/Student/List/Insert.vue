@@ -1,11 +1,11 @@
 <template>
     <b-tabs content-class="mt-3" align="center" small lazy>
-        <b-tab title="Nhập gõ" active>
+        <b-tab title="Nhập form" active>
             <b-card-body>
                 <component :is="Input"></component>
             </b-card-body>
         </b-tab>
-        <b-tab title="Nhập Excel">
+        <b-tab title="Import Excel">
             <b-card-body>
                 <component :is="Import"></component>
             </b-card-body>

@@ -151,7 +151,8 @@
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
-                        <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
+                      <b-alert :show="EditModal.UpdateUserForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
+                      <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
                     </b-form>
                 </b-modal>
             </b-col>
@@ -245,6 +246,7 @@
                       actived: Boolean,
                       is_lock: Boolean,
                       permission_opt: ['Admin', 'Sinh viên', 'Giảng viên'],
+                      notFilled: false,
                   }
               }
           }
@@ -311,37 +313,48 @@
             },
             async submitUserUpdate() {
                 try {
-                    const response = await axios({
-                        url: 'http://localhost:5000/user/update-record',
-                        method: 'put',
-                        data: {
-                            user_id: this.EditModal.UpdateUserForm.user_id,
-                            update_username: this.EditModal.UpdateUserForm.username,
-                            update_name: this.EditModal.UpdateUserForm.name,
-                            update_email: this.EditModal.UpdateUserForm.email,
-                            update_permission: this.EditModal.UpdateUserForm.permission,
-                            update_actived: this.EditModal.UpdateUserForm.actived,
-                            update_is_lock: this.EditModal.UpdateUserForm.is_lock,
-                        },
-                        changeOrigin: true,
-                    });
-                    if (response.status === 200) {
-                        this.$bvToast.toast(`Cập nhật người dùng có ID ${this.EditModal.UpdateUserForm.user_id} thành công!`, {
-                            title: `Thành công`,
-                            variant: 'success',
-                            solid: true,
-                            appendToast: true,
-                        });
-                        this.$root.$emit('bv::hide::modal', this.EditModal.id);
-
+                    if (String(this.EditModal.UpdateUserForm.name).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateUserForm.username).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateUserForm.email).replace(' ', '') === ''
+                    ) {
+                        this.EditModal.UpdateUserForm.notFilled = true;
+                        setTimeout(() => {
+                            this.EditModal.UpdateUserForm.notFilled = false;
+                        }, 3000);
                     }
-                    else if (response.status === 202) {
-                        this.$bvToast.toast(`Trùng dữ liệu!`, {
-                            title: `Oops!`,
-                            variant: 'warning',
-                            solid: true,
-                            appendToast: true,
-                        })
+                    else {
+                        const response = await axios({
+                            url: 'http://localhost:5000/user/update-record',
+                            method: 'put',
+                            data: {
+                                user_id: this.EditModal.UpdateUserForm.user_id,
+                                update_username: this.EditModal.UpdateUserForm.username,
+                                update_name: this.EditModal.UpdateUserForm.name,
+                                update_email: this.EditModal.UpdateUserForm.email,
+                                update_permission: this.EditModal.UpdateUserForm.permission,
+                                update_actived: this.EditModal.UpdateUserForm.actived,
+                                update_is_lock: this.EditModal.UpdateUserForm.is_lock,
+                            },
+                            changeOrigin: true,
+                        });
+                        if (response.status === 200) {
+                            this.$bvToast.toast(`Cập nhật người dùng có ID ${this.EditModal.UpdateUserForm.user_id} thành công!`, {
+                                title: `Thành công`,
+                                variant: 'success',
+                                solid: true,
+                                appendToast: true,
+                            });
+                            this.$root.$emit('bv::hide::modal', this.EditModal.id);
+
+                        }
+                        else if (response.status === 202) {
+                            this.$bvToast.toast(`Trùng dữ liệu!`, {
+                                title: `Oops!`,
+                                variant: 'warning',
+                                solid: true,
+                                appendToast: true,
+                            })
+                        }
                     }
                 } catch (e) {
                     this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateUserForm.user_id}!`, {

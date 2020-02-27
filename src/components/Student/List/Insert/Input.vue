@@ -212,9 +212,6 @@
         this.form.actived = true;
         this.form.is_lock = false;
         // eventBus.$emit('clearCourse');
-        this.$nextTick(() => {
-          this.show = true
-        })
       }
     },
     created() {

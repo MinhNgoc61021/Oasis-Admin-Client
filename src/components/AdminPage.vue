@@ -2,7 +2,7 @@
     <div>
       <b-row>
         <b-col align-self="start">
-          <b-navbar toggleable="sm" sticky type="dark" variant="dark">
+          <b-navbar toggleable="sm" sticky type="light" variant="light">
             <b-navbar-brand>Oasis Admin</b-navbar-brand>
             <b-navbar-nav class="ml-auto">
               <b-nav-item-dropdown right>
@@ -27,6 +27,8 @@
                 <b-list-group-item to="/user-management">Quản lý người dùng</b-list-group-item>
                 <b-list-group-item to="/student-management">Quản lý sinh viên</b-list-group-item>
                 <b-list-group-item to="/lecturer-management">Quản lý giảng viên</b-list-group-item>
+                <b-list-group-item to="/semester-management">Quản lý kỳ học</b-list-group-item>
+                <b-list-group-item to="/course-management">Quản lý lớp môn học</b-list-group-item>
               </b-list-group>
             </div>
           </b-col>

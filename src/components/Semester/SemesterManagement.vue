@@ -1,16 +1,16 @@
 <template>
     <div>
-        <h3 class="mb-3">Quản lý giảng viên</h3>
+        <h3 class="mb-3">Quản lý kỳ học</h3>
         <b-card no-body>
             <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>
                     <b-card-body>
-                        <component :is="LecturerList"></component>
+                        <component :is="SemesterList"></component>
                     </b-card-body>
                 </b-tab>
                 <b-tab title="Thêm">
                     <b-card-body>
-                        <component :is="Input"></component>
+                        <component :is="Insert"></component>
                     </b-card-body>
                 </b-tab>
             </b-tabs>
@@ -19,17 +19,17 @@
 </template>
 
 <script>
-    import LecturerList from "@/components/Lecturer/List/LecturerList";
-    import Input from '@/components/Lecturer/List/Insert';
+    import SemesterList from "@/components/Semester/List/SemesterList";
+    import Insert from '@/components/Semester/List/Input';
 
     export default {
-        name: "LecturerManagement",
+        name: "SemesterManagement",
         component: {
-            LecturerList, Input
+            SemesterList, Insert
         },
         data() {
             return {
-                LecturerList, Input
+                SemesterList, Insert
             }
         },
     }

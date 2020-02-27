@@ -127,13 +127,7 @@
                 solid: true,
                 appendToast: true,
               });
-
-              this.form.username = '';
-              this.form.name = '';
-              this.form.email = '';
-              this.form.permission = 'Sinh viên';
-              this.form.actived = true;
-              this.form.is_lock = false;
+              this.onReset()
             }
             else if (response.status === 202) {
               this.$bvToast.toast(`Trùng lặp dữ liệu!`, {
@@ -161,10 +155,6 @@
         this.form.permission = 'Sinh viên';
         this.form.actived = true;
         this.form.is_lock = false;
-        this.show = false;
-        this.$nextTick(() => {
-          this.show = true
-        })
       }
     }
   }

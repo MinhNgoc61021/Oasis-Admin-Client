@@ -36,7 +36,7 @@
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm bằng tên tài khoản',
+                message: 'Tìm kiếm bằng tên đăng nhập',
                 searchSelect: Object,
             }
         },

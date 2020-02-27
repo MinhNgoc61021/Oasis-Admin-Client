@@ -72,7 +72,6 @@
                           v-model="EditModal.UpdateLecturerForm.email"
                           type="email"
                           size="sm"
-                          required
                           placeholder="Nhập tên đăng nhập"
                         ></b-form-input>
                       </b-form-group>
@@ -87,7 +86,6 @@
                           v-model="EditModal.UpdateLecturerForm.username"
                           type="text"
                           size="sm"
-                          required
                           placeholder="Nhập tên đăng nhập"
                         ></b-form-input>
                       </b-form-group>
@@ -102,7 +100,6 @@
                           v-model="EditModal.UpdateLecturerForm.name"
                           type="text"
                           size="sm"
-                          required
                           placeholder="Nhập họ tên"
                         ></b-form-input>
                       </b-form-group>
@@ -152,7 +149,7 @@
     import Search from "@/components/Lecturer/List/Search";
 
     export default {
-        name: "UserList",
+        name: "LecturerList",
         components: {
             Search,
         },

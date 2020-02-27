@@ -5,7 +5,7 @@
             <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>
                     <b-card-body>
-                        <component :is="LecturerList"></component>
+                        <component :is="CourseList"></component>
                     </b-card-body>
                 </b-tab>
                 <b-tab title="Thêm">
@@ -19,17 +19,17 @@
 </template>
 
 <script>
-    import LecturerList from "@/components/Lecturer/List/LecturerList";
-    import Input from '@/components/Lecturer/List/Insert';
+    import CourseList from "@/components/Course/List/CourseList";
+    import Input from '@/components/Course/List/Input';
 
     export default {
-        name: "LecturerManagement",
-        component: {
-            LecturerList, Input
+        name: "CourseManagement",
+        components: {
+            CourseList, Input
         },
         data() {
             return {
-                LecturerList, Input
+                CourseList, Input
             }
         },
     }
