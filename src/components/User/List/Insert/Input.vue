@@ -67,15 +67,14 @@
         </b-form-checkbox>
       </b-form-group>
       <b-alert :show="form.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-      <b-button size="sm" type="submit" variant="primary">Tạo</b-button>
-      <b-button size="sm" type="reset" class="ml-2" variant="danger">Lại</b-button>
+      <b-button size="sm" type="submit" variant="outline-primary">Tạo</b-button>
+      <b-button size="sm" type="reset" class="ml-2" variant="outline-danger">Lại</b-button>
     </b-form>
   </div>
 </template>
 
 <script>
   import axios from 'axios';
-  import { eventBus } from "@/main";
 
   export default {
     name: 'Input',
@@ -88,7 +87,6 @@
           permission: 'Sinh viên',
           actived: true,
           is_lock: false,
-          password: '',
           notFilled: false,
         },
         permission_opt: ['Admin', 'Sinh viên', 'Giảng viên'],
@@ -147,14 +145,12 @@
             }
           }
         } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi khi ${e} tạo người dùng thất bại!`, {
+            this.$bvToast.toast(`Gặp lỗi khi ${e} tạo người dùng!`, {
                 title: `Thành công`,
                 variant: 'danger',
                 solid: true,
                 appendToast: true,
             });
-        } finally {
-            eventBus.$emit('refreshUserRecordData')
         }
       },
       onReset() {

@@ -57,15 +57,14 @@
         </b-form-checkbox>
       </b-form-group>
       <b-alert :show="form.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-      <b-button size="sm" type="submit" variant="primary">Tạo</b-button>
-      <b-button size="sm" type="reset" class="ml-2" variant="danger">Lại</b-button>
+      <b-button size="sm" type="submit" variant="outline-primary">Tạo</b-button>
+      <b-button size="sm" type="reset" class="ml-2" variant="outline-danger">Lại</b-button>
     </b-form>
   </div>
 </template>
 
 <script>
   import axios from 'axios';
-  import { eventBus } from "@/main";
 
   export default {
     name: 'Input',
@@ -77,7 +76,6 @@
           email: '',
           actived: true,
           is_lock: false,
-          password: '',
           notFilled: false,
         },
       }
@@ -110,7 +108,7 @@
             },
           });
             if (response.status === 200) {
-              this.$bvToast.toast(`Tạo người dùng thành công!`, {
+              this.$bvToast.toast(`Tạo giảng viên thành công!`, {
                 title: `Thành công`,
                 variant: 'success',
                 solid: true,
@@ -134,14 +132,12 @@
             }
           }
         } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi khi ${e} tạo người dùng thất bại!`, {
+            this.$bvToast.toast(`Gặp lỗi khi ${e} tạo giảng viên!`, {
                 title: `Thành công`,
                 variant: 'danger',
                 solid: true,
                 appendToast: true,
             });
-        } finally {
-            eventBus.$emit('refreshUserRecordData')
         }
       },
       onReset() {
@@ -151,10 +147,6 @@
         this.form.email = '';
         this.form.actived = true;
         this.form.is_lock = false;
-        this.show = false;
-        this.$nextTick(() => {
-          this.show = true
-        })
       }
     }
   }

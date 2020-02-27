@@ -183,7 +183,7 @@
                         </b-form-checkbox>
                       </b-form-group>
                       <b-alert :show="EditModal.UpdateStudentForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-                      <b-button type="submit" size="sm" variant="primary" style="float: right">Cập nhật</b-button>
+                      <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
                     </b-form>
                 </b-modal>
             </b-col>
@@ -428,9 +428,10 @@
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
-                    okVariant: 'danger',
+                    okVariant: 'outline-danger',
                     okTitle: 'Có',
                     cancelTitle: 'Không',
+                    cancelVariant: 'outline-primary',
                     footerClass: 'p-2',
                     hideHeaderClose: false,
                     centered: true,
@@ -441,7 +442,8 @@
                                 url: 'http://localhost:5000/student/delete-record',
                                 method: 'delete',
                                 data: {
-                                    delStudentCode: item.code,
+                                    // delStudentCode: item.code,
+                                    delUserID: item.user.user_id,
                                 },
                             });
                             if (response.status === 200) {
@@ -486,9 +488,6 @@
         },
         created() {
             this.getStudentRecordData();
-            eventBus.$on('refreshStudentRecordData', () => {
-                this.getStudentRecordData();
-            });
             eventBus.$on('studentSearchSelected', (searchSelected) => {
                 this.studentItems = [];
                 this.studentItems.push(searchSelected);

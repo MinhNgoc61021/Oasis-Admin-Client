@@ -25,7 +25,7 @@
     import { eventBus } from "@/main";
 
     export default {
-        name: "Search",
+        name: "CourseInput",
         components: {
             VueBootstrapTypeahead
         },
@@ -68,7 +68,6 @@
                             response.data.search_results.forEach((item) => {
                                 this.searchResults.push(item);
                             });
-                              // console.log(this.searchResults);
                         }
                     }
                     catch(error) {

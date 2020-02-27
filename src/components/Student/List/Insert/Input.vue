@@ -106,8 +106,8 @@
         </b-form-checkbox>
       </b-form-group>
       <b-alert :show="form.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-      <b-button size="sm" type="submit" variant="primary">Tạo</b-button>
-      <b-button size="sm" type="reset" class="ml-2" variant="danger">Lại</b-button>
+      <b-button size="sm" type="submit" variant="outline-primary">Tạo</b-button>
+      <b-button size="sm" type="reset" class="ml-2" variant="outline-danger">Lại</b-button>
     </b-form>
   </div>
 </template>
@@ -199,8 +199,6 @@
                 solid: true,
                 appendToast: true,
             });
-        } finally {
-            eventBus.$emit('refreshUserRecordData')
         }
       },
       onReset() {

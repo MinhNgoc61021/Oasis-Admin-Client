@@ -151,7 +151,7 @@
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
-                        <b-button type="submit" size="sm" variant="primary" style="float: right">Cập nhật</b-button>
+                        <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
                     </b-form>
                 </b-modal>
             </b-col>
@@ -359,21 +359,14 @@
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
-                    okVariant: 'danger',
+                    okVariant: 'outline-danger',
                     okTitle: 'Có',
                     cancelTitle: 'Không',
+                    cancelVariant: 'outline-primary',
                     footerClass: 'p-2',
                     hideHeaderClose: false,
                     centered: true,
                 }).then(async (value) => {
-                    const permission = await axios({
-                        url: 'http://localhost:5000/user/user_role',
-                        method: 'get',
-                        params: {
-                            user_id: item.user_id,
-                        },
-                        changeOrigin: true,
-                    });
                     if (value === true) {
                         try {
                             const response = await axios({
@@ -381,7 +374,6 @@
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,
-                                    delRoleID: permission.data.role_id,
                                 },
                             });
                             if (response.status === 200) {
@@ -426,9 +418,6 @@
         },
         created() {
             this.getUserRecordData();
-            eventBus.$on('refreshUserRecordData', () => {
-                this.getUserRecordData();
-            });
             eventBus.$on('userSearchSelected', (searchSelected) => {
                 this.userItems = [];
                 this.userItems.push(searchSelected);

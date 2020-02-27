@@ -108,19 +108,6 @@
                       </b-form-group>
 
                       <b-form-group
-                              id="edit-input-group-4"
-                              label="Quyền:"
-                              label-for="edit-input-4">
-                        <b-form-select
-                                size="sm"
-                                id="edit-input-4"
-                            v-model="EditModal.UpdateLecturerForm.permission"
-                            :options="EditModal.UpdateLecturerForm.permission_opt"
-                            required
-                        ></b-form-select>
-                      </b-form-group>
-
-                      <b-form-group
                               id="edit-input-group-5"
                               label="Active:"
                               label-for="edit-input-5">
@@ -151,7 +138,7 @@
                           <span v-else>Khóa</span>
                         </b-form-checkbox>
                       </b-form-group>
-                        <b-button type="submit" size="sm" variant="primary" style="float: right">Cập nhật</b-button>
+                        <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
                     </b-form>
                 </b-modal>
             </b-col>
@@ -281,28 +268,11 @@
                 }
             },
             async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin người dùng có ID: ${item.user_id}`;
+                this.EditModal.title = `Sửa thông tin giảng viên ${item.name}`;
                 this.EditModal.UpdateLecturerForm.user_id = item.user_id;
                 this.EditModal.UpdateLecturerForm.username = item.username;
                 this.EditModal.UpdateLecturerForm.email = item.email;
                 this.EditModal.UpdateLecturerForm.name = item.name;
-                const permission = await axios({
-                    url: 'http://localhost:5000/user/user-role',
-                    method: 'get',
-                    params: {
-                        user_id: item.user_id,
-                    },
-                    changeOrigin: true,
-                });
-                if (permission.data.role_id === 1) {
-                    this.EditModal.UpdateLecturerForm.permission = 'Sinh viên';
-                }
-                else if (permission.data.role_id === 2) {
-                    this.EditModal.UpdateLecturerForm.permission = 'Giảng viên';
-                }
-                else {
-                    this.EditModal.UpdateLecturerForm.permission = 'Admin';
-                }
                 this.EditModal.UpdateLecturerForm.actived = item.actived === 1;
                 this.EditModal.UpdateLecturerForm.is_lock = item.is_lock === 1;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
@@ -310,21 +280,20 @@
             async submitLecturerUpdate() {
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/user/update-record',
+                        url: 'http://localhost:5000/lecturer/update-record',
                         method: 'put',
                         data: {
                             user_id: this.EditModal.UpdateLecturerForm.user_id,
                             update_username: this.EditModal.UpdateLecturerForm.username,
                             update_name: this.EditModal.UpdateLecturerForm.name,
                             update_email: this.EditModal.UpdateLecturerForm.email,
-                            update_permission: this.EditModal.UpdateLecturerForm.permission,
                             update_actived: this.EditModal.UpdateLecturerForm.actived,
                             update_is_lock: this.EditModal.UpdateLecturerForm.is_lock,
                         },
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.$bvToast.toast(`Cập nhật người dùng có ID ${this.EditModal.UpdateLecturerForm.user_id} thành công!`, {
+                        this.$bvToast.toast(`Cập nhật giảng viên ${this.EditModal.UpdateLecturerForm.name} thành công!`, {
                             title: `Thành công`,
                             variant: 'success',
                             solid: true,
@@ -342,7 +311,7 @@
                         })
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateLecturerForm.user_id}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật giảng viên ${this.EditModal.UpdateLecturerForm.name}!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
@@ -353,37 +322,29 @@
                 }
             },
             deleteLecturer(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa người dùng có ID: ${item.user_id}?`, {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa giảng viên ${item.name}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
-                    okVariant: 'danger',
+                    okVariant: 'outline-danger',
                     okTitle: 'Có',
                     cancelTitle: 'Không',
+                    cancelVariant: 'outline-primary',
                     footerClass: 'p-2',
                     hideHeaderClose: false,
                     centered: true,
                 }).then(async (value) => {
-                    const permission = await axios({
-                        url: 'http://localhost:5000/user/user_role',
-                        method: 'get',
-                        params: {
-                            user_id: item.user_id,
-                        },
-                        changeOrigin: true,
-                    });
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/user/delete-record',
+                                url: 'http://localhost:5000/lecturer/delete-record',
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,
-                                    delRoleID: permission.data.role_id,
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa người dùng có ID: ${item.user_id} thành công!`, {
+                                this.$bvToast.toast(`Xóa giảng viên ${item.name} thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -391,7 +352,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa người dùng có ID: ${item.user_id}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa giảng viên ${item.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,
@@ -424,10 +385,7 @@
         },
         created() {
             this.getLecturerRecordData();
-            eventBus.$on('refreshUserRecordData', () => {
-                this.getLecturerRecordData();
-            });
-            eventBus.$on('userSearchSelected', (searchSelected) => {
+            eventBus.$on('lecturerSearchSelected', (searchSelected) => {
                 this.lecturerItems = [];
                 this.lecturerItems.push(searchSelected);
                 this.totalPage = 1;

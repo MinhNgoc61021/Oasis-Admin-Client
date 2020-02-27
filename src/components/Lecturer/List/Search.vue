@@ -45,7 +45,7 @@
                 this.onSearch();
             }, 500),
             searchSelect: function () {
-                eventBus.$emit('userSearchSelected', this.searchSelect);
+                eventBus.$emit('lecturerSearchSelected', this.searchSelect);
             }
         },
         methods: {
@@ -57,7 +57,7 @@
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: 'http://localhost:5000/user/search',
+                        url: 'http://localhost:5000/lecturer/search',
                         method: 'get',
                         changeOrigin: true,
                         params: {
