@@ -62,12 +62,12 @@
         label="Ngày sinh:"
         label-for="input-5"
       >
-        <b-form-datepicker
-                id="input-5"
-                v-model="form.dob"
-                locale="vi"
-                size="sm" class="mb-2">
-        </b-form-datepicker>
+        <b-form-input
+          type="date"
+          id="input-5"
+          v-model="form.dob"
+          size="sm" class="mb-2">
+        </b-form-input>
       </b-form-group>
 
       <b-form-group

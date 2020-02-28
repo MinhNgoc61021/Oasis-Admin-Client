@@ -124,12 +124,12 @@
                             label="Ngày sinh:"
                             label-for="edit-input-4"
                       >
-                        <b-form-datepicker
-                                id="edit-input-4"
+                        <b-form-input
+                                type="date"
+                                id="input-5"
                                 v-model="EditModal.UpdateStudentForm.dob"
-                                locale="vi"
                                 size="sm" class="mb-2">
-                        </b-form-datepicker>
+                        </b-form-input>
                       </b-form-group>
 
                       <b-form-group
@@ -340,7 +340,7 @@
                 this.EditModal.UpdateStudentForm.user_id = item.user.user_id;
                 this.EditModal.UpdateStudentForm.username = item.user.username;
                 this.EditModal.UpdateStudentForm.name = item.user.name;
-                this.EditModal.UpdateStudentForm.dob = new Date(moment(item.dob).format('MM/DD/YYYY'));
+                this.EditModal.UpdateStudentForm.dob = item.dob;
                 this.EditModal.UpdateStudentForm.email = item.user.email;
                 this.EditModal.UpdateStudentForm.class_course = item.class_course;
                 const course = await axios({

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="mb-3">Quản lý giảng viên</h3>
+        <h3 class="mb-3">Quản lý lớp môn học</h3>
         <b-card no-body>
             <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>

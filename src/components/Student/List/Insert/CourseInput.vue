@@ -35,7 +35,7 @@
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm và nhập lớp học phần',
+                message: 'Tìm kiếm và nhập mã lớp học phần',
                 searchSelect: Object,
             }
         },

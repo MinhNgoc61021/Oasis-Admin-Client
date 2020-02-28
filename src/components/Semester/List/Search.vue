@@ -1,20 +1,15 @@
 <template>
     <div>
         <vue-bootstrap-typeahead
-          v-model="searchCode" size="sm"
-          :serializer="s => s.code"
-          :placeholder="message"
-          :data="searchResults"
-          @hit="searchSelect = $event"
-          :maxMatches="range"
-          :minMatchingChars="minSearchChar"
+                v-model="searchSemester" size="sm"
+                :serializer="s => s.name"
+                :placeholder="message"
+                :data="searchResults"
+                @hit="searchSelect = $event"
+                :maxMatches="range"
+                :minMatchingChars="minSearchChar"
+                ref="typeahead"
         >
-            <template slot="suggestion" slot-scope="{ data }">
-                <span><b>MSSV: </b>{{ data.code }}</span><br>
-                <span><b>Email: </b>{{ data.user.email}}</span><br>
-                <span><b>Họ tên: </b>{{ data.user.name }}</span>
-
-            </template>
         </vue-bootstrap-typeahead>
     </div>
 </template>
@@ -26,31 +21,31 @@
     import { eventBus } from "@/main";
 
     export default {
-        name: "Search",
+        name: "CourseInput",
         components: {
             VueBootstrapTypeahead
         },
         data() {
             return {
-                searchCode: '',
+                searchSemester: '',
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm và nhập tên kỳ học',
+                message: 'Tìm kiếm và nhập mã kỳ học',
                 searchSelect: Object,
             }
         },
         watch: {
-            searchCode: debounce(function () {
+            searchSemester: debounce(function () {
                 this.onSearch();
             }, 500),
             searchSelect: function () {
-                eventBus.$emit('studentSearchSelected', this.searchSelect);
+                eventBus.$emit('semesterSearchSelected', this.searchSelect);
             }
         },
         methods: {
             async onSearch() {
-                if (this.searchCode.length > 16  || this.searchCode.length === 0) {
+                if (this.searchSemester.length > 16  || this.searchSemester.length === 0) {
                     this.searchResults = [];
                 }
                 else {
@@ -61,7 +56,7 @@
                         method: 'get',
                         changeOrigin: true,
                         params: {
-                            searchCode: this.searchCode,
+                            searchSemester: this.searchSemester,
                         },
                     });
                         if (response.status === 200) {
@@ -69,11 +64,10 @@
                             response.data.search_results.forEach((item) => {
                                 this.searchResults.push(item);
                             });
-                              // console.log(this.searchResults);
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm sinh viên có MSSV: ${this.searchCode}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm kỳ học ${this.searchSemester}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,
