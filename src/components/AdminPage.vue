@@ -3,8 +3,8 @@
       <div>
         <b-row>
           <b-col align-self="start">
-            <b-navbar toggleable="sm" sticky type="light" variant="light">
-              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="35" width="auto" alt="Oasis Admin"></b-navbar-brand>
+            <b-navbar toggleable="sm" class="border-bottom" variant="light" fixed="top" type="light">
+              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="40" width="auto" alt="Oasis Admin"></b-navbar-brand>
               <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown right>
                   <!-- Using 'button-content' slot -->
@@ -20,7 +20,7 @@
         </b-row>
       </div>
 
-      <div>
+      <div style="margin-top: 90px;">
           <!--content-->
           <b-row class="m-2 mt-3">
             <b-col class="col-3">
@@ -71,4 +71,8 @@
 </script>
 
 <style scoped>
+  .hd {
+    background: -webkit-gradient(linear,left top,right top,from(#48b1bf),to(#677ebd));
+    background: linear-gradient(90deg,#48b1bf,#677ebd);
+  }
 </style>
