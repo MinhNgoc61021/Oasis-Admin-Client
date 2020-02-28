@@ -46,10 +46,9 @@
           id="input-3"
           size="sm"
           v-model="form.description"
-          rows="3"
+          rows="4"
           max-rows="8"
           placeholder="Nhập mô tả (Không bắt buộc)"
-          no-auto-shrink
         ></b-form-textarea>
       </b-form-group>
 
