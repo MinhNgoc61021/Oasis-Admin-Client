@@ -4,7 +4,7 @@
         <b-row>
           <b-col align-self="start">
             <b-navbar toggleable="sm" class="border-bottom" variant="light" fixed="top" type="light">
-              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="40" width="auto" alt="Oasis Admin"></b-navbar-brand>
+              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="35" width="auto" alt="Oasis Admin"></b-navbar-brand>
               <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown right>
                   <!-- Using 'button-content' slot -->
@@ -20,7 +20,7 @@
         </b-row>
       </div>
 
-      <div style="margin-top: 90px;">
+      <div style="margin-top: 88px;">
           <!--content-->
           <b-row class="m-2 mt-3">
             <b-col class="col-3">
