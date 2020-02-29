@@ -1,96 +1,138 @@
 <template>
-    <b-container>
-        <b-row>
-            <b-col sm="7" md="6" class="my-1 mb-2">
-                <b-pagination-nav
-                  v-model="currentPage"
-                  :total-rows="perPage"
-                  :number-of-pages="totalPage"
-                  align="fill"
-                  size="sm"
-                  class="my-0 light"
-                  base-url="#"
-                  first-number
-                  last-number
-                  @input="getSemesterRecordData"
-                ></b-pagination-nav>
-            </b-col>
-            <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-success" @click="getSemesterRecordData">
-                  <b-icon icon="arrow-repeat
-                    "></b-icon>
-                    <span>
-                        Làm mới
-                    </span>
-                </b-button>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col>
-                <b-table responsive
-                         :busy="busy"
-                         head-variant="light"
-                         :small="true"
-                         size="sm"
-                         :items="courseItems"
-                         :fields="fields"
-                         :per-page="perPage"
-                         :sort-by.sync="sortBy"
-                         @sort-changed="sortSemesterRecordData"
-                         :sort-direction="sortOrder"
-                         hover
-                >
-                    <template v-slot:table-busy>
-                        <div class="text-center text-danger my-2">
-                              <b-spinner class="align-middle"></b-spinner>
-                              <strong class="ml-md-2">Đang tải...</strong>
-                        </div>
-                    </template>
-                    <template v-slot:cell(actions)="row">
-                        <div class="text-center text-danger my-2" style="min-width: 120px;">
-                            <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
-                                <b-icon icon="pencil"></b-icon>
-                            </b-button>
-                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteSemester(row.item)">
-                                <b-icon icon="trash"></b-icon>
-                            </b-button>
-                        </div>
-                    </template>
-                </b-table>
-                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitSemesterUpdate">
-                      <b-form-group
-                        id="edit-input-group-3"
-                        label="Họ tên:"
-                        label-for="edit-input-3"
-                      >
-                        <b-form-input
-                          id="edit-input-3"
-                          v-model="EditModal.UpdateCourseForm.name"
-                          type="text"
-                          size="sm"
-                          required
-                          placeholder="Nhập họ tên"
-                        ></b-form-input>
-                      </b-form-group>
+    <b-tabs v-model="tabIndex" align="center" small content-class="mt-3">
+        <b-tab title="Danh sách lớp môn học">
+            <b-container>
+                <b-row>
+                    <b-col sm="7" md="6" class="my-1 mb-2">
+                        <b-pagination-nav
+                                v-model="currentPage"
+                              :total-rows="perPage"
+                              :number-of-pages="totalPage"
+                              align="fill"
+                              size="sm"
+                              class="my-0 light"
+                              base-url="#"
+                              first-number
+                              last-number
+                              @input="getCourseRecordData"
+                            ></b-pagination-nav>
+                    </b-col>
+                    <b-col class="ml-auto my-1">
+                        <b-form-select
+                                v-model="selectedSemesterItem"
+                                :options="semesterOptions"
+                                size="sm"
+                                value-field="semester_id"
+                                text-field="name"
+                        >
+                            <template v-slot:first>
+                                <b-form-select-option value="" disabled>-- Hãy chọn kỳ học trước để lấy danh sách môn học --</b-form-select-option>
+                            </template>
+                        </b-form-select>
+                    </b-col>
+                    <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
+                        <b-button size="sm" variant="outline-success" @click="getCourseRecordData">
+                            <b-icon icon="arrow-repeat
+                               "></b-icon>
+                            <span>
+                                Làm mới
+                            </span>
+                        </b-button>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <b-table responsive
+                                 show-empty
+                                 select-mode="single"
+                                 empty-text="Danh sách môn học trống (Lưu ý: Hãy chọn kỳ học trước)"
+                                 :busy="busy"
+                                 head-variant="light"
+                                 :small="true"
+                                 size="sm"
+                                 :items="courseItems"
+                                 :fields="fields"
+                                 :per-page="perPage"
+                                 :sort-by.sync="sortBy"
+                                 @sort-changed="sortCourseRecordData"
+                                 :sort-direction="sortOrder"
+                                 hover
+                        >
+                            <template v-slot:table-busy>
+                                <div class="text-center text-danger my-2">
+                                    <b-spinner class="align-middle"></b-spinner>
+                                    <strong class="ml-md-2">Đang tải...</strong>
+                                </div>
+                            </template>
+                            <template v-slot:cell(studentList)="row">
+                                <div>
+                                    <b><a style="cursor: pointer" @click="getStudentCourseList(row.item)">Danh sách sinh viên</a></b>
+                                </div>
+                            </template>
+                            <template v-slot:cell(lecturerList)="row">
+                                <div>
+                                    <b><a style="cursor: pointer" @click="row">Danh sách giảng viên</a></b>
+                                </div>
+                            </template>
+                            <template v-slot:cell(actions)="row">
+                                <div class="text-center text-danger my-2" style="min-width: 100px;">
+                                    <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
+                                        <b-icon icon="pencil"></b-icon>
+                                    </b-button>
+                                    <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteCourse(row.item)">
+                                        <b-icon icon="trash"></b-icon>
+                                    </b-button>
+                                </div>
+                            </template>
+                        </b-table>
+                        <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
+                            <b-form @submit.prevent="submitSemesterUpdate">
+                                <b-form-group
+                                        id="edit-input-group-3"
+                                    label="Họ tên:"
+                                    label-for="edit-input-3"
+                                  >
+                                    <b-form-input
+                                      id="edit-input-3"
+                                      v-model="EditModal.UpdateCourseForm.name"
+                                      type="text"
+                                      size="sm"
+                                      required
+                                      placeholder="Nhập họ tên"
+                                    ></b-form-input>
+                                </b-form-group>
 
-                      <b-alert :show="EditModal.UpdateCourseForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-                      <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
-                    </b-form>
-                </b-modal>
-            </b-col>
-        </b-row>
-    </b-container>
+                                <b-alert :show="EditModal.UpdateCourseForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
+                                <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
+                            </b-form>
+                        </b-modal>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-tab>
+        <b-tab title="Danh sách sinh viên" :disabled="StudentCourseDisable" lazy>
+            <StudentCourseList :prop_course_id="propStudentCourse.prop_course_id" :prop_course_name="propStudentCourse.prop_course_name"></StudentCourseList>
+        </b-tab>
+        <b-tab title="Danh sách giàng viên" :disabled="LecturerCourseDisable" lazy>
+        </b-tab>
+    </b-tabs>
 </template>
 
 <script>
     import axios from 'axios';
     import { eventBus } from "@/main";
+    import StudentCourseList from "@/components/Course/List/StudentCourseList";
 
     export default {
         name: "CourseList",
+        components: {
+            StudentCourseList,
+        },
         data() {
           return {
+              StudentCourseList,
+              selectedSemesterItem: '',
+              semesterOptions: [],
               courseItems: [],
               perPage: 10,
               currentPage: 1,
@@ -98,6 +140,13 @@
               sortBy: 'name',
               sortOrder: 'asc',
               totalPage: 1,
+              StudentCourseDisable: true,
+              LecturerCourseDisable: true,
+              propStudentCourse: {
+                  prop_course_id: '',
+                  prop_course_name: '',
+              },
+              tabIndex: 0,
               fields: [
                   {
                       key: 'course_id',
@@ -115,9 +164,25 @@
                       sortable: true,
                   },
                   {
-                      key: 'code',
+                      key: 'description',
                       label: 'Mô tả',
                       sortable: true,
+                      formatter: (value) => {
+                          if (value === '' || value === null) {
+                              return 'Không có';
+                          }
+                          else {
+                              return value;
+                          }
+                      }
+                  },
+                  {
+                      key: 'studentList',
+                      label: 'Sinh viên'
+                  },
+                  {
+                      key: 'lecturerList',
+                      label: 'Giảng viên'
                   },
                   {
                       key: 'actions',
@@ -137,14 +202,39 @@
               }
           }
         },
+        watch: {
+            selectedSemesterItem: function () {
+                console.log(this.selectedSemesterItem);
+                this.getCourseRecordData();
+            }
+        },
         methods: {
             async getSemesterRecordData() {
+                try {
+                    const response = await axios({
+                        url: 'http://localhost:5000/semester/all-records',
+                        method: 'get',
+                        changeOrigin: true,
+                    });
+                    if (response.status === 200) {
+                        this.semesterOptions = [];
+                        response.data.records.forEach((item) => {
+                            this.semesterOptions.push(item);
+                        });
+                    }
+                } catch (error) {
+                    this.semesterOptions = [];
+                    throw error;
+                }
+            },
+            async getCourseRecordData() {
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/semester/records',
+                        url: 'http://localhost:5000/course/records',
                         method: 'get',
                         params: {
+                            semester_id: this.selectedSemesterItem,
                             page_index: this.currentPage,
                             per_page: this.perPage,
                             sort_field: this.sortBy,
@@ -170,63 +260,8 @@
 
                 }
             },
-            async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin hoc kỳ ${item.name}`;
-                this.EditModal.UpdateCourseForm.course_id = item.semester_id;
-                this.EditModal.UpdateCourseForm.name = item.name;
-                this.$root.$emit('bv::show::modal', this.EditModal.id, button);
-            },
-            async submitSemesterUpdate() {
-                try {
-                    if (String(this.EditModal.UpdateCourseForm.name).replace(' ', '') === ''
-                    ) {
-                        this.EditModal.UpdateCourseForm.notFilled = true;
-                        setTimeout(() => {
-                            this.EditModal.UpdateCourseForm.notFilled = false;
-                        }, 3000);
-                    }
-                    else {
-                        const response = await axios({
-                            url: 'http://localhost:5000/semester/update-record',
-                            method: 'put',
-                            data: {
-                                semester_id: this.EditModal.UpdateCourseForm.course_id,
-                                update_name: this.EditModal.UpdateCourseForm.name,
-                            },
-                            changeOrigin: true,
-                        });
-                        if (response.status === 200) {
-                            this.$bvToast.toast(`Cập nhật kỳ học ${this.EditModal.UpdateCourseForm.name} thành công!`, {
-                                title: `Thành công`,
-                                variant: 'success',
-                                solid: true,
-                                appendToast: true,
-                            });
-                            this.$root.$emit('bv::hide::modal', this.EditModal.id);
-
-                        }
-                        else if (response.status === 202) {
-                            this.$bvToast.toast(`Trùng dữ liệu!`, {
-                                title: `Oops!`,
-                                variant: 'warning',
-                                solid: true,
-                                appendToast: true,
-                            })
-                        }
-                    }
-                } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu kỳ học ${this.EditModal.UpdateCourseForm.name}!`, {
-                        title: `Thất bại`,
-                        variant: 'danger',
-                        solid: true,
-                        appendToast: true,
-                    })
-                } finally {
-                    this.getSemesterRecordData();
-                }
-            },
-            deleteSemester(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa kỳ học ${item.name}?`, {
+            deleteCourse(item) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa môn học ${item.name}(${item.code})?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -241,14 +276,14 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/semester/delete-record',
+                                url: 'http://localhost:5000/course/delete-record',
                                 method: 'delete',
                                 data: {
-                                    delSemesterID: item.semester_id,
+                                    delCourseID: item.course_id,
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa kỳ học ${item.name} thành công!`, {
+                                this.$bvToast.toast(`Xóa môn học ${item.name}(${item.code})  thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -256,7 +291,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa kỳ học ${item.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa môn học ${item.name}(${item.code})!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,
@@ -271,12 +306,12 @@
                                     this.currentPage = 1;
                                 }
                             }
-                            this.getSemesterRecordData();
+                            this.getCourseRecordData();
                         }
                     }
                 })
             },
-            sortSemesterRecordData(sort) {
+            sortCourseRecordData(sort) {
                 this.sortBy = sort.sortBy;
                 if (sort.sortDesc === true) {
                     this.sortOrder = 'desc';
@@ -284,8 +319,14 @@
                 else {
                     this.sortOrder = 'asc';
                 }
-                this.getSemesterRecordData();
-            }
+                this.getCourseRecordData();
+            },
+            getStudentCourseList(course_item) {
+                this.StudentCourseDisable = false;
+                this.propStudentCourse.prop_course_id = course_item.course_id;
+                this.propStudentCourse.prop_course_name = course_item.name;
+                this.tabIndex = 1;
+            },
         },
         created() {
             this.getSemesterRecordData();

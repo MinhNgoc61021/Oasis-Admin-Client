@@ -31,6 +31,8 @@
         <b-row>
             <b-col>
                 <b-table responsive
+                         show-empty
+                         empty-text="Danh sách người dùng trống"
                          :busy="busy"
                          head-variant="light"
                          :small="true"
