@@ -1,6 +1,6 @@
 <template>
     <b-container>
-        <h5> {{ course_name }} (Danh sách sinh viên)</h5>
+        <h5> {{ course_name }} {{ course_code }} (Danh sách sinh viên)</h5>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
                 <b-pagination-nav
@@ -72,7 +72,7 @@
     import Search from "@/components/Student/List/Search";
 
     export default {
-        props: ['prop_course_id', 'prop_course_name'],
+        props: ['prop_course'],
         name: "StudentCourseList",
         components: {
             Search,
@@ -80,8 +80,9 @@
         data() {
           return {
               Search,
-              course_id: this.prop_course_id,
-              course_name: this.prop_course_name,
+              course_id: this.prop_course.course_id,
+              course_name: this.prop_course.name,
+              course_code: this.prop_course.code,
               studentItems: [],
               perPage: 10,
               currentPage: 1,

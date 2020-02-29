@@ -111,7 +111,7 @@
             </b-container>
         </b-tab>
         <b-tab title="Danh sách sinh viên" :disabled="StudentCourseDisable" lazy>
-            <StudentCourseList :prop_course_id="propStudentCourse.prop_course_id" :prop_course_name="propStudentCourse.prop_course_name"></StudentCourseList>
+            <StudentCourseList :prop_course="propStudentCourse"></StudentCourseList>
         </b-tab>
         <b-tab title="Danh sách giàng viên" :disabled="LecturerCourseDisable" lazy>
         </b-tab>
@@ -142,10 +142,7 @@
               totalPage: 1,
               StudentCourseDisable: true,
               LecturerCourseDisable: true,
-              propStudentCourse: {
-                  prop_course_id: '',
-                  prop_course_name: '',
-              },
+              propStudentCourse: Object,
               tabIndex: 0,
               fields: [
                   {
@@ -323,8 +320,7 @@
             },
             getStudentCourseList(course_item) {
                 this.StudentCourseDisable = false;
-                this.propStudentCourse.prop_course_id = course_item.course_id;
-                this.propStudentCourse.prop_course_name = course_item.name;
+                this.propStudentCourse = course_item;
                 this.tabIndex = 1;
             },
         },
