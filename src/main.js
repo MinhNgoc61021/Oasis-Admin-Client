@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { router }  from './router';
-import Vuex from 'vuex';
+import { store } from './state/state';
 import App from './App.vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css';
@@ -19,5 +19,5 @@ Vue.config.productionTip = false;
 new Vue({
   render: h => h(App),
   router,
-  Vuex,
+  store,
 }).$mount('#app');

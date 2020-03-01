@@ -263,9 +263,6 @@
                 this.studentItems.push(searchSelected);
                 this.totalPage = 1;
             });
-            eventBus.$on('courseEditSelected', (searchSelected) => {
-                this.EditModal.UpdateStudentForm.course = searchSelected;
-            });
         }
     }
 </script>

@@ -71,7 +71,7 @@
                             </template>
                             <template v-slot:cell(lecturerList)="row">
                                 <div>
-                                    <b><a style="cursor: pointer" @click="row">Danh sách giảng viên</a></b>
+                                    <b><a style="cursor: pointer" @click="getLecturerRecordData(row.item)">Danh sách giảng viên</a></b>
                                 </div>
                             </template>
                             <template v-slot:cell(actions)="row">
@@ -114,23 +114,26 @@
             <StudentCourseList :prop_course="propStudentCourse"></StudentCourseList>
         </b-tab>
         <b-tab title="Danh sách giàng viên" :disabled="LecturerCourseDisable" lazy>
+            <LecturerCourseList :prop_course="propLecturerCourse"></LecturerCourseList>
         </b-tab>
     </b-tabs>
 </template>
 
 <script>
     import axios from 'axios';
-    import { eventBus } from "@/main";
     import StudentCourseList from "@/components/Course/List/StudentCourseList";
+    import LecturerCourseList from "@/components/Course/List/LecturerCourseList";
+    import { mapState, mapActions } from 'vuex';
 
     export default {
         name: "CourseList",
         components: {
-            StudentCourseList,
+            StudentCourseList, LecturerCourseList,
         },
         data() {
           return {
               StudentCourseList,
+              LecturerCourseList,
               selectedSemesterItem: '',
               semesterOptions: [],
               courseItems: [],
@@ -143,6 +146,7 @@
               StudentCourseDisable: true,
               LecturerCourseDisable: true,
               propStudentCourse: Object,
+              propLecturerCourse: Object,
               tabIndex: 0,
               fields: [
                   {
@@ -201,11 +205,19 @@
         },
         watch: {
             selectedSemesterItem: function () {
-                console.log(this.selectedSemesterItem);
+                this.setSemesterID(this.selectedSemesterItem);
                 this.getCourseRecordData();
             }
         },
+        computed: {
+            ...mapState([
+                'currentSemesterID',
+            ]),
+        },
         methods: {
+            ...mapActions([
+                'setSemesterID',
+            ]),
             async getSemesterRecordData() {
                 try {
                     const response = await axios({
@@ -323,14 +335,18 @@
                 this.propStudentCourse = course_item;
                 this.tabIndex = 1;
             },
+            getLecturerRecordData(course_item) {
+                this.LecturerCourseDisable = false;
+                this.propLecturerCourse = course_item;
+                this.tabIndex = 2;
+            },
         },
         created() {
             this.getSemesterRecordData();
-            eventBus.$on('semesterSearchSelected', (searchSelected) => {
-                this.courseItems = [];
-                this.courseItems.push(searchSelected);
-                this.totalPage = 1;
-            });
+            this.selectedSemesterItem = this.currentSemesterID;
+            if (this.selectedSemesterItem !==  '' ) {
+                this.getCourseRecordData();
+            }
         }
     }
 </script>

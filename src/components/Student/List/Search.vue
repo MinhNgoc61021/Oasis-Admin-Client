@@ -36,7 +36,7 @@
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm và nhập tên kỳ học',
+                message: 'Tìm kiếm bằng mã số sinh viên',
                 searchSelect: Object,
             }
         },
@@ -57,7 +57,7 @@
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: 'http://localhost:5000/semester/search',
+                        url: 'http://localhost:5000/student/search',
                         method: 'get',
                         changeOrigin: true,
                         params: {

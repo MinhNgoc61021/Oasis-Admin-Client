@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <h5> {{ course_name }} {{ course_code }} (Danh sách giảng viên)</h5>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
                 <b-pagination-nav
@@ -52,94 +53,13 @@
                         </div>
                     </template>
                     <template v-slot:cell(actions)="row">
-                        <div class="text-center text-danger my-2" style="min-width: 120px;">
-                            <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
-                                <b-icon icon="pencil"></b-icon>
-                            </b-button>
+                        <div class="text-center text-danger my-2">
                             <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteLecturer(row.item)">
                                 <b-icon icon="trash"></b-icon>
                             </b-button>
                         </div>
                     </template>
                 </b-table>
-                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitLecturerUpdate" @reset.prevent="onReset">
-                      <b-form-group
-                        id="edit-input-group-1"
-                        label="Email:"
-                        label-for="edit-input-1"
-                      >
-                        <b-form-input
-                          id="edit-input-1"
-                          v-model="EditModal.UpdateLecturerForm.email"
-                          type="email"
-                          size="sm"
-                          placeholder="Nhập tên đăng nhập"
-                        ></b-form-input>
-                      </b-form-group>
-
-                      <b-form-group
-                        id="edit-input-group-2"
-                        label="Tên đăng nhập:"
-                        label-for="edit-input-2"
-                      >
-                        <b-form-input
-                          id="edit-input-2"
-                          v-model="EditModal.UpdateLecturerForm.username"
-                          type="text"
-                          size="sm"
-                          placeholder="Nhập tên đăng nhập"
-                        ></b-form-input>
-                      </b-form-group>
-
-                      <b-form-group
-                        id="edit-input-group-3"
-                        label="Họ tên:"
-                        label-for="edit-input-3"
-                      >
-                        <b-form-input
-                          id="edit-input-3"
-                          v-model="EditModal.UpdateLecturerForm.name"
-                          type="text"
-                          size="sm"
-                          placeholder="Nhập họ tên"
-                        ></b-form-input>
-                      </b-form-group>
-
-                      <b-form-group
-                              id="edit-input-group-5"
-                              label="Active:"
-                              label-for="edit-input-5">
-                        <b-form-checkbox
-                                v-model="EditModal.UpdateLecturerForm.actived"
-                                size="sm"
-                                id="edit-input-5"
-                                name="check-button"
-                                switch
-                        >
-                          <span v-if="EditModal.UpdateLecturerForm.actived !== true">Không</span>
-                          <span v-else>Có</span>
-                        </b-form-checkbox>
-                      </b-form-group>
-
-                      <b-form-group
-                              id="edit-input-group-6"
-                              label="Khóa tài khoản:"
-                              label-for="edit-input-6">
-                        <b-form-checkbox
-                                v-model="EditModal.UpdateLecturerForm.is_lock"
-                                size="sm"
-                                id="edit-input-6"
-                                name="check-button"
-                                switch
-                        >
-                          <span v-if="EditModal.UpdateLecturerForm.is_lock !== true">Không khóa</span>
-                          <span v-else>Khóa</span>
-                        </b-form-checkbox>
-                      </b-form-group>
-                        <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
-                    </b-form>
-                </b-modal>
             </b-col>
         </b-row>
     </b-container>
@@ -151,13 +71,17 @@
     import Search from "@/components/Lecturer/List/Search";
 
     export default {
-        name: "LecturerList",
+        name: "LecturerCourseList",
+        props: ['prop_course'],
         components: {
             Search,
         },
         data() {
           return {
               Search,
+              course_id: this.prop_course.course_id,
+              course_name: this.prop_course.name,
+              course_code: this.prop_course.code,
               lecturerItems: [],
               perPage: 10,
               currentPage: 1,
@@ -238,9 +162,10 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/lecturer/records',
+                        url: 'http://localhost:5000/lecturer/records-by-course',
                         method: 'get',
                         params: {
+                            course_id: this.course_id,
                             page_index: this.currentPage,
                             per_page: this.perPage,
                             sort_field: this.sortBy,
@@ -264,60 +189,6 @@
                     this.busy = false;
                     throw error;
 
-                }
-            },
-            async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin giảng viên ${item.name}`;
-                this.EditModal.UpdateLecturerForm.user_id = item.user_id;
-                this.EditModal.UpdateLecturerForm.username = item.username;
-                this.EditModal.UpdateLecturerForm.email = item.email;
-                this.EditModal.UpdateLecturerForm.name = item.name;
-                this.EditModal.UpdateLecturerForm.actived = item.actived === 1;
-                this.EditModal.UpdateLecturerForm.is_lock = item.is_lock === 1;
-                this.$root.$emit('bv::show::modal', this.EditModal.id, button);
-            },
-            async submitLecturerUpdate() {
-                try {
-                    const response = await axios({
-                        url: 'http://localhost:5000/lecturer/update-record',
-                        method: 'put',
-                        data: {
-                            user_id: this.EditModal.UpdateLecturerForm.user_id,
-                            update_username: this.EditModal.UpdateLecturerForm.username,
-                            update_name: this.EditModal.UpdateLecturerForm.name,
-                            update_email: this.EditModal.UpdateLecturerForm.email,
-                            update_actived: this.EditModal.UpdateLecturerForm.actived,
-                            update_is_lock: this.EditModal.UpdateLecturerForm.is_lock,
-                        },
-                        changeOrigin: true,
-                    });
-                    if (response.status === 200) {
-                        this.$bvToast.toast(`Cập nhật giảng viên ${this.EditModal.UpdateLecturerForm.name} thành công!`, {
-                            title: `Thành công`,
-                            variant: 'success',
-                            solid: true,
-                            appendToast: true,
-                        });
-                        this.$root.$emit('bv::hide::modal', this.EditModal.id);
-
-                    }
-                    else if (response.status === 202) {
-                        this.$bvToast.toast(`Trùng dữ liệu!`, {
-                            title: `Oops!`,
-                            variant: 'warning',
-                            solid: true,
-                            appendToast: true,
-                        })
-                    }
-                } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật giảng viên ${this.EditModal.UpdateLecturerForm.name}!`, {
-                        title: `Thất bại`,
-                        variant: 'danger',
-                        solid: true,
-                        appendToast: true,
-                    })
-                } finally {
-                    this.getLecturerRecordData();
                 }
             },
             deleteLecturer(item) {
