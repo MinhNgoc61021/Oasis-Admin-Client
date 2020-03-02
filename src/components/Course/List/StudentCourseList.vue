@@ -209,11 +209,12 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/student/delete-record',
+                                url: 'http://localhost:5000/student/delete-student-course-record',
                                 method: 'delete',
                                 data: {
                                     // delStudentCode: item.code,
                                     delUserID: item.user.user_id,
+                                    course_id: this.course_id,
                                 },
                             });
                             if (response.status === 200) {
