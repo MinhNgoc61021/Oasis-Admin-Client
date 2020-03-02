@@ -85,23 +85,53 @@
                                 </div>
                             </template>
                         </b-table>
+
                         <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                            <b-form @submit.prevent="submitSemesterUpdate">
+                            <b-form @submit.prevent="submitCourseUpdate">
                                 <b-form-group
-                                        id="edit-input-group-3"
+                                        id="edit-input-group-1"
                                     label="Họ tên:"
-                                    label-for="edit-input-3"
+                                    label-for="edit-input-1"
                                   >
                                     <b-form-input
-                                      id="edit-input-3"
+                                      id="edit-input-1"
+                                      v-model="EditModal.UpdateCourseForm.code"
+                                      type="text"
+                                      size="sm"
+                                      required
+                                      placeholder="Nhập mã lớp môn học"
+                                    ></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group
+                                        id="edit-input-group-2"
+                                    label="Họ tên:"
+                                    label-for="edit-input-2"
+                                  >
+                                    <b-form-input
+                                      id="edit-input-2"
                                       v-model="EditModal.UpdateCourseForm.name"
                                       type="text"
                                       size="sm"
                                       required
-                                      placeholder="Nhập họ tên"
+                                      placeholder="Nhập tên lớp môn học"
                                     ></b-form-input>
                                 </b-form-group>
 
+                                <b-form-group
+                                    id="input-group-3"
+                                    label="Mô tả:"
+                                    label-for="input-3"
+                                  >
+                                    <b-form-textarea
+                                      id="input-3"
+                                      size="sm"
+                                      v-model="EditModal.UpdateCourseForm.description"
+                                      rows="4"
+                                      max-rows="8"
+                                      placeholder="Nhập mô tả (Không bắt buộc)"
+                                    ></b-form-textarea>
+                                  </b-form-group>
                                 <b-alert :show="EditModal.UpdateCourseForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
                                 <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
                             </b-form>
@@ -179,11 +209,13 @@
                   },
                   {
                       key: 'studentList',
-                      label: 'Sinh viên'
+                      label: 'Sinh viên',
+                      sortable: false,
                   },
                   {
                       key: 'lecturerList',
-                      label: 'Giảng viên'
+                      label: 'Giảng viên',
+                      sortable: false,
                   },
                   {
                       key: 'actions',
@@ -197,7 +229,9 @@
                   title: '',
                   UpdateCourseForm: {
                       course_id: '',
+                      code: '',
                       name: '',
+                      description: '',
                       notFilled: false,
                   }
               }
@@ -267,6 +301,66 @@
                     this.busy = false;
                     throw error;
 
+                }
+            },
+            async updateModal(item, index, button) {
+                this.EditModal.title = `Sửa thông tin lớp môn học ${item.name}`;
+                this.EditModal.UpdateCourseForm.course_id = item.semester_id;
+                this.EditModal.UpdateCourseForm.code = item.code;
+                this.EditModal.UpdateCourseForm.name = item.name;
+                this.EditModal.UpdateCourseForm.description = item.description;
+                this.$root.$emit('bv::show::modal', this.EditModal.id, button);
+            },
+            async submitCourseUpdate() {
+                try {
+                    if (String(this.EditModal.UpdateCourseForm.code).replace(' ', '') === ''
+                        || String(this.EditModal.UpdateCourseForm.name).replace(' ', '') === ''
+                    ) {
+                        this.EditModal.UpdateCourseForm.notFilled = true;
+                        setTimeout(() => {
+                            this.EditModal.UpdateCourseForm.notFilled = false;
+                        }, 3000);
+                    }
+                    else {
+                        const response = await axios({
+                            url: 'http://localhost:5000/course/update-record',
+                            method: 'put',
+                            data: {
+                                course_id: this.EditModal.UpdateCourseForm.semester_id,
+                                update_name: this.EditModal.UpdateCourseForm.name,
+                                update_code: this.EditModal.UpdateCourseForm.code,
+                                update_description: this.EditModal.UpdateCourseForm.description,
+                            },
+                            changeOrigin: true,
+                        });
+                        if (response.status === 200) {
+                            this.$bvToast.toast(`Cập nhật kỳ học ${this.EditModal.UpdateSemesterForm.name} thành công!`, {
+                                title: `Thành công`,
+                                variant: 'success',
+                                solid: true,
+                                appendToast: true,
+                            });
+                            this.$root.$emit('bv::hide::modal', this.EditModal.id);
+
+                        }
+                        else if (response.status === 202) {
+                            this.$bvToast.toast(`Trùng dữ liệu!`, {
+                                title: `Oops!`,
+                                variant: 'warning',
+                                solid: true,
+                                appendToast: true,
+                            })
+                        }
+                    }
+                } catch (e) {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu kỳ học ${this.EditModal.UpdateSemesterForm.name}!`, {
+                        title: `Thất bại`,
+                        variant: 'danger',
+                        solid: true,
+                        appendToast: true,
+                    })
+                } finally {
+                    this.getSemesterRecordData();
                 }
             },
             deleteCourse(item) {

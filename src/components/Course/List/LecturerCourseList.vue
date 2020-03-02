@@ -20,6 +20,10 @@
                 <Search></Search>
             </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
+                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1">
+                  <b-icon icon="plus
+                    "></b-icon>
+                </b-button>
                 <b-button size="sm" variant="outline-success" @click="getLecturerRecordData">
                   <b-icon icon="arrow-repeat
                     "></b-icon>
@@ -211,6 +215,7 @@
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,
+                                    course_id: this.course_id,
                                 },
                             });
                             if (response.status === 200) {
