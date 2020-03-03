@@ -334,7 +334,7 @@
                             changeOrigin: true,
                         });
                         if (response.status === 200) {
-                            this.$bvToast.toast(`Cập nhật kỳ học ${this.EditModal.UpdateSemesterForm.name} thành công!`, {
+                            this.$bvToast.toast(`Cập nhật lớp môn học ${this.EditModal.UpdateCourseForm.name} thành công!`, {
                                 title: `Thành công`,
                                 variant: 'success',
                                 solid: true,
@@ -353,7 +353,7 @@
                         }
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu kỳ học ${this.EditModal.UpdateSemesterForm.name}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật lớp môn học học ${this.EditModal.UpdateCourseForm.name}!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
