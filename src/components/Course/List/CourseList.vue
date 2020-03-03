@@ -151,8 +151,8 @@
 
 <script>
     import axios from 'axios';
-    import StudentCourseList from "@/components/Course/List/StudentCourseList";
-    import LecturerCourseList from "@/components/Course/List/LecturerCourseList";
+    import StudentCourseList from "@/components/Course/List/Student/StudentCourseList";
+    import LecturerCourseList from "@/components/Course/List/Lecturer/LecturerCourseList";
     import { mapState, mapActions } from 'vuex';
 
     export default {

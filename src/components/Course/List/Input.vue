@@ -124,8 +124,8 @@
             }
           }
         } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi khi ${e} tạo lớp môn học!`, {
-                title: `Thành công`,
+            this.$bvToast.toast(`Gặp lỗi ${e} khi tạo lớp môn học!`, {
+                title: `Thất bại`,
                 variant: 'danger',
                 solid: true,
                 appendToast: true,

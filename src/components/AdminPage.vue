@@ -4,7 +4,7 @@
         <b-row>
           <b-col align-self="start">
             <b-navbar toggleable="sm" class="border-bottom" variant="light" fixed="top" type="light">
-              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="35" width="auto" alt="Oasis Admin"></b-navbar-brand>
+              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="35" width="auto" alt="OASIS Admin"></b-navbar-brand>
               <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown right>
                   <!-- Using 'button-content' slot -->

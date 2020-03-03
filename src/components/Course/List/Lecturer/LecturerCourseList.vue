@@ -1,6 +1,6 @@
 <template>
     <b-container>
-        <h5> {{ course_name }} {{ course_code }} (Danh sách sinh viên)</h5>
+        <h5> {{ course_name }} {{ course_code }} (Danh sách giảng viên)</h5>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
                 <b-pagination-nav
@@ -10,21 +10,21 @@
                   align="fill"
                   size="sm"
                   class="my-0 light"
+                  base-url="#"
                   first-number
                   last-number
-                  base-url="#"
-                  @input="getStudentCourseRecordData"
+                  @input="getLecturerRecordData"
                 ></b-pagination-nav>
             </b-col>
             <b-col class="ml-auto my-1">
                 <Search></Search>
             </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1" @click="addStudentCourse">
+                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1">
                   <b-icon icon="plus
                     "></b-icon>
                 </b-button>
-                <b-button size="sm" variant="outline-success" @click="getStudentCourseRecordData">
+                <b-button size="sm" variant="outline-success" @click="getLecturerRecordData">
                   <b-icon icon="arrow-repeat
                     "></b-icon>
                     <span>
@@ -36,17 +36,17 @@
         <b-row>
             <b-col>
                 <b-table responsive
-                         show-empty
-                         empty-text="Danh sách sinh viên trống"
                          :busy="busy"
+                         show-empty
+                         empty-text="Danh sách giảng viên trống"
                          head-variant="light"
                          :small="true"
                          size="sm"
-                         :items="studentItems"
+                         :items="lecturerItems"
                          :fields="fields"
                          :per-page="perPage"
                          :sort-by.sync="sortBy"
-                         @sort-changed="sortStudentRecordData"
+                         @sort-changed="sortLectureRecordData"
                          :sort-direction="sortOrder"
                          hover
                 >
@@ -58,7 +58,7 @@
                     </template>
                     <template v-slot:cell(actions)="row">
                         <div class="text-center text-danger my-2">
-                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteStudent(row.item)">
+                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteLecturer(row.item)">
                                 <b-icon icon="trash"></b-icon>
                             </b-button>
                         </div>
@@ -66,18 +66,18 @@
                 </b-table>
             </b-col>
         </b-row>
+
     </b-container>
 </template>
 
 <script>
     import axios from 'axios';
-    import moment from 'moment/moment';
     import { eventBus } from "@/main";
-    import Search from "@/components/Student/List/Search";
+    import Search from "@/components/Lecturer/List/Search";
 
     export default {
+        name: "LecturerCourseList",
         props: ['prop_course'],
-        name: "StudentCourseList",
         components: {
             Search,
         },
@@ -87,49 +87,36 @@
               course_id: this.prop_course.course_id,
               course_name: this.prop_course.name,
               course_code: this.prop_course.code,
-              studentItems: [],
+              lecturerItems: [],
               perPage: 10,
               currentPage: 1,
               filter: '',
-              sortBy: 'code',
+              sortBy: 'user_id',
               sortOrder: 'asc',
               totalPage: 1,
               fields: [
                   {
-                      key: 'code',
-                      label: 'Mã số sinh viên',
+                      key: 'user_id',
+                      label: 'ID',
                       sortable: true,
                   },
                   {
-                      key: 'user.username',
+                      key: 'username',
                       label: 'Tên đăng nhập',
                       sortable: true,
                   },
                   {
-                      key: 'user.name',
+                      key: 'name',
                       label: 'Họ tên',
                       sortable: true,
                   },
                   {
-                      key: 'dob',
-                      label: 'Ngày sinh',
-                      sortable: true,
-                      formatter: value => {
-                        return moment(value).format('MM/DD/YYYY');
-                      }
-                  },
-                  {
-                      key: 'user.email',
+                      key: 'email',
                       label: 'Email',
                       sortable: true,
                   },
                   {
-                      key: 'class_course',
-                      label: 'Lớp',
-                      sortable: true,
-                  },
-                  {
-                      key: 'user.actived',
+                      key: 'actived',
                       label: 'Quyền hoạt động',
                       sortable: true,
                       formatter: value => {
@@ -142,7 +129,7 @@
                       }
                   },
                   {
-                      key: 'user.is_lock',
+                      key: 'is_lock',
                       label: 'Khóa',
                       sortable: true,
                       formatter: value => {
@@ -159,16 +146,28 @@
                       label: 'Hành động'
                   }
               ],
-              totalStudent: 0,
+              totalLecturer: 0,
               busy: false,
+              EditModal: {
+                  id: 'edit-modal',
+                  title: '',
+                  UpdateLecturerForm: {
+                      user_id: '',
+                      username: '',
+                      name: '',
+                      email: '',
+                      actived: Boolean,
+                      is_lock: Boolean,
+                  }
+              }
           }
         },
         methods: {
-            async getStudentCourseRecordData() {
+            async getLecturerRecordData() {
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/student/records-by-course',
+                        url: 'http://localhost:5000/lecturer/records-by-course',
                         method: 'get',
                         params: {
                             course_id: this.course_id,
@@ -180,25 +179,25 @@
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.studentItems = [];
-                        this.totalStudent = response.data.total_results;
+                        this.lecturerItems = [];
+                        this.totalLecturer = response.data.total_results;
                         this.totalPage = response.data.num_pages;
                         response.data.records.forEach((item) => {
-                            this.studentItems.push(item);
+                            this.lecturerItems.push(item);
                         });
                         // console.log(this.data);
                         this.busy = false
                     }
                 } catch (error) {
-                    this.studentItems = [];
-                    this.totalStudent = 0;
+                    this.lecturerItems = [];
+                    this.totalLecturer = 0;
                     this.busy = false;
                     throw error;
 
                 }
             },
-            deleteStudent(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa sinh viên ${item.user.name}?`, {
+            deleteLecturer(item) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa giảng viên ${item.name}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -213,16 +212,15 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/student/delete-student-course-record',
+                                url: 'http://localhost:5000/lecturer/delete-record',
                                 method: 'delete',
                                 data: {
-                                    // delStudentCode: item.code,
-                                    student_id: item.student_id,
+                                    delUserID: item.user_id,
                                     course_id: this.course_id,
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa sinh viên ${item.user.name} thành công!`, {
+                                this.$bvToast.toast(`Xóa giảng viên ${item.name} thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -230,27 +228,27 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi sinh viên ${item.user.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa giảng viên ${item.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,
                                 appendToast: true,
                             })
                         } finally {
-                            if (this.studentItems.length === 1) {
-                                if ((this.totalStudent / this.perPage) > 0) {
+                            if (this.lecturerItems.length === 1) {
+                                if ((this.totalLecturer / this.perPage) > 0) {
                                     this.currentPage--;
                                 }
                                 else {
                                     this.currentPage = 1;
                                 }
                             }
-                            this.getStudentCourseRecordData();
+                            this.getLecturerRecordData();
                         }
                     }
                 })
             },
-            sortStudentRecordData(sort) {
+            sortLectureRecordData(sort) {
                 this.sortBy = sort.sortBy;
                 if (sort.sortDesc === true) {
                     this.sortOrder = 'desc';
@@ -258,14 +256,14 @@
                 else {
                     this.sortOrder = 'asc';
                 }
-                this.getStudentCourseRecordData();
+                this.getLecturerRecordData();
             }
         },
         created() {
-            this.getStudentCourseRecordData();
-            eventBus.$on('studentSearchSelected', (searchSelected) => {
-                this.studentItems = [];
-                this.studentItems.push(searchSelected);
+            this.getLecturerRecordData();
+            eventBus.$on('lecturerSearchSelected', (searchSelected) => {
+                this.lecturerItems = [];
+                this.lecturerItems.push(searchSelected);
                 this.totalPage = 1;
             });
         }

@@ -1,6 +1,6 @@
 <template>
     <b-container>
-        <h5> {{ course_name }} {{ course_code }} (Danh sách giảng viên)</h5>
+        <h5> {{ course_name }} {{ course_code }} (Danh sách sinh viên)</h5>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
                 <b-pagination-nav
@@ -10,21 +10,21 @@
                   align="fill"
                   size="sm"
                   class="my-0 light"
-                  base-url="#"
                   first-number
                   last-number
-                  @input="getLecturerRecordData"
+                  base-url="#"
+                  @input="getStudentCourseRecordData"
                 ></b-pagination-nav>
             </b-col>
             <b-col class="ml-auto my-1">
-                <Search></Search>
+                <SearchStudentByCourse :current_course="course_id" location="from-course"></SearchStudentByCourse>
             </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1">
+                <b-button size="sm" variant="outline-primary" title="Thêm sinh viên" class="mr-1" @click="openNewStudentModal($event.target)">
                   <b-icon icon="plus
                     "></b-icon>
                 </b-button>
-                <b-button size="sm" variant="outline-success" @click="getLecturerRecordData">
+                <b-button size="sm" variant="outline-success" @click="getStudentCourseRecordData">
                   <b-icon icon="arrow-repeat
                     "></b-icon>
                     <span>
@@ -36,17 +36,17 @@
         <b-row>
             <b-col>
                 <b-table responsive
-                         :busy="busy"
                          show-empty
-                         empty-text="Danh sách giảng viên trống"
+                         empty-text="Danh sách sinh viên trống"
+                         :busy="busy"
                          head-variant="light"
                          :small="true"
                          size="sm"
-                         :items="lecturerItems"
+                         :items="studentItems"
                          :fields="fields"
                          :per-page="perPage"
                          :sort-by.sync="sortBy"
-                         @sort-changed="sortLectureRecordData"
+                         @sort-changed="sortStudentRecordData"
                          :sort-direction="sortOrder"
                          hover
                 >
@@ -58,12 +58,24 @@
                     </template>
                     <template v-slot:cell(actions)="row">
                         <div class="text-center text-danger my-2">
-                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteLecturer(row.item)">
+                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteStudent(row.item)">
                                 <b-icon icon="trash"></b-icon>
                             </b-button>
                         </div>
                     </template>
                 </b-table>
+                <b-modal :id="AddStudentModal.id" :title="AddStudentModal.title" centered hide-footer button-size="sm">
+                    <b-form @submit.prevent="submitNewStudent">
+                        <b-form-group
+                                id="submit-input-group-1"
+                        >
+                            <SearchStudentByCourse :current_course="course_id" location="outside-course"></SearchStudentByCourse>
+                        </b-form-group>
+                        <b-alert :show="AddStudentModal.SubmitStudentForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
+                        <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Thêm</b-button>
+                    </b-form>
+                </b-modal>
+
             </b-col>
         </b-row>
     </b-container>
@@ -71,51 +83,65 @@
 
 <script>
     import axios from 'axios';
+    import moment from 'moment/moment';
     import { eventBus } from "@/main";
-    import Search from "@/components/Lecturer/List/Search";
+    import SearchStudentByCourse from "@/components/Course/List/Student/SearchStudentByCourse";
 
     export default {
-        name: "LecturerCourseList",
         props: ['prop_course'],
+        name: "StudentCourseList",
         components: {
-            Search,
+            SearchStudentByCourse,
         },
         data() {
           return {
-              Search,
+              SearchStudentByCourse,
               course_id: this.prop_course.course_id,
               course_name: this.prop_course.name,
               course_code: this.prop_course.code,
-              lecturerItems: [],
+              studentItems: [],
               perPage: 10,
               currentPage: 1,
               filter: '',
-              sortBy: 'user_id',
+              sortBy: 'code',
               sortOrder: 'asc',
               totalPage: 1,
               fields: [
                   {
-                      key: 'user_id',
-                      label: 'ID',
+                      key: 'code',
+                      label: 'Mã số sinh viên',
                       sortable: true,
                   },
                   {
-                      key: 'username',
+                      key: 'user.username',
                       label: 'Tên đăng nhập',
                       sortable: true,
                   },
                   {
-                      key: 'name',
+                      key: 'user.name',
                       label: 'Họ tên',
                       sortable: true,
                   },
                   {
-                      key: 'email',
+                      key: 'dob',
+                      label: 'Ngày sinh',
+                      sortable: true,
+                      formatter: value => {
+                        return moment(value).format('MM/DD/YYYY');
+                      }
+                  },
+                  {
+                      key: 'user.email',
                       label: 'Email',
                       sortable: true,
                   },
                   {
-                      key: 'actived',
+                      key: 'class_course',
+                      label: 'Lớp',
+                      sortable: true,
+                  },
+                  {
+                      key: 'user.actived',
                       label: 'Quyền hoạt động',
                       sortable: true,
                       formatter: value => {
@@ -128,7 +154,7 @@
                       }
                   },
                   {
-                      key: 'is_lock',
+                      key: 'user.is_lock',
                       label: 'Khóa',
                       sortable: true,
                       formatter: value => {
@@ -145,28 +171,24 @@
                       label: 'Hành động'
                   }
               ],
-              totalLecturer: 0,
+              totalStudent: 0,
               busy: false,
-              EditModal: {
-                  id: 'edit-modal',
-                  title: '',
-                  UpdateLecturerForm: {
-                      user_id: '',
-                      username: '',
-                      name: '',
-                      email: '',
-                      actived: Boolean,
-                      is_lock: Boolean,
+              AddStudentModal: {
+                  id: 'add-student-modal',
+                  title: 'Thêm sinh viên vào lớp ' + this.prop_course.name + ' (' + this.prop_course.code + ')',
+                  SubmitStudentForm: {
+                      student_id: '',
+                      notFilled: false,
                   }
               }
           }
         },
         methods: {
-            async getLecturerRecordData() {
+            async getStudentCourseRecordData() {
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/lecturer/records-by-course',
+                        url: 'http://localhost:5000/student/records-by-course',
                         method: 'get',
                         params: {
                             course_id: this.course_id,
@@ -178,25 +200,64 @@
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
-                        this.lecturerItems = [];
-                        this.totalLecturer = response.data.total_results;
+                        this.studentItems = [];
+                        this.totalStudent = response.data.total_results;
                         this.totalPage = response.data.num_pages;
                         response.data.records.forEach((item) => {
-                            this.lecturerItems.push(item);
+                            this.studentItems.push(item);
                         });
                         // console.log(this.data);
                         this.busy = false
                     }
                 } catch (error) {
-                    this.lecturerItems = [];
-                    this.totalLecturer = 0;
+                    this.studentItems = [];
+                    this.totalStudent = 0;
                     this.busy = false;
                     throw error;
 
                 }
             },
-            deleteLecturer(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa giảng viên ${item.name}?`, {
+            async submitNewStudent() {
+                try {
+                  if (String(this.AddStudentModal.SubmitStudentForm.student_id,).replace(' ', '') === '') {
+                      this.AddStudentModal.SubmitStudentForm.notFilled = true;
+                      setTimeout(() => {
+                        this.AddStudentModal.SubmitStudentForm.notFilled = false
+                      }, 3000);
+                  }
+                  else {
+                      const response = await axios({
+                          url: 'http://localhost:5000/student/create-student-course-record',
+                          method: 'post',
+                          changeOrigin: true,
+                          data: {
+                              new_student_id: this.AddStudentModal.SubmitStudentForm.student_id,
+                              course_id: this.course_id,
+                          },
+                  });
+                    if (response.status === 200) {
+                      this.$bvToast.toast(`Thêm sinh viên vào lớp thành công!`, {
+                        title: `Thành công`,
+                        variant: 'success',
+                        solid: true,
+                        appendToast: true,
+                      });
+                      this.$root.$emit('bv::hide::modal', this.AddStudentModal.id);
+                      this.onReset();
+                      this.getStudentCourseRecordData();
+                    }
+                  }
+                } catch (e) {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi thêm sinh viên vào lớpc!`, {
+                        title: `Thất bại`,
+                        variant: 'danger',
+                        solid: true,
+                        appendToast: true,
+                    });
+                }
+            },
+            deleteStudent(item) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa sinh viên ${item.user.name}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -211,15 +272,16 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/lecturer/delete-record',
+                                url: 'http://localhost:5000/student/delete-student-course-record',
                                 method: 'delete',
                                 data: {
-                                    delUserID: item.user_id,
+                                    // delStudentCode: item.code,
+                                    student_id: item.student_id,
                                     course_id: this.course_id,
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa giảng viên ${item.name} thành công!`, {
+                                this.$bvToast.toast(`Xóa sinh viên ${item.user.name} thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -227,27 +289,30 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa giảng viên ${item.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e} khi sinh viên ${item.user.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,
                                 appendToast: true,
                             })
                         } finally {
-                            if (this.lecturerItems.length === 1) {
-                                if ((this.totalLecturer / this.perPage) > 0) {
+                            if (this.studentItems.length === 1) {
+                                if ((this.totalStudent / this.perPage) > 0) {
                                     this.currentPage--;
                                 }
                                 else {
                                     this.currentPage = 1;
                                 }
                             }
-                            this.getLecturerRecordData();
+                            this.getStudentCourseRecordData();
                         }
                     }
                 })
             },
-            sortLectureRecordData(sort) {
+            openNewStudentModal(button) {
+              this.$root.$emit('bv::show::modal', this.AddStudentModal.id, button);
+            },
+            sortStudentRecordData(sort) {
                 this.sortBy = sort.sortBy;
                 if (sort.sortDesc === true) {
                     this.sortOrder = 'desc';
@@ -255,16 +320,23 @@
                 else {
                     this.sortOrder = 'asc';
                 }
-                this.getLecturerRecordData();
+                this.getStudentCourseRecordData();
+            },
+            onReset() {
+                // Reset our form values\
+                this.AddStudentModal.SubmitStudentForm.student_id = '';
             }
         },
         created() {
-            this.getLecturerRecordData();
-            eventBus.$on('lecturerSearchSelected', (searchSelected) => {
-                this.lecturerItems = [];
-                this.lecturerItems.push(searchSelected);
+            this.getStudentCourseRecordData();
+            eventBus.$on('studentInCourseSearchSelected', (searchSelected) => {
+                this.studentItems = [];
+                this.studentItems.push(searchSelected);
                 this.totalPage = 1;
             });
+            eventBus.$on('studentOutsideCourseSearchSelected', (searchSelected) => {
+                this.AddStudentModal.SubmitStudentForm.student_id = searchSelected.student_id;
+            })
         }
     }
 </script>

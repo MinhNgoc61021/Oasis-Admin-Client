@@ -193,8 +193,8 @@
             }
           }
         } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi ${e} tạo sinh viên thất bại!`, {
-                title: `Thành công`,
+            this.$bvToast.toast(`Gặp lỗi ${e} khi tạo sinh viên thất bại!`, {
+                title: `Thất bại`,
                 variant: 'danger',
                 solid: true,
                 appendToast: true,
