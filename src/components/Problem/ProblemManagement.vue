@@ -5,6 +5,7 @@
             <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>
                     <b-card-body>
+                        <component :is="ProblemList"></component>
                     </b-card-body>
                 </b-tab>
                 <b-tab title="Thêm">
@@ -18,8 +19,18 @@
 </template>
 
 <script>
+    import ProblemList from "@/components/Problem/List/ProblemList";
+
     export default {
-        name: "ProblemManagement"
+        name: "ProblemManagement",
+        components: {
+            ProblemList
+        },
+        data() {
+            return {
+                ProblemList
+            }
+        }
     }
 </script>
 
