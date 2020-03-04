@@ -17,10 +17,10 @@
                 ></b-pagination-nav>
             </b-col>
             <b-col class="ml-auto my-1">
-                <Search></Search>
+                <SearchLecturerByCourse :current_course="course_id" location="from-course"></SearchLecturerByCourse>
             </b-col>
             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1">
+                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1" @click="openNewLecturerModal($event.target)">
                   <b-icon icon="plus
                     "></b-icon>
                 </b-button>
@@ -64,6 +64,17 @@
                         </div>
                     </template>
                 </b-table>
+                <b-modal :id="AddLecturerModal.id" :title="AddLecturerModal.title" centered hide-footer button-size="sm">
+                        <b-form @submit.prevent="submitNewLecturer">
+                            <b-form-group
+                                    id="submit-lecturer-input-group-1"
+                            >
+                                <SearchLecturerByCourse :current_course="course_id" location="outside-course"></SearchLecturerByCourse>
+                            </b-form-group>
+                            <b-alert :show="AddLecturerModal.SubmitLecturerForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
+                            <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Thêm</b-button>
+                        </b-form>
+                    </b-modal>
             </b-col>
         </b-row>
 
@@ -73,17 +84,17 @@
 <script>
     import axios from 'axios';
     import { eventBus } from "@/main";
-    import Search from "@/components/Lecturer/List/Search";
+    import SearchLecturerByCourse from "@/components/Course/List/Lecturer/SearchLecturerByCourse";
 
     export default {
         name: "LecturerCourseList",
         props: ['prop_course'],
         components: {
-            Search,
+            SearchLecturerByCourse,
         },
         data() {
           return {
-              Search,
+              SearchLecturerByCourse,
               course_id: this.prop_course.course_id,
               course_name: this.prop_course.name,
               course_code: this.prop_course.code,
@@ -148,16 +159,12 @@
               ],
               totalLecturer: 0,
               busy: false,
-              EditModal: {
-                  id: 'edit-modal',
-                  title: '',
-                  UpdateLecturerForm: {
+              AddLecturerModal: {
+                  id: 'add-lecturer-modal',
+                  title: 'Thêm giảng viên vào lớp ' + this.prop_course.name + ' (' + this.prop_course.code + ')',
+                  SubmitLecturerForm: {
                       user_id: '',
-                      username: '',
-                      name: '',
-                      email: '',
-                      actived: Boolean,
-                      is_lock: Boolean,
+                      notFilled: false,
                   }
               }
           }
@@ -196,6 +203,53 @@
 
                 }
             },
+            async submitNewLecturer() {
+                try {
+                  if (String(this.AddLecturerModal.SubmitLecturerForm.user_id,).replace(' ', '') === '') {
+                      this.AddLecturerModal.SubmitLecturerForm.notFilled = true;
+                      setTimeout(() => {
+                        this.AddLecturerModal.SubmitLecturerForm.notFilled = false
+                      }, 3000);
+                  }
+                  else {
+                      const response = await axios({
+                          url: 'http://localhost:5000/lecturer/create-lecturer-course-record',
+                          method: 'post',
+                          changeOrigin: true,
+                          data: {
+                              new_user_id: this.AddLecturerModal.SubmitLecturerForm.user_id,
+                              course_id: this.course_id,
+                          },
+                  });
+                    if (response.status === 200) {
+                      this.$bvToast.toast(`Thêm giảng viên vào lớp thành công!`, {
+                        title: `Thành công`,
+                        variant: 'success',
+                        solid: true,
+                        appendToast: true,
+                      });
+                      this.$root.$emit('bv::hide::modal', this.AddLecturerModal.id);
+                      this.onReset();
+                      this.getLecturerRecordData();
+                    }
+                    else {
+                        this.$bvToast.toast(`Giảng viên đã có trong lớp học này rồi!`, {
+                        title: `Oops`,
+                        variant: 'warning',
+                        solid: true,
+                        appendToast: true,
+                      });
+                    }
+                  }
+                } catch (e) {
+                    this.$bvToast.toast(`Gặp lỗi ${e} khi thêm giảng viên vào lớp!`, {
+                        title: `Thất bại`,
+                        variant: 'danger',
+                        solid: true,
+                        appendToast: true,
+                    });
+                }
+            },
             deleteLecturer(item) {
                 this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa giảng viên ${item.name}?`, {
                     title: 'Xác nhận xóa',
@@ -212,7 +266,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/lecturer/delete-record',
+                                url: 'http://localhost:5000/lecturer/delete-lecturer-course-record',
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,
@@ -248,6 +302,9 @@
                     }
                 })
             },
+            openNewLecturerModal(button) {
+              this.$root.$emit('bv::show::modal', this.AddLecturerModal.id, button);
+            },
             sortLectureRecordData(sort) {
                 this.sortBy = sort.sortBy;
                 if (sort.sortDesc === true) {
@@ -257,15 +314,22 @@
                     this.sortOrder = 'asc';
                 }
                 this.getLecturerRecordData();
+            },
+            onReset() {
+                // Reset our form values\
+                this.AddLecturerModal.SubmitLecturerForm.user_id = '';
             }
         },
         created() {
             this.getLecturerRecordData();
-            eventBus.$on('lecturerSearchSelected', (searchSelected) => {
+            eventBus.$on('lecturerInCourseSearchSelected', (searchSelected) => {
                 this.lecturerItems = [];
                 this.lecturerItems.push(searchSelected);
                 this.totalPage = 1;
             });
+            eventBus.$on('lecturerOutsideCourseSearchSelected', (searchSelected) => {
+                this.AddLecturerModal.SubmitLecturerForm.user_id = searchSelected.user_id;
+            })
         }
     }
 </script>

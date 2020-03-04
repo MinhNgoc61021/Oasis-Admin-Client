@@ -305,7 +305,7 @@
             },
             async updateModal(item, index, button) {
                 this.EditModal.title = `Sửa thông tin lớp môn học ${item.name}`;
-                this.EditModal.UpdateCourseForm.course_id = item.semester_id;
+                this.EditModal.UpdateCourseForm.course_id = item.course_id;
                 this.EditModal.UpdateCourseForm.code = item.code;
                 this.EditModal.UpdateCourseForm.name = item.name;
                 this.EditModal.UpdateCourseForm.description = item.description;
@@ -326,7 +326,7 @@
                             url: 'http://localhost:5000/course/update-record',
                             method: 'put',
                             data: {
-                                course_id: this.EditModal.UpdateCourseForm.semester_id,
+                                course_id: this.EditModal.UpdateCourseForm.course_id,
                                 update_name: this.EditModal.UpdateCourseForm.name,
                                 update_code: this.EditModal.UpdateCourseForm.code,
                                 update_description: this.EditModal.UpdateCourseForm.description,
@@ -341,7 +341,7 @@
                                 appendToast: true,
                             });
                             this.$root.$emit('bv::hide::modal', this.EditModal.id);
-
+                            this.getCourseRecordData();
                         }
                         else if (response.status === 202) {
                             this.$bvToast.toast(`Trùng dữ liệu!`, {

@@ -1,8 +1,8 @@
 <template>
     <div>
         <vue-bootstrap-typeahead
-          v-model="searchCode" size="sm"
-          :serializer="s => s.code"
+          v-model="searchUsername" size="sm"
+          :serializer="s => s.username"
           :placeholder="message"
           :data="searchResults"
           @hit="searchSelect = $event"
@@ -11,9 +11,9 @@
           ref="typeahead"
         >
             <template slot="suggestion" slot-scope="{ data }">
-                <span><b>MSSV: </b>{{ data.code }}</span><br>
-                <span><b>Email: </b>{{ data.user.email}}</span><br>
-                <span><b>Họ tên: </b>{{ data.user.name }}</span>
+                <span><b>Tên đăng nhập: </b>{{ data.username }}</span><br>
+                <span><b>Email: </b>{{ data.email}}</span><br>
+                <span><b>Họ tên: </b>{{ data.name }}</span>
 
             </template>
         </vue-bootstrap-typeahead>
@@ -27,49 +27,49 @@
     import { eventBus } from "@/main";
 
     export default {
-        name: "SearchStudentByCourse",
+        name: "SearchLecturerByCourse",
         props: ['current_course', 'location'],
         components: {
             VueBootstrapTypeahead
         },
         data() {
             return {
-                searchCode: '',
+                searchUsername: '',
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm bằng mã số sinh viên',
+                message: 'Tìm kiếm bằng tên đăng nhập',
                 searchSelect: Object,
             }
         },
         watch: {
-            searchCode: debounce(function () {
+            searchUsername: debounce(function () {
                 this.onSearch();
             }, 500),
             searchSelect: function () {
                 if (this.location === 'from-course') {
-                    eventBus.$emit('studentInCourseSearchSelected', this.searchSelect);
+                    eventBus.$emit('lecturerInCourseSearchSelected', this.searchSelect);
                 }
                 else {
-                    eventBus.$emit('studentOutsideCourseSearchSelected', this.searchSelect);
+                    eventBus.$emit('lecturerOutsideCourseSearchSelected', this.searchSelect);
                 }
             }
         },
         methods: {
             async onSearch() {
-                if (this.searchCode.length > 16  || this.searchCode.length === 0) {
+                if (this.searchUsername.length > 16  || this.searchUsername.length === 0) {
                     this.searchResults = [];
                 }
                 else {
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: 'http://localhost:5000/student/search-' + this.location,
+                        url: 'http://localhost:5000/lecturer/search-' + this.location,
                         method: 'get',
                         changeOrigin: true,
                         params: {
                             course_id: this.current_course,
-                            searchCode: this.searchCode,
+                            searchUsername: this.searchUsername,
                         },
                     });
                         if (response.status === 200) {
@@ -81,7 +81,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm sinh viên có MSSV: ${this.searchCode}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm giảng viên có tài khoản ${this.searchUsername}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,
