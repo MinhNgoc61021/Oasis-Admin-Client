@@ -31,6 +31,7 @@
                   <b-list-group-item to="/lecturer-management">Quản lý giảng viên</b-list-group-item>
                   <b-list-group-item to="/semester-management">Quản lý kỳ học</b-list-group-item>
                   <b-list-group-item to="/course-management">Quản lý lớp môn học</b-list-group-item>
+                  <b-list-group-item to="/problem-management">Quản lý các problem</b-list-group-item>
                 </b-list-group>
               </div>
             </b-col>

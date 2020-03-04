@@ -6,10 +6,9 @@ import UserManagement from "@/components/User/UserManagement";
 import LecturerManagement from "@/components/Lecturer/LecturerManagement";
 import SemesterManagement from "@/components/Semester/SemesterManagement";
 import CourseManagement from "@/components/Course/CourseManagement";
+import ProblemManagement from "@/components/Problem/ProblemManagement";
 
 Vue.use(VueRouter);
-
-
 
 export const router = new VueRouter({
   mode: 'history',
@@ -22,7 +21,7 @@ export const router = new VueRouter({
           { path: '/lecturer-management', name: 'lecturer-management', component: LecturerManagement },
           { path: '/semester-management', name: 'semester-management', component: SemesterManagement },
           { path: '/course-management', name: 'course-management', component: CourseManagement },
-
+          { path: '/problem-management', name: 'problem-management', component: ProblemManagement }
       ],
 
     },
