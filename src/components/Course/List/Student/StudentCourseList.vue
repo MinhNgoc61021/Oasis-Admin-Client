@@ -1,6 +1,6 @@
 <template>
     <b-container>
-        <h5> {{ course_name }} {{ course_code }} (Danh sách sinh viên)</h5>
+        <b-breadcrumb :items="route"></b-breadcrumb>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
                 <b-pagination-nav
@@ -88,7 +88,7 @@
     import SearchStudentByCourse from "@/components/Course/List/Student/SearchStudentByCourse";
 
     export default {
-        props: ['prop_course'],
+        props: ['id', 'code', 'name'],
         name: "StudentCourseList",
         components: {
             SearchStudentByCourse,
@@ -96,9 +96,9 @@
         data() {
           return {
               SearchStudentByCourse,
-              course_id: this.prop_course.course_id,
-              course_name: this.prop_course.name,
-              course_code: this.prop_course.code,
+              course_id: this.id,
+              course_name: this.name,
+              course_code: this.code,
               studentItems: [],
               perPage: 10,
               currentPage: 1,
@@ -106,6 +106,16 @@
               sortBy: 'code',
               sortOrder: 'asc',
               totalPage: 1,
+              route: [
+                  {
+                    text: 'Danh sách lớp',
+                    to: { name: 'course-list' }
+                  },
+                  {
+                    text: 'Danh sách sinh viên ' + this.name + ' (' + this.code + ')',
+                    active: false,
+                  }
+              ],
               fields: [
                   {
                       key: 'code',
@@ -175,7 +185,7 @@
               busy: false,
               AddStudentModal: {
                   id: 'add-student-modal',
-                  title: 'Thêm sinh viên vào lớp ' + this.prop_course.name + ' (' + this.prop_course.code + ')',
+                  title: 'Thêm sinh viên vào lớp ' + this.name + ' (' + this.code + ')',
                   SubmitStudentForm: {
                       student_id: '',
                       notFilled: false,

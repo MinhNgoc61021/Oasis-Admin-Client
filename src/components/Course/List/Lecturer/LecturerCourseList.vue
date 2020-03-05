@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <b-breadcrumb :items="route"></b-breadcrumb>
         <h5> {{ course_name }} {{ course_code }} (Danh sách giảng viên)</h5>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
@@ -88,16 +89,16 @@
 
     export default {
         name: "LecturerCourseList",
-        props: ['prop_course'],
+        props: ['id', 'code', 'name'],
         components: {
             SearchLecturerByCourse,
         },
         data() {
           return {
               SearchLecturerByCourse,
-              course_id: this.prop_course.course_id,
-              course_name: this.prop_course.name,
-              course_code: this.prop_course.code,
+              course_id: this.id,
+              course_name: this.name,
+              course_code: this.code,
               lecturerItems: [],
               perPage: 10,
               currentPage: 1,
@@ -105,6 +106,16 @@
               sortBy: 'user_id',
               sortOrder: 'asc',
               totalPage: 1,
+              route: [
+                  {
+                    text: 'Danh sách lớp',
+                    to: { name: 'course-list' }
+                  },
+                  {
+                    text: 'Danh sách giảng viên',
+                    active: false,
+                  }
+              ],
               fields: [
                   {
                       key: 'user_id',
@@ -161,7 +172,7 @@
               busy: false,
               AddLecturerModal: {
                   id: 'add-lecturer-modal',
-                  title: 'Thêm giảng viên vào lớp ' + this.prop_course.name + ' (' + this.prop_course.code + ')',
+                  title: 'Thêm giảng viên vào lớp ' + this.name + ' (' + this.code + ')',
                   SubmitLecturerForm: {
                       user_id: '',
                       notFilled: false,

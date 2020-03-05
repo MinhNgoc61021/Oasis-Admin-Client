@@ -4,7 +4,7 @@
         <b-row>
           <b-col align-self="start">
             <b-navbar toggleable="sm" class="border-bottom" variant="light" fixed="top" type="light">
-              <b-navbar-brand to="/user-management"><img :src="'img/oasis.png'" height="35" width="auto" alt="OASIS Admin"></b-navbar-brand>
+              <b-navbar-brand to="/user-management"><img :src="'/img/oasis.png'" height="35" width="auto" alt="OASIS Admin"></b-navbar-brand>
               <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown right>
                   <!-- Using 'button-content' slot -->
@@ -23,7 +23,7 @@
       <div style="margin-top: 88px;">
           <!--content-->
           <b-row class="m-2 mt-3">
-            <b-col class="col-3">
+            <b-col>
               <div>
                 <b-list-group>
                   <b-list-group-item to="/user-management">Quản lý người dùng</b-list-group-item>
@@ -35,7 +35,7 @@
                 </b-list-group>
               </div>
             </b-col>
-            <b-col class="col-9" align-self="center">
+            <b-col :class="{ 'col-9': activation }" align-self="center">
               <router-view></router-view>
             </b-col>
           </b-row>
@@ -66,14 +66,17 @@
         data() {
             return {
                 collapsed: false,
+                width: window.innerWidth,
+                activation: true,
+            }
+        },
+        watch: {
+            width: function (value) {
+              console.log(value);
             }
         },
     }
 </script>
 
 <style scoped>
-  .hd {
-    background: -webkit-gradient(linear,left top,right top,from(#48b1bf),to(#677ebd));
-    background: linear-gradient(90deg,#48b1bf,#677ebd);
-  }
 </style>

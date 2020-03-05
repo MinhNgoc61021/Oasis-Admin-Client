@@ -1,92 +1,86 @@
 <template>
-    <b-tabs v-model="tabIndex" align="center" small content-class="mt-3">
-        <b-tab title="Danh sách lớp môn học">
-            <b-container>
-                <b-row>
-                    <b-col sm="7" md="6" class="my-1 mb-2">
-                        <b-pagination-nav
-                                v-model="currentPage"
-                              :total-rows="perPage"
-                              :number-of-pages="totalPage"
-                              align="fill"
-                              size="sm"
-                              class="my-0 light"
-                              base-url="#"
-                              first-number
-                              last-number
-                              @input="getCourseRecordData"
-                            ></b-pagination-nav>
-                    </b-col>
-                    <b-col class="ml-auto my-1">
-                        <b-form-select
-                                v-model="selectedSemesterItem"
-                                :options="semesterOptions"
-                                size="sm"
-                                value-field="semester_id"
-                                text-field="name"
+     <b-container>
+         <b-row>
+             <b-col sm="7" md="6" class="my-1 mb-2">
+                 <b-pagination-nav
+                         v-model="currentPage"
+                         :total-rows="perPage"
+                         :number-of-pages="totalPage"
+                         align="fill"
+                         size="sm"
+                         class="my-0 light"
+                         base-url="#"
+                         first-number
+                         last-number
+                         @input="getCourseRecordData"
+                 ></b-pagination-nav>
+             </b-col>
+             <b-col class="ml-auto my-1">
+                 <b-form-select
+                         v-model="selectedSemesterItem"
+                         :options="semesterOptions"
+                         size="sm"
+                         value-field="semester_id"
+                         text-field="name"
                         >
-                            <template v-slot:first>
-                                <b-form-select-option value="" disabled>-- Hãy chọn kỳ học trước để lấy danh sách môn học --</b-form-select-option>
-                            </template>
-                        </b-form-select>
-                    </b-col>
-                    <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                        <b-button size="sm" variant="outline-success" @click="getCourseRecordData">
-                            <b-icon icon="arrow-repeat
-                               "></b-icon>
-                            <span>
-                                Làm mới
-                            </span>
-                        </b-button>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <b-table responsive
-                                 show-empty
-                                 select-mode="single"
-                                 empty-text="Danh sách môn học trống (Lưu ý: Hãy chọn kỳ học trước)"
-                                 :busy="busy"
-                                 head-variant="light"
-                                 :small="true"
-                                 size="sm"
-                                 :items="courseItems"
-                                 :fields="fields"
-                                 :per-page="perPage"
-                                 :sort-by.sync="sortBy"
-                                 @sort-changed="sortCourseRecordData"
-                                 :sort-direction="sortOrder"
-                                 hover
-                        >
-                            <template v-slot:table-busy>
-                                <div class="text-center text-danger my-2">
-                                    <b-spinner class="align-middle"></b-spinner>
-                                    <strong class="ml-md-2">Đang tải...</strong>
-                                </div>
-                            </template>
-                            <template v-slot:cell(studentList)="row">
-                                <div>
-                                    <b><a style="cursor: pointer" @click="getStudentCourseList(row.item)">Danh sách sinh viên</a></b>
-                                </div>
-                            </template>
-                            <template v-slot:cell(lecturerList)="row">
-                                <div>
-                                    <b><a style="cursor: pointer" @click="getLecturerRecordData(row.item)">Danh sách giảng viên</a></b>
-                                </div>
-                            </template>
-                            <template v-slot:cell(actions)="row">
-                                <div class="text-center text-danger my-2" style="min-width: 100px;">
-                                    <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
-                                        <b-icon icon="pencil"></b-icon>
-                                    </b-button>
-                                    <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteCourse(row.item)">
-                                        <b-icon icon="trash"></b-icon>
-                                    </b-button>
-                                </div>
-                            </template>
-                        </b-table>
-
-                        <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
+                     <template v-slot:first>
+                         <b-form-select-option value="" disabled>-- Hãy chọn kỳ học trước để lấy danh sách môn học --</b-form-select-option>
+                     </template>
+                 </b-form-select>
+             </b-col>
+             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
+                 <b-button size="sm" variant="outline-success" @click="getCourseRecordData">
+                     <b-icon icon="arrow-repeat"></b-icon>
+                     <span>Làm mới</span>
+                 </b-button>
+             </b-col>
+         </b-row>
+         <b-row>
+             <b-col>
+                 <b-table responsive
+                          show-empty
+                          select-mode="single"
+                          empty-text="Danh sách môn học trống (Lưu ý: Hãy chọn kỳ học trước)"
+                          :busy="busy"
+                          head-variant="light"
+                          :small="true"
+                          size="sm"
+                          :items="courseItems"
+                          :fields="fields"
+                          :per-page="perPage"
+                          :sort-by.sync="sortBy"
+                          @sort-changed="sortCourseRecordData"
+                          :sort-direction="sortOrder"
+                          hover
+                 >
+                     <template v-slot:table-busy>
+                         <div class="text-center text-danger my-2">
+                             <b-spinner class="align-middle"></b-spinner>
+                             <strong class="ml-md-2">Đang tải...</strong>
+                         </div>
+                     </template>
+                     <template v-slot:cell(studentList)="row">
+                         <div>
+                             <a style="cursor: pointer; color: #007bff" @click="getStudentCourseList(row.item)">Danh sách sinh viên</a>
+                         </div>
+                     </template>
+                     <template v-slot:cell(lecturerList)="row">
+                         <div>
+                             <a style="cursor: pointer; color: #007bff" @click="getLecturerRecordData(row.item)">Danh sách giảng viên</a>
+                         </div>
+                     </template>
+                     <template v-slot:cell(actions)="row">
+                         <div class="text-center text-danger my-2" style="min-width: 100px;">
+                             <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
+                                 <b-icon icon="pencil"></b-icon>
+                             </b-button>
+                             <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteCourse(row.item)">
+                                 <b-icon icon="trash"></b-icon>
+                             </b-button>
+                         </div>
+                     </template>
+                 </b-table>
+                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
                             <b-form @submit.prevent="submitCourseUpdate">
                                 <b-form-group
                                         id="edit-input-group-1"
@@ -136,34 +130,19 @@
                                 <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
                             </b-form>
                         </b-modal>
-                    </b-col>
-                </b-row>
-            </b-container>
-        </b-tab>
-        <b-tab title="Danh sách sinh viên" :disabled="StudentCourseDisable" lazy>
-            <StudentCourseList :prop_course="propStudentCourse"></StudentCourseList>
-        </b-tab>
-        <b-tab title="Danh sách giàng viên" :disabled="LecturerCourseDisable" lazy>
-            <LecturerCourseList :prop_course="propLecturerCourse"></LecturerCourseList>
-        </b-tab>
-    </b-tabs>
+             </b-col>
+         </b-row>
+     </b-container>
 </template>
 
 <script>
     import axios from 'axios';
-    import StudentCourseList from "@/components/Course/List/Student/StudentCourseList";
-    import LecturerCourseList from "@/components/Course/List/Lecturer/LecturerCourseList";
     import { mapState, mapActions } from 'vuex';
 
     export default {
         name: "CourseList",
-        components: {
-            StudentCourseList, LecturerCourseList,
-        },
         data() {
           return {
-              StudentCourseList,
-              LecturerCourseList,
               selectedSemesterItem: '',
               semesterOptions: [],
               courseItems: [],
@@ -175,9 +154,6 @@
               totalPage: 1,
               StudentCourseDisable: true,
               LecturerCourseDisable: true,
-              propStudentCourse: Object,
-              propLecturerCourse: Object,
-              tabIndex: 0,
               fields: [
                   {
                       key: 'course_id',
@@ -426,13 +402,19 @@
             },
             getStudentCourseList(course_item) {
                 this.StudentCourseDisable = false;
-                this.propStudentCourse = course_item;
-                this.tabIndex = 1;
+                this.$router.push({ name: 'student-course-list',
+                                    params: { id: course_item.course_id,
+                                            code: course_item.code,
+                                            name: course_item.name }
+                });
             },
             getLecturerRecordData(course_item) {
                 this.LecturerCourseDisable = false;
-                this.propLecturerCourse = course_item;
-                this.tabIndex = 2;
+                this.$router.push({ name: 'lecturer-course-list',
+                                    params: { id: course_item.course_id,
+                                            code: course_item.code,
+                                            name: course_item.name }
+                });
             },
         },
         created() {

@@ -112,6 +112,16 @@
                       sortable: true,
                   },
                   {
+                      key: 'problem_statement',
+                      label: 'Nội dung',
+                      sortable: true,
+                  },
+                  {
+                      key: 'category.name',
+                      label: 'Phân loại',
+                      sortable: true,
+                  },
+                  {
                       key: 'actions',
                       label: 'Hành động'
                   }

@@ -7,6 +7,9 @@ import LecturerManagement from "@/components/Lecturer/LecturerManagement";
 import SemesterManagement from "@/components/Semester/SemesterManagement";
 import CourseManagement from "@/components/Course/CourseManagement";
 import ProblemManagement from "@/components/Problem/ProblemManagement";
+import CourseList from "@/components/Course/List/CourseList";
+import StudentCourseList from "@/components/Course/List/Student/StudentCourseList";
+import LecturerCourseList from "@/components/Course/List/Lecturer/LecturerCourseList";
 
 Vue.use(VueRouter);
 
@@ -20,8 +23,14 @@ export const router = new VueRouter({
           { path: '/user-management', name: 'user-management', component: UserManagement },
           { path: '/lecturer-management', name: 'lecturer-management', component: LecturerManagement },
           { path: '/semester-management', name: 'semester-management', component: SemesterManagement },
-          { path: '/course-management', name: 'course-management', component: CourseManagement },
-          { path: '/problem-management', name: 'problem-management', component: ProblemManagement }
+          { path: '/problem-management', name: 'problem-management', component: ProblemManagement },
+          { path: '/course-management', name: 'course-management', redirect: '/course-management/course-list', component: CourseManagement,
+            children: [
+                { path: '/course-management/course-list', props: true, name: 'course-list', component: CourseList },
+                { path: '/course-management/student-list/id/:id/code/:code/name/:name', props: true, name: 'student-course-list', component: StudentCourseList },
+                { path: '/course-management/lecturer-list/id/:id/code/:code/name/:name', props: true, name: 'lecturer-course-list', component: LecturerCourseList },
+            ]
+          },
       ],
 
     },
