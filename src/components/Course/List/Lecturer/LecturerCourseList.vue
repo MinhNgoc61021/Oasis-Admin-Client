@@ -1,7 +1,6 @@
 <template>
     <b-container>
         <b-breadcrumb :items="route"></b-breadcrumb>
-        <h5> {{ course_name }} {{ course_code }} (Danh sách giảng viên)</h5>
         <b-row>
             <b-col sm="7" md="6" class="my-1 mb-2">
                 <b-pagination-nav
@@ -112,7 +111,7 @@
                     to: { name: 'course-list' }
                   },
                   {
-                    text: 'Danh sách giảng viên',
+                    text: 'Danh sách giảng viên ' + this.name + ' (' + this.code + ')',
                     active: false,
                   }
               ],
