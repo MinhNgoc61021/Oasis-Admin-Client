@@ -1,5 +1,6 @@
 <template>
      <b-container>
+         <b-breadcrumb :items="route"></b-breadcrumb>
          <b-row>
              <b-col sm="7" md="6" class="my-1 mb-2">
                  <b-pagination-nav
@@ -28,10 +29,14 @@
                      </template>
                  </b-form-select>
              </b-col>
-             <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
+             <b-col sm="7" md="3" class="ml-auto my-1" cols="auto">
+                 <b-button size="sm" variant="outline-primary" class="mr-2" @click="newCourseModal($event.target)">
+                     <b-icon icon="plus"></b-icon>
+                     <span>Thêm</span>
+                 </b-button>
                  <b-button size="sm" variant="outline-success" @click="getCourseRecordData">
                      <b-icon icon="arrow-repeat"></b-icon>
-                     <span>Làm mới</span>
+                     <span> Làm mới</span>
                  </b-button>
              </b-col>
          </b-row>
@@ -61,7 +66,7 @@
                      </template>
                      <template v-slot:cell(studentList)="row">
                          <div>
-                             <a style="cursor: pointer; color: #007bff" @click="getStudentCourseList(row.item)">Danh sách sinh viên</a>
+                             <a style="cursor: pointer; color: #007bff;" @click="getStudentCourseList(row.item)">Danh sách sinh viên</a>
                          </div>
                      </template>
                      <template v-slot:cell(lecturerList)="row">
@@ -80,11 +85,14 @@
                          </div>
                      </template>
                  </b-table>
+                 <b-modal :id="SubmitNewCourseModal.id" :title="SubmitNewCourseModal.title" centered hide-footer scrollable button-size="sm">
+                     <Input/>
+                 </b-modal>
                  <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
                             <b-form @submit.prevent="submitCourseUpdate">
                                 <b-form-group
                                         id="edit-input-group-1"
-                                    label="Họ tên:"
+                                    label="Mã lớp:"
                                     label-for="edit-input-1"
                                   >
                                     <b-form-input
@@ -99,7 +107,7 @@
 
                                 <b-form-group
                                         id="edit-input-group-2"
-                                    label="Họ tên:"
+                                    label="Tiêu đề:"
                                     label-for="edit-input-2"
                                   >
                                     <b-form-input
@@ -138,11 +146,16 @@
 <script>
     import axios from 'axios';
     import { mapState, mapActions } from 'vuex';
+    import Input from '../List/Input';
 
     export default {
         name: "CourseList",
+        components: {
+            Input
+        },
         data() {
           return {
+              Input,
               selectedSemesterItem: '',
               semesterOptions: [],
               courseItems: [],
@@ -152,8 +165,12 @@
               sortBy: 'name',
               sortOrder: 'asc',
               totalPage: 1,
-              StudentCourseDisable: true,
-              LecturerCourseDisable: true,
+              route: [
+                  {
+                    text: 'Danh sách lớp môn học',
+                    to: { name: 'course-list' }
+                  },
+              ],
               fields: [
                   {
                       key: 'course_id',
@@ -200,6 +217,10 @@
               ],
               totalCourse: 0,
               busy: false,
+              SubmitNewCourseModal: {
+                  id: 'new-course-modal',
+                  title: 'Thêm lớp học mới',
+              },
               EditModal: {
                   id: 'edit-modal',
                   title: '',
@@ -279,7 +300,10 @@
 
                 }
             },
-            async updateModal(item, index, button) {
+            newCourseModal(button) {
+                this.$root.$emit('bv::show::modal', this.SubmitNewCourseModal.id, button);
+            },
+            updateModal(item, index, button) {
                 this.EditModal.title = `Sửa thông tin lớp môn học ${item.name}`;
                 this.EditModal.UpdateCourseForm.course_id = item.course_id;
                 this.EditModal.UpdateCourseForm.code = item.code;
@@ -401,7 +425,6 @@
                 this.getCourseRecordData();
             },
             getStudentCourseList(course_item) {
-                this.StudentCourseDisable = false;
                 this.$router.push({ name: 'student-course-list',
                                     params: { id: course_item.course_id,
                                             code: course_item.code,
@@ -409,7 +432,6 @@
                 });
             },
             getLecturerRecordData(course_item) {
-                this.LecturerCourseDisable = false;
                 this.$router.push({ name: 'lecturer-course-list',
                                     params: { id: course_item.course_id,
                                             code: course_item.code,

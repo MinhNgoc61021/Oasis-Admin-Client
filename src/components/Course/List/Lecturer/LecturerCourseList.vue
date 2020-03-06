@@ -19,10 +19,11 @@
             <b-col class="ml-auto my-1">
                 <SearchLecturerByCourse :current_course="course_id" location="from-course"></SearchLecturerByCourse>
             </b-col>
-            <b-col sm="7" md="2" class="ml-auto my-1" cols="auto">
-                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-1" @click="openNewLecturerModal($event.target)">
+            <b-col sm="7" md="3" class="m1-auto my-1" cols="auto">
+                <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-2" @click="openNewLecturerModal($event.target)">
                   <b-icon icon="plus
                     "></b-icon>
+                    <span>Thêm</span>
                 </b-button>
                 <b-button size="sm" variant="outline-success" @click="getLecturerRecordData">
                   <b-icon icon="arrow-repeat
@@ -107,11 +108,11 @@
               totalPage: 1,
               route: [
                   {
-                    text: 'Danh sách lớp',
+                    text: 'Danh sách lớp môn học',
                     to: { name: 'course-list' }
                   },
                   {
-                    text: 'Danh sách giảng viên ' + this.name + ' (' + this.code + ')',
+                    text: 'Danh sách giảng viên lớp ' + this.name + ' (' + this.code + ')',
                     active: false,
                   }
               ],

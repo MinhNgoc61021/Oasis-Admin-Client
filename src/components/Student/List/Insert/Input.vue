@@ -52,6 +52,7 @@
           id="input-4"
           size="sm"
           v-model="form.email"
+          readonly
           type="email"
           placeholder="Nhập email"
         ></b-form-input>
@@ -138,9 +139,18 @@
         },
       }
     },
+    watch: {
+        'form.code': function () {
+          this.form.username = this.form.code;
+          this.form.email = this.form.code + '@vnu.edu.vn';
+        },
+        'form.username': function () {
+          this.form.code = this.form.username;
+          this.form.email = this.form.code + '@vnu.edu.vn';
+        },
+    },
     methods: {
       async onSubmit() {
-        console.log('OK');
         console.log(this.form);
         try {
           if (String(this.form.code).replace(' ', '') === ''
@@ -149,7 +159,6 @@
                   || String(this.form.email).replace(' ', '') === ''
                   || String(this.form.dob).replace(' ', '') === ''
                   || String(this.form.class_course).replace(' ', '') === ''
-                  || String(this.form.course).replace(' ', '') === ''
           )
           {
               this.form.notFilled = true;
