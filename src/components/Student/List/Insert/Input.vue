@@ -1,5 +1,4 @@
 <template>
-  <div>
     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
       <b-form-group
         id="input-group-1"
@@ -54,7 +53,6 @@
           v-model="form.email"
           readonly
           type="email"
-          placeholder="Nhập email"
         ></b-form-input>
       </b-form-group>
 
@@ -110,7 +108,6 @@
       <b-button size="sm" type="submit" variant="outline-primary">Tạo</b-button>
       <b-button size="sm" type="reset" class="ml-2" variant="outline-danger">Lại</b-button>
     </b-form>
-  </div>
 </template>
 
 <script>
@@ -129,7 +126,7 @@
             code: '',
             username: '',
             name: '',
-            email: '',
+            email: '@vnu.edu.vn',
             dob: '',
             class_course: '',
             course: '',
@@ -211,12 +208,12 @@
         }
       },
       onReset() {
-        // Reset our form values\
+        // Reset our form values
         this.form.code = '';
         this.form.username = '';
         this.form.name = '';
-        this.form.email = '';
-        this.form.dob = '';
+        this.form.email = '@vnu.edu.vn';
+        this.form.dob = null;
         this.form.class_course = '';
         this.form.actived = true;
         this.form.is_lock = false;

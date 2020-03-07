@@ -30,7 +30,7 @@
         name: "SearchStudentByCourse",
         props: ['current_course', 'location'],
         components: {
-            VueBootstrapTypeahead
+            VueBootstrapTypeahead,
         },
         data() {
             return {

@@ -41,6 +41,7 @@
                          @sort-changed="sortSemesterRecordData"
                          :sort-direction="sortOrder"
                          hover
+                         fixed
                 >
                     <template v-slot:table-busy>
                         <div class="text-center text-danger my-2">

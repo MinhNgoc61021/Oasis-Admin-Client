@@ -66,17 +66,8 @@
                     </template>
                 </b-table>
                 <b-modal :id="AddStudentModal.id" :title="AddStudentModal.title" centered hide-footer button-size="sm">
-                    <b-form @submit.prevent="submitNewStudent">
-                        <b-form-group
-                                id="submit-input-group-1"
-                        >
-                            <SearchStudentByCourse :current_course="course_id" location="outside-course"></SearchStudentByCourse>
-                        </b-form-group>
-                        <b-alert :show="AddStudentModal.SubmitStudentForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-                        <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Thêm</b-button>
-                    </b-form>
+                    <NewStudentForm></NewStudentForm>
                 </b-modal>
-
             </b-col>
         </b-row>
     </b-container>
@@ -87,16 +78,17 @@
     import moment from 'moment/moment';
     import { eventBus } from "@/main";
     import SearchStudentByCourse from "@/components/Course/List/Student/SearchStudentByCourse";
+    import NewStudentForm from "@/components/Course/List/Student/NewStudentForm";
 
     export default {
         props: ['id', 'code', 'name'],
         name: "StudentCourseList",
         components: {
-            SearchStudentByCourse,
+            SearchStudentByCourse, NewStudentForm
         },
         data() {
           return {
-              SearchStudentByCourse,
+              SearchStudentByCourse, NewStudentForm,
               course_id: this.id,
               course_name: this.name,
               course_code: this.code,
@@ -187,10 +179,6 @@
               AddStudentModal: {
                   id: 'add-student-modal',
                   title: 'Thêm sinh viên vào lớp ' + this.name + ' (' + this.code + ')',
-                  SubmitStudentForm: {
-                      student_id: '',
-                      notFilled: false,
-                  }
               }
           }
         },
@@ -226,45 +214,6 @@
                     this.busy = false;
                     throw error;
 
-                }
-            },
-            async submitNewStudent() {
-                try {
-                  if (String(this.AddStudentModal.SubmitStudentForm.student_id,).replace(' ', '') === '') {
-                      this.AddStudentModal.SubmitStudentForm.notFilled = true;
-                      setTimeout(() => {
-                        this.AddStudentModal.SubmitStudentForm.notFilled = false
-                      }, 3000);
-                  }
-                  else {
-                      const response = await axios({
-                          url: 'http://localhost:5000/student/create-student-course-record',
-                          method: 'post',
-                          changeOrigin: true,
-                          data: {
-                              new_student_id: this.AddStudentModal.SubmitStudentForm.student_id,
-                              course_id: this.course_id,
-                          },
-                  });
-                    if (response.status === 200) {
-                      this.$bvToast.toast(`Thêm sinh viên vào lớp thành công!`, {
-                        title: `Thành công`,
-                        variant: 'success',
-                        solid: true,
-                        appendToast: true,
-                      });
-                      this.$root.$emit('bv::hide::modal', this.AddStudentModal.id);
-                      this.onReset();
-                      this.getStudentCourseRecordData();
-                    }
-                  }
-                } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi thêm sinh viên vào lớp!`, {
-                        title: `Thất bại`,
-                        variant: 'danger',
-                        solid: true,
-                        appendToast: true,
-                    });
                 }
             },
             deleteStudent(item) {

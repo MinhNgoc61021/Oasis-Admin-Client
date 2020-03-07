@@ -89,28 +89,27 @@
                      <Input/>
                  </b-modal>
                  <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                            <b-form @submit.prevent="submitCourseUpdate">
-                                <b-form-group
-                                        id="edit-input-group-1"
-                                    label="Mã lớp:"
-                                    label-for="edit-input-1"
-                                  >
-                                    <b-form-input
-                                      id="edit-input-1"
-                                      v-model="EditModal.UpdateCourseForm.code"
-                                      type="text"
-                                      size="sm"
-                                      required
-                                      placeholder="Nhập mã lớp môn học"
-                                    ></b-form-input>
+                     <b-form @submit.prevent="submitCourseUpdate">
+                         <b-form-group
+                                 id="edit-input-group-1"
+                                 label="Mã lớp:"
+                                 label-for="edit-input-1"
+                         >
+                             <b-form-input
+                                     id="edit-input-1"
+                                     v-model="EditModal.UpdateCourseForm.code"
+                                     type="text"
+                                     size="sm"
+                                     required
+                                     placeholder="Nhập mã lớp môn học"
+                             ></b-form-input>
                                 </b-form-group>
 
                                 <b-form-group
                                         id="edit-input-group-2"
-                                    label="Tiêu đề:"
-                                    label-for="edit-input-2"
-                                  >
-                                    <b-form-input
+                                        label="Tiêu đề:"
+                                        label-for="edit-input-2"
+                                ><b-form-input
                                       id="edit-input-2"
                                       v-model="EditModal.UpdateCourseForm.name"
                                       type="text"
@@ -120,24 +119,24 @@
                                     ></b-form-input>
                                 </b-form-group>
 
-                                <b-form-group
-                                    id="input-group-3"
-                                    label="Mô tả:"
-                                    label-for="input-3"
-                                  >
-                                    <b-form-textarea
-                                      id="input-3"
-                                      size="sm"
-                                      v-model="EditModal.UpdateCourseForm.description"
-                                      rows="4"
-                                      max-rows="8"
-                                      placeholder="Nhập mô tả (Không bắt buộc)"
-                                    ></b-form-textarea>
-                                  </b-form-group>
-                                <b-alert :show="EditModal.UpdateCourseForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-                                <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
-                            </b-form>
-                        </b-modal>
+                         <b-form-group
+                                 id="input-group-3"
+                                 label="Mô tả:"
+                                 label-for="input-3"
+                         >
+                             <b-form-textarea
+                                     id="input-3"
+                                     size="sm"
+                                     v-model="EditModal.UpdateCourseForm.description"
+                                     rows="4"
+                                     max-rows="8"
+                                     placeholder="Nhập mô tả (Không bắt buộc)"
+                             ></b-form-textarea>
+                         </b-form-group>
+                         <b-alert :show="EditModal.UpdateCourseForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
+                         <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
+                     </b-form>
+                 </b-modal>
              </b-col>
          </b-row>
      </b-container>
@@ -147,6 +146,7 @@
     import axios from 'axios';
     import { mapState, mapActions } from 'vuex';
     import Input from '../List/Input';
+    import {eventBus} from "@/main";
 
     export default {
         name: "CourseList",
@@ -445,6 +445,9 @@
             if (this.selectedSemesterItem !==  '' ) {
                 this.getCourseRecordData();
             }
+            eventBus.$on('updateCourseList', () => {
+                this.getCourseRecordData();
+            });
         }
     }
 </script>

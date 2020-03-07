@@ -1,8 +1,8 @@
 <template>
     <div>
         <vue-bootstrap-typeahead
-          v-model="searchUsername" size="sm"
-          :serializer="s => s.username"
+          v-model="searchName" size="sm"
+          :serializer="s => s.name"
           :placeholder="message"
           :data="searchResults"
           @hit="searchSelect = $event"
@@ -11,10 +11,9 @@
           ref="typeahead"
         >
             <template slot="suggestion" slot-scope="{ data }">
+                <span><b>Họ tên: </b>{{ data.name }}</span><br>
                 <span><b>Tên đăng nhập: </b>{{ data.username }}</span><br>
-                <span><b>Email: </b>{{ data.email}}</span><br>
-                <span><b>Họ tên: </b>{{ data.name }}</span>
-
+                <span><b>Email: </b>{{ data.email}}</span>
             </template>
         </vue-bootstrap-typeahead>
     </div>
@@ -34,16 +33,16 @@
         },
         data() {
             return {
-                searchUsername: '',
+                searchName: '',
                 searchResults: [],
                 minSearchChar: 1,
                 range: 1000,
-                message: 'Tìm kiếm bằng tên đăng nhập',
+                message: 'Tìm kiếm bằng họ tên',
                 searchSelect: Object,
             }
         },
         watch: {
-            searchUsername: debounce(function () {
+            searchName: debounce(function () {
                 this.onSearch();
             }, 500),
             searchSelect: function () {
@@ -57,7 +56,7 @@
         },
         methods: {
             async onSearch() {
-                if (this.searchUsername.length > 16  || this.searchUsername.length === 0) {
+                if (this.searchName.length > 16  || this.searchName.length === 0) {
                     this.searchResults = [];
                 }
                 else {
@@ -69,7 +68,7 @@
                         changeOrigin: true,
                         params: {
                             course_id: this.current_course,
-                            searchUsername: this.searchUsername,
+                            searchName: this.searchName,
                         },
                     });
                         if (response.status === 200) {
@@ -81,7 +80,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm giảng viên có tài khoản ${this.searchUsername}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm giảng viên ${this.searchName}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,

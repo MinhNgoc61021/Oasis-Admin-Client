@@ -53,8 +53,8 @@
       </b-form-group>
 
       <b-alert :show="form.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-      <b-button size="sm" type="submit" variant="outline-primary">Tạo</b-button>
-      <b-button size="sm" type="reset" class="ml-2" variant="outline-danger">Lại</b-button>
+      <b-button size="sm" type="submit" style="float: right" variant="outline-primary">Tạo</b-button>
+      <b-button size="sm" type="reset" style="float: right" class="mr-2" variant="outline-danger">Lại</b-button>
     </b-form>
   </div>
 </template>
@@ -112,7 +112,8 @@
                 solid: true,
                 appendToast: true,
               });
-              this.onReset();
+              this.$root.$emit('bv::hide::modal', 'new-course-modal');
+              eventBus.$emit('updateCourseList');
             }
             else if (response.status === 202) {
               this.$bvToast.toast(`Trùng lặp dữ liệu!`, {

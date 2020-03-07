@@ -4,7 +4,7 @@
         <Header></Header>
       </div>
 
-      <div style="margin-top: 50px;">
+      <div style="margin-top: 80px;">
         <!--content-->
         <MainContent></MainContent>
         <!--footer-->
