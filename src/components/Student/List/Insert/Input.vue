@@ -9,6 +9,7 @@
           id="input-1"
           size="sm"
           v-model="form.code"
+          maxlength="8"
           type="text"
           placeholder="Nhập mã số sinh viên"
         ></b-form-input>
@@ -165,23 +166,23 @@
           }
           else {
             const response = await axios({
-            url: 'http://localhost:5000/student/create-record',
-            method: 'post',
-            changeOrigin: true,
-            data: {
-              new_code: this.form.code,
-              new_username: this.form.username,
-              new_name: this.form.name,
-              new_email: this.form.email,
-              new_dob: this.form.dob,
-              new_class_cource: this.form.class_course,
-              new_course_id: this.form.course.course_id,
-              new_actived: this.form.actived,
-              new_is_lock: this.form.is_lock,
-            },
-          });
+              url: 'http://localhost:5000/student/create-record',
+              method: 'post',
+              changeOrigin: true,
+              data: {
+                new_code: this.form.code,
+                new_username: this.form.username,
+                new_name: this.form.name,
+                new_email: this.form.email,
+                new_dob: this.form.dob,
+                new_class_cource: this.form.class_course,
+                new_course_id: this.form.course.course_id,
+                new_actived: this.form.actived,
+                new_is_lock: this.form.is_lock,
+              },
+            });
             if (response.status === 200) {
-              this.$bvToast.toast(`Tạo sinh viên thành công!`, {
+              this.$bvToast.toast(`Tạo và thêm sinh viên thành công!`, {
                 title: `Thành công`,
                 variant: 'success',
                 solid: true,

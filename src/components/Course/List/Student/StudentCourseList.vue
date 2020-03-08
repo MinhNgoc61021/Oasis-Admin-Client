@@ -66,7 +66,7 @@
                     </template>
                 </b-table>
                 <b-modal :id="AddStudentModal.id" :title="AddStudentModal.title" centered hide-footer button-size="sm">
-                    <NewStudentForm></NewStudentForm>
+                    <NewStudentForm :course_id="id" :course_code="code" :course_name="name"></NewStudentForm>
                 </b-modal>
             </b-col>
         </b-row>
