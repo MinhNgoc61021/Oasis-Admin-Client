@@ -65,7 +65,7 @@
                         </div>
                     </template>
                 </b-table>
-                <b-modal :id="AddLecturerModal.id" :title="AddLecturerModal.title" centered hide-footer button-size="sm">
+                <b-modal :id="AddLecturerModal.id" :title="AddLecturerModal.title" centered hide-footer lazy button-size="sm">
                         <b-form @submit.prevent="submitNewLecturer">
                             <b-form-group
                                     id="submit-lecturer-input-group-1"

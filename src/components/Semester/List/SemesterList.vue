@@ -60,7 +60,7 @@
                         </div>
                     </template>
                 </b-table>
-                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
+                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer lazy button-size="sm">
                     <b-form @submit.prevent="submitSemesterUpdate">
                       <b-form-group
                         id="edit-input-group-3"

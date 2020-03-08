@@ -88,7 +88,7 @@
                  <b-modal :id="SubmitNewCourseModal.id" :title="SubmitNewCourseModal.title" centered hide-footer scrollable button-size="sm">
                      <Input/>
                  </b-modal>
-                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
+                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable lazy button-size="sm">
                      <b-form @submit.prevent="submitCourseUpdate">
                          <b-form-group
                                  id="edit-input-group-1"

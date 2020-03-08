@@ -62,8 +62,8 @@
                         </div>
                     </template>
                 </b-table>
-                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitLecturerUpdate" @reset.prevent="onReset">
+                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable lazy button-size="sm">
+                    <b-form @submit.prevent="submitLecturerUpdate">
                       <b-form-group
                         id="edit-input-group-1"
                         label="Email:"

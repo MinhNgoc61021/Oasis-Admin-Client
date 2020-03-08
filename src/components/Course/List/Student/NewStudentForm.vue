@@ -224,6 +224,7 @@
                     this.form.is_lock = false;
                     this.form.actived = true;
                     this.form.buttonType = 'Thêm';
+                    this.form.disableEdit = false;
                 }
             }, 300),
         },
