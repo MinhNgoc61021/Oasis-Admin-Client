@@ -195,7 +195,7 @@
                                 this.form.class_course = res[1].class_course;
                                 this.form.is_lock = res[1].user.is_lock === 1;
                                 this.form.actived = res[1].user.actived === 1;
-                                this.form.buttonType = 'Cập nhật';
+                                this.form.buttonType = 'Thêm';
                                 this.form.disableEdit = true;
                             }
                         }
@@ -346,8 +346,8 @@
                         }
                     }
                     else {
-                        this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn chuyển sinh viên ${this.form.name} sang lớp ${this.course_name} (${this.course_code})?`, {
-                             title: 'Xác nhận thêm sinh viên',
+                        this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn chuyển lớp của sinh viên ${this.form.name} sang lớp ${this.course_name} (${this.course_code})?`, {
+                             title: 'Xác nhận chuyển sinh viên',
                              size: 'md',
                              buttonSize: 'sm',
                              okVariant: 'outline-primary',
