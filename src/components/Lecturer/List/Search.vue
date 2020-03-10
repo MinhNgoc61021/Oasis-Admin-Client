@@ -56,7 +56,7 @@
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: 'http://localhost:5000/lecturer/search',
+                        url: `${process.env.VUE_APP_API_URL}/lecturer/search`,
                         method: 'get',
                         changeOrigin: true,
                         params: {

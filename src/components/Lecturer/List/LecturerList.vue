@@ -238,7 +238,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/lecturer/records',
+                        url: `${process.env.VUE_APP_API_URL}/lecturer/records`,
                         method: 'get',
                         params: {
                             page_index: this.currentPage,
@@ -279,7 +279,7 @@
             async submitLecturerUpdate() {
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/lecturer/update-record',
+                        url: `${process.env.VUE_APP_API_URL}/lecturer/update-record`,
                         method: 'put',
                         data: {
                             user_id: this.EditModal.UpdateLecturerForm.user_id,
@@ -336,7 +336,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/lecturer/delete-record',
+                                url: `${process.env.VUE_APP_API_URL}/lecturer/delete-record`,
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,

@@ -52,7 +52,7 @@
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: 'http://localhost:5000/semester/search',
+                        url: `${process.env.VUE_APP_API_URL}/semester/search`,
                         method: 'get',
                         changeOrigin: true,
                         params: {

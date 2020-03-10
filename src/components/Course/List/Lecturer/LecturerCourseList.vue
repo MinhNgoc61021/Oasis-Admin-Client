@@ -185,7 +185,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/lecturer/records-by-course',
+                        url: `${process.env.VUE_APP_API_URL}/lecturer/records-by-course`,
                         method: 'get',
                         params: {
                             course_id: this.course_id,
@@ -224,7 +224,7 @@
                   }
                   else {
                       const response = await axios({
-                          url: 'http://localhost:5000/lecturer/create-lecturer-course-record',
+                          url: `${process.env.VUE_APP_API_URL}/lecturer/create-lecturer-course-record`,
                           method: 'post',
                           changeOrigin: true,
                           data: {
@@ -277,7 +277,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/lecturer/delete-lecturer-course-record',
+                                url: `${process.env.VUE_APP_API_URL}/lecturer/delete-lecturer-course-record`,
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,

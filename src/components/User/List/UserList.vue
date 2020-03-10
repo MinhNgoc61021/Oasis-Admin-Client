@@ -258,7 +258,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/user/records',
+                        url: `${process.env.VUE_APP_API_URL}/user/records`,
                         method: 'get',
                         params: {
                             page_index: this.currentPage,
@@ -293,7 +293,7 @@
                 this.EditModal.UpdateUserForm.email = item.email;
                 this.EditModal.UpdateUserForm.name = item.name;
                 const permission = await axios({
-                    url: 'http://localhost:5000/user/user-role',
+                    url:   `${process.env.VUE_APP_API_URL}/user/user-role`,
                     method: 'get',
                     params: {
                         user_id: item.user_id,
@@ -326,7 +326,7 @@
                     }
                     else {
                         const response = await axios({
-                            url: 'http://localhost:5000/user/update-record',
+                            url: `${process.env.VUE_APP_API_URL}/user/update-record`,
                             method: 'put',
                             data: {
                                 user_id: this.EditModal.UpdateUserForm.user_id,
@@ -385,7 +385,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/user/delete-record',
+                                url: `${process.env.VUE_APP_API_URL}/user/delete-record`,
                                 method: 'delete',
                                 data: {
                                     delUserID: item.user_id,

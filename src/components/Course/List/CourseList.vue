@@ -252,7 +252,7 @@
             async getSemesterRecordData() {
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/semester/all-records',
+                        url: `${process.env.VUE_APP_API_URL}/semester/all-records`,
                         method: 'get',
                         changeOrigin: true,
                     });
@@ -271,7 +271,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/course/records',
+                        url: `${process.env.VUE_APP_API_URL}/course/records`,
                         method: 'get',
                         params: {
                             semester_id: this.selectedSemesterItem,
@@ -323,7 +323,7 @@
                     }
                     else {
                         const response = await axios({
-                            url: 'http://localhost:5000/course/update-record',
+                            url: `${process.env.VUE_APP_API_URL}/course/update-record`,
                             method: 'put',
                             data: {
                                 course_id: this.EditModal.UpdateCourseForm.course_id,
@@ -379,7 +379,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/course/delete-record',
+                                url: `${process.env.VUE_APP_API_URL}/course/delete-record`,
                                 method: 'delete',
                                 data: {
                                     delCourseID: item.course_id,

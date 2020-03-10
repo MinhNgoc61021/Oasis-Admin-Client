@@ -135,7 +135,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/semester/records',
+                        url: `${process.env.VUE_APP_API_URL}/semester/records`,
                         method: 'get',
                         params: {
                             page_index: this.currentPage,
@@ -180,7 +180,7 @@
                     }
                     else {
                         const response = await axios({
-                            url: 'http://localhost:5000/semester/update-record',
+                            url: `${process.env.VUE_APP_API_URL}/semester/update-record`,
                             method: 'put',
                             data: {
                                 semester_id: this.EditModal.UpdateSemesterForm.semester_id,
@@ -234,7 +234,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/semester/delete-record',
+                                url: `${process.env.VUE_APP_API_URL}/semester/delete-record`,
                                 method: 'delete',
                                 data: {
                                     delSemesterID: item.semester_id,

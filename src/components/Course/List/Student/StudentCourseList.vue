@@ -187,7 +187,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/student/records-by-course',
+                        url: `${process.env.VUE_APP_API_URL}/student/records-by-course`,
                         method: 'get',
                         params: {
                             course_id: this.course_id,
@@ -232,7 +232,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/student/delete-student-course-record',
+                                url: `${process.env.VUE_APP_API_URL}/student/delete-student-course-record`,
                                 method: 'delete',
                                 data: {
                                     // delStudentCode: item.code,

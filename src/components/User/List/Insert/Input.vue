@@ -108,7 +108,7 @@
           }
           else {
             const response = await axios({
-            url: 'http://localhost:5000/user/create-record',
+            url: `${process.env.VUE_APP_API_URL}/user/create-record`,
             method: 'post',
             changeOrigin: true,
             data: {

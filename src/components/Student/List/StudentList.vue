@@ -307,7 +307,7 @@
                 this.busy = true;
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/student/records',
+                        url: `${process.env.VUE_APP_API_URL}/student/records`,
                         method: 'get',
                         params: {
                             page_index: this.currentPage,
@@ -346,7 +346,7 @@
                 this.EditModal.UpdateStudentForm.email = item.user.email;
                 this.EditModal.UpdateStudentForm.class_course = item.class_course;
                 const course = await axios({
-                    url: 'http://localhost:5000/course/student-course',
+                    url: `${process.env.VUE_APP_API_URL}/course/student-course`,
                     method: 'get',
                     params: {
                         student_id: item.student_id,
@@ -378,7 +378,7 @@
                     }
                     else {
                         const response = await axios({
-                            url: 'http://localhost:5000/student/update-record',
+                            url: `${process.env.VUE_APP_API_URL}/student/update-record`,
                             method: 'put',
                             data: {
                                 user_id: this.EditModal.UpdateStudentForm.user_id,
@@ -440,7 +440,7 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: 'http://localhost:5000/student/delete-record',
+                                url: `${process.env.VUE_APP_API_URL}/student/delete-record`,
                                 method: 'delete',
                                 data: {
                                     // delStudentCode: item.code,

@@ -232,7 +232,7 @@
             async studentCourseExistence() {
                 try {
                     const response = await axios({
-                        url: 'http://localhost:5000/student/search-from-course-existence',
+                        url: `${process.env.VUE_APP_API_URL}/student/search-from-course-existence`,
                         method: 'get',
                         changeOrigin: true,
                         params: {
@@ -282,7 +282,7 @@
                                      centered: true,
                                 }).then(async () => {
                                     const response = await axios({
-                                        url: 'http://localhost:5000/student/create-record',
+                                        url: `${process.env.VUE_APP_API_URL}/student/create-record`,
                                         method: 'post',
                                         changeOrigin: true,
                                         data: {
@@ -323,7 +323,7 @@
                                 }).then( async (val) => {
                                     if (val === true) {
                                         const response = await axios({
-                                            url: 'http://localhost:5000/student/create-student-course-record',
+                                            url: `${process.env.VUE_APP_API_URL}/student/create-student-course-record`,
                                             method: 'post',
                                             changeOrigin: true,
                                             data: {
@@ -360,7 +360,7 @@
                         }).then( async (val) => {
                             if (val === true) {
                                 const response = await axios({
-                                    url: 'http://localhost:5000/student/update-student-course-record',
+                                    url: `${process.env.VUE_APP_API_URL}/student/update-student-course-record`,
                                     method: 'put',
                                     changeOrigin: true,
                                     data: {
