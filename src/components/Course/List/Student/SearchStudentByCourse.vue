@@ -81,7 +81,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm sinh viên có MSSV: ${this.searchCode}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error.response.data.error_message} khi tìm kiếm sinh viên có MSSV: ${this.searchCode}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,

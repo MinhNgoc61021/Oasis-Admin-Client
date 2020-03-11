@@ -139,7 +139,7 @@
             }
           }
         } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi ${e} khi tạo người dùng!`, {
+            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi tạo người dùng!`, {
                 title: `Thất bại`,
                 variant: 'danger',
                 solid: true,

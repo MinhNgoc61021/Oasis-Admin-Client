@@ -416,7 +416,7 @@
                     }
 
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật thông tin sinh viên!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi cập nhật thông tin sinh viên!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
@@ -456,7 +456,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi sinh viên ${item.user.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi sinh viên ${item.user.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

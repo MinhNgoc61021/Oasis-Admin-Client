@@ -61,7 +61,7 @@
                     }
                   }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi thêm sinh viên vào lớp!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi thêm sinh viên vào lớp!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,

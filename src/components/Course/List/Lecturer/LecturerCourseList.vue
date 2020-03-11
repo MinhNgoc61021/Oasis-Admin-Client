@@ -293,7 +293,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa giảng viên ${item.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa giảng viên ${item.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

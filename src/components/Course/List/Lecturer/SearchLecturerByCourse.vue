@@ -80,7 +80,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm giảng viên ${this.searchName}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error.response.data.error_message} khi tìm kiếm giảng viên ${this.searchName}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,

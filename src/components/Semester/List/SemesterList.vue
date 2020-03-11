@@ -208,7 +208,7 @@
                         }
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu kỳ học ${this.EditModal.UpdateSemesterForm.name}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi cập nhật dữ liệu kỳ học ${this.EditModal.UpdateSemesterForm.name}!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
@@ -249,7 +249,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa kỳ học ${item.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa kỳ học ${item.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

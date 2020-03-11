@@ -308,7 +308,7 @@
                                     }
                                 })
                             }
-                            else if(this.form.studentNonExistent.includes('chưa có lớp học nào')) {
+                            else if (this.form.studentNonExistent.includes('chưa có lớp học nào')) {
                                 this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn thêm sinh viên ${this.form.name} vào lớp ${this.course_name} (${this.course_code})?`, {
                                      title: 'Xác nhận thêm sinh viên',
                                      size: 'md',
@@ -382,7 +382,7 @@
                         })
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi tạo hoặc thêm sinh viên thất bại!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi tạo hoặc thêm sinh viên thất bại!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,

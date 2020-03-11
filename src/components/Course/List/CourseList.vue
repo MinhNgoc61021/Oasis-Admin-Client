@@ -394,7 +394,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa môn học ${item.name}(${item.code})!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa môn học ${item.name}(${item.code})!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

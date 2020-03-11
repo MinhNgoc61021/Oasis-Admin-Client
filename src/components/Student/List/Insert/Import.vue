@@ -8,20 +8,11 @@
                     v-model="file"
                     :state="state"
                     accept="application/vnd.ms-excel"
-
                     placeholder="Chọn hoặc kéo thả file..."
                     drop-placeholder="Thả file ở đây..."
             >
            </b-form-file>
         </b-form-group>
-        <b-alert :show="show" variant="success">
-            <h4 class="alert-heading">Well done!</h4>
-            <p>
-              GG {{ file }}
-            </p>
-            <hr>
-        </b-alert>
-
     </div>
 </template>
 
@@ -35,12 +26,12 @@
               show: false,
               state: null,
               invalidStatement: '',
+              data: [],
           }
         },
         watch: {
             file: function () {
                 this.show = true;
-                console.log(this.file.type);
                 if (this.file.type === 'application/vnd.ms-excel') {
                     this.uploadExcel();
                 }
@@ -61,20 +52,23 @@
                         }
                     });
                     if (response.status === 200) {
-                        this.$bvToast.toast(`Tại file lên thành công !`, {
+                        console.log(response);
+                        this.$bvToast.toast(`Tại file ${this.file.name} lên thành công!`, {
                             title: `Thành công`,
                             variant: 'success',
                             solid: true,
                             appendToast: true,
                         });
+                        this.state = true;
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi nhập file ${this.file}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi nhập file ${this.file.name}!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
                         appendToast: true,
                     });
+                    this.state = false;
                 }
             }
         },

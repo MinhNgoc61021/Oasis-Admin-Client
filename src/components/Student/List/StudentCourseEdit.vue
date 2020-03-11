@@ -73,7 +73,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm lớp học phần có mã: ${this.searchCode}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error.response.data.error_message} khi tìm kiếm lớp học phần có mã: ${this.searchCode}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,

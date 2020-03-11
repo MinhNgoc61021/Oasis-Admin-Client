@@ -359,7 +359,7 @@
                         }
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateUserForm.user_id}!`, {
+                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi cập nhật dữ liệu người dùng có ID: ${this.EditModal.UpdateUserForm.user_id}!`, {
                         title: `Thất bại`,
                         variant: 'danger',
                         solid: true,
@@ -400,7 +400,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa người dùng có ID: ${item.user_id}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa người dùng có ID: ${item.user_id}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

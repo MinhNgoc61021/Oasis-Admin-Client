@@ -125,7 +125,7 @@
             }
           }
         } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi ${e} khi tạo lớp môn học!`, {
+            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi tạo lớp môn học!`, {
                 title: `Thất bại`,
                 variant: 'danger',
                 solid: true,

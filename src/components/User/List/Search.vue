@@ -73,7 +73,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm người dùng có tài khoản: ${this.searchUsername}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error.response.data.error_message} khi tìm kiếm người dùng có tài khoản: ${this.searchUsername}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,
