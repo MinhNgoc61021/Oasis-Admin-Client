@@ -74,6 +74,7 @@
                           v-model="EditModal.UpdateStudentForm.code"
                           type="text"
                           size="sm"
+                          maxlength="8"
                           placeholder="Nhập mã số sinh viên"
                         ></b-form-input>
                       </b-form-group>
@@ -85,6 +86,7 @@
                       >
                         <b-form-input
                           id="edit-input-1"
+                          readonly
                           v-model="EditModal.UpdateStudentForm.email"
                           type="email"
                           size="sm"
@@ -292,7 +294,7 @@
                       username: '',
                       name: '',
                       dob: '',
-                      email: '',
+                      email: '@vnu.edu.vn',
                       class_course: '',
                       course: Object,
                       actived: Boolean,
@@ -301,6 +303,16 @@
                   }
               }
           }
+        },
+        watch: {
+            'EditModal.UpdateStudentForm.code': function () {
+              this.EditModal.UpdateStudentForm.username = this.EditModal.UpdateStudentForm.code;
+              this.EditModal.UpdateStudentForm.email = this.EditModal.UpdateStudentForm.code + '@vnu.edu.vn';
+            },
+            'EditModal.UpdateStudentForm.username': function () {
+              this.EditModal.UpdateStudentForm.code = this.EditModal.UpdateStudentForm.username;
+              this.EditModal.UpdateStudentForm.email = this.EditModal.UpdateStudentForm.code + '@vnu.edu.vn';
+            },
         },
         methods: {
             async getStudentRecordData() {

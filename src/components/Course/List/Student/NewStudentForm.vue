@@ -114,6 +114,7 @@
 <script>
     import axios from "axios";
     import debounce from 'lodash/debounce';
+    import { eventBus } from "@/main";
 
     export default {
         name: "NewStudentForm",
@@ -404,6 +405,10 @@
                 this.form.buttonType = 'Thêm';
                 this.form.disableEdit = false;
                 // eventBus.$emit('clearCourse');
+                this.refreshStudentList();
+            },
+            refreshStudentList() {
+                eventBus.$emit('refreshStudentList');
             }
         },
     }

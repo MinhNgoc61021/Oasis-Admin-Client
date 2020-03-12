@@ -296,6 +296,9 @@
             });
             eventBus.$on('studentOutsideCourseSearchSelected', (searchSelected) => {
                 this.AddStudentModal.SubmitStudentForm.student_id = searchSelected.student_id;
+            });
+            eventBus.$on('refreshStudentList', () => {
+                this.getStudentCourseRecordData();
             })
         }
     }
