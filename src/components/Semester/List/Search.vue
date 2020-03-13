@@ -67,7 +67,7 @@
                         }
                     }
                     catch(error) {
-                        this.$bvToast.toast(`Gặp lỗi ${error} khi tìm kiếm kỳ học ${this.searchSemester}!`, {
+                        this.$bvToast.toast(`Gặp lỗi ${error.response.data.error_message} khi tìm kiếm kỳ học ${this.searchSemester}!`, {
                             title: `Thất bại`,
                             variant: 'danger',
                             solid: true,

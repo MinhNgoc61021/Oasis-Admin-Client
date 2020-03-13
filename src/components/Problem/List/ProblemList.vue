@@ -258,7 +258,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e} khi xóa kỳ học ${item.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa kỳ học ${item.name}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

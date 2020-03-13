@@ -10,6 +10,7 @@
                 </b-tab>
                 <b-tab title="Thêm">
                     <b-card-body>
+                        <component :is="Input"></component>
                     </b-card-body>
                 </b-tab>
             </b-tabs>
@@ -20,15 +21,16 @@
 
 <script>
     import ProblemList from "@/components/Problem/List/ProblemList";
+    import Input from "@/components/Problem/List/Insert/Input";
 
     export default {
         name: "ProblemManagement",
         components: {
-            ProblemList
+            ProblemList, Input
         },
         data() {
             return {
-                ProblemList
+                ProblemList, Input
             }
         }
     }

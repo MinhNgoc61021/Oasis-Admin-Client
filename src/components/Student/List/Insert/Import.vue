@@ -7,7 +7,7 @@
                     size="sm"
                     v-model="file"
                     :state="state"
-                    accept="application/vnd.ms-excel"
+                    accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     placeholder="Chọn hoặc kéo thả file..."
                     drop-placeholder="Thả file ở đây..."
             >
@@ -32,7 +32,7 @@
         watch: {
             file: function () {
                 this.show = true;
-                if (this.file.type === 'application/vnd.ms-excel') {
+                if (this.file.type === 'application/vnd.ms-excel' || this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
                     this.uploadExcel();
                 }
                 else {
