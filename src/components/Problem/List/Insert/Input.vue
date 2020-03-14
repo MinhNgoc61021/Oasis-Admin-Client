@@ -31,7 +31,7 @@
          </b-form-group>
          <b-form-group
                 id="input-group-5"
-                label="Output:"
+                label="Kiểu output:"
                 label-for="input-5"
           >
              <vue-editor placeholder="Nhập kiểu output" id="input-5" v-model="form.output_format"></vue-editor>

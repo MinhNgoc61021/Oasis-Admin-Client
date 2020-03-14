@@ -49,15 +49,88 @@
                         </div>
                     </template>
                     <template v-slot:cell(actions)="row">
-                        <div class="text-center text-danger my-2" style="min-width: 120px;">
+                        <div class="text-center text-danger my-2" style="min-width: 220px;">
+                            <b-button size="sm" variant="outline-success" @click="row.toggleDetails" class="mr-1">
+                              {{ row.detailsShowing ? 'Ẩn' : 'Hiện' }} chi tiết
+                            </b-button>
                             <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
                                 <b-icon icon="pencil"></b-icon>
                             </b-button>
-                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteSemester(row.item)">
+                            <b-button variant="outline-danger" size="sm"  class="mr-1" @click="deleteProblem(row.item)">
                                 <b-icon icon="trash"></b-icon>
                             </b-button>
                         </div>
                     </template>
+
+                      <template v-slot:row-details="row">
+                        <b-card>
+                          <h4>Chi tiết:</h4>
+                          <b-list-group>
+                            <b-list-group-item>
+                                <h6>Tiêu đề:</h6>
+                                <span>{{ row.item.title }}</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Nội dung:</h6>
+                                <span v-if="String(row.item.problem_statement).replace(' ', '') !== '' && row.item.problem_statement !== null ">{{row.item.problem_statement}}</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Input:</h6>
+                                <span v-if="String(row.item.input_format).replace(' ', '') !== '' && row.item.input_format !== null ">{{row.item.input_format}}</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Output:</h6>
+                                <span v-if="String(row.item.output_format).replace(' ', '') !== '' && row.item.output_format !== null ">{{row.item.output_format}}</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                              <b-list-group-item>
+                                <h6>Giàng buộc:</h6>
+                                  <span v-if="String(row.item.constraints).replace(' ', '') !== '' && row.item.constraints !== null">{{row.item.constraints}}</span>
+                                  <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Mức:</h6>
+                                <span>{{ row.item.level }}</span>
+                            </b-list-group-item><b-list-group-item>
+                                <h6>Loại:</h6>
+                                <span>{{ row.item.category.name }}</span>
+                            </b-list-group-item><b-list-group-item>
+                                <h6>JUnit:</h6>
+                                <span>{{ row.item.junit_rate }}</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Parser:</h6>
+                                <span>{{ row.item.parser_rate }}</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Chấm cấu trúc:</h6>
+                                <span v-if="row.item.mark_parser !== 0">Có</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Chấm chức năng:</h6>
+                                <span v-if="row.item.mark_io !== 0">Có</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Chấm JUnit:</h6>
+                                <span v-if="row.item.mark_junit !== 0">Có</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Code mẫu:</h6>
+                                <span v-if="String(row.item.sample_code).replace(' ', '') !== '' && row.item.sample_code !== null">{{row.item.sample_code}}</span>
+                                <span v-else>Không có</span>
+                            </b-list-group-item>
+                            <b-list-group-item>
+                                <h6>Kiểu submit:</h6>
+                                <span>{{ row.item.submit_type }}</span>
+                            </b-list-group-item>
+                          </b-list-group>
+                        </b-card>
+                      </template>
                 </b-table>
                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
                     <b-form @submit.prevent="submitSemesterUpdate">
@@ -115,6 +188,9 @@
                       key: 'problem_statement',
                       label: 'Nội dung',
                       sortable: true,
+                      tdStyle: {
+                          color: 'red',
+                      },
                   },
                   {
                       key: 'category.name',
@@ -227,8 +303,8 @@
                     this.getProblemRecordData();
                 }
             },
-            deleteSemester(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa kỳ học ${item.name}?`, {
+            deleteProblem(item) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa problem ${item.title}?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -243,14 +319,14 @@
                     if (value === true) {
                         try {
                             const response = await axios({
-                                url: `${process.env.VUE_APP_API_URL}/semester/delete-record`,
+                                url: `${process.env.VUE_APP_API_URL}/problem/delete-record`,
                                 method: 'delete',
                                 data: {
-                                    delSemesterID: item.semester_id,
+                                    delProblemID: item.problem_id,
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa kỳ học ${item.name} thành công!`, {
+                                this.$bvToast.toast(`Xóa problem ${item.title} thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -258,7 +334,7 @@
                                 })
                             }
                         } catch (e) {
-                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa kỳ học ${item.name}!`, {
+                            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi xóa problem ${item.title}!`, {
                                 title: `Thất bại`,
                                 variant: 'danger',
                                 solid: true,

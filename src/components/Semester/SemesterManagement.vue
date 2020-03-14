@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="mb-3">Quản lý kỳ học</h3>
+        <h3 class="mb-3"><b-icon icon="archive"></b-icon> Quản lý kỳ học</h3>
         <b-card no-body>
             <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>
