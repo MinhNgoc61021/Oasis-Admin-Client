@@ -130,7 +130,7 @@
                 label="Chấm JUnit:"
                 label-for="input-14"
           >
-             <b-form-checkbox v-model="form.mark_junit" id="input-13" size="sm" name="check-button" switch>
+             <b-form-checkbox v-model="form.mark_junit" id="input-14" size="sm" name="check-button" switch>
                  <span v-if="form.mark_junit !== true">Không</span>
                  <span v-else>Có</span>
             </b-form-checkbox>
