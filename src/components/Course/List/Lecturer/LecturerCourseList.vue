@@ -21,9 +21,8 @@
             </b-col>
             <b-col sm="7" md="3" class="m1-auto my-1" cols="auto">
                 <b-button size="sm" variant="outline-primary" title="Thêm giảng viên" class="mr-2" @click="openNewLecturerModal($event.target)">
-                  <b-icon icon="plus
-                    "></b-icon>
-                    <span>Thêm</span>
+                  <b-icon icon="people"></b-icon>
+                    <span> Thêm</span>
                 </b-button>
                 <b-button size="sm" variant="outline-success" @click="getLecturerRecordData">
                   <b-icon icon="arrow-repeat

@@ -31,8 +31,8 @@
              </b-col>
              <b-col sm="7" md="3" class="ml-auto my-1" cols="auto">
                  <b-button size="sm" variant="outline-primary" class="mr-2" @click="newCourseModal($event.target)">
-                     <b-icon icon="plus"></b-icon>
-                     <span>Thêm</span>
+                     <b-icon icon="book"></b-icon>
+                     <span> Thêm</span>
                  </b-button>
                  <b-button size="sm" variant="outline-success" @click="getCourseRecordData">
                      <b-icon icon="arrow-repeat"></b-icon>
@@ -66,12 +66,12 @@
                      </template>
                      <template v-slot:cell(studentList)="row">
                          <div>
-                             <a style="cursor: pointer; color: #007bff;" @click="getStudentCourseList(row.item)">Danh sách sinh viên</a>
+                             <a style="cursor: pointer; color: #007bff;" @click="getStudentCourseList(row.item)"><b-icon icon="people"></b-icon> Danh sách sinh viên</a>
                          </div>
                      </template>
                      <template v-slot:cell(lecturerList)="row">
                          <div>
-                             <a style="cursor: pointer; color: #007bff" @click="getLecturerRecordData(row.item)">Danh sách giảng viên</a>
+                             <a style="cursor: pointer; color: #007bff" @click="getLecturerRecordData(row.item)"><b-icon icon="people"></b-icon> Danh sách giảng viên</a>
                          </div>
                      </template>
                      <template v-slot:cell(actions)="row">
@@ -162,7 +162,7 @@
               perPage: 10,
               currentPage: 1,
               filter: '',
-              sortBy: 'name',
+              sortBy: 'course_id',
               sortOrder: 'asc',
               totalPage: 1,
               route: [
