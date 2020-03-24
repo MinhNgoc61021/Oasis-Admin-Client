@@ -20,28 +20,28 @@
                 label="Nội dung:"
                 label-for="input-2"
          >
-             <vue-editor placeholder="Nhập nội dung" id="input-2" v-model="form.problem_statement"></vue-editor>
+             <froala :tag="input" :config="config" id="input-2" placeholder="Nhập nội dung" v-model="form.problem_statement"></froala>
          </b-form-group>
          <b-form-group
                 id="input-group-3"
                 label="Kiểu input:"
                 label-for="input-3"
          >
-             <vue-editor placeholder="Nhập kiểu input" id="input-3" v-model="form.input_format"></vue-editor>
+             <froala id="input-3" :config="config" placeholder="Nhập nội dung" v-model="form.input_format"></froala>
          </b-form-group>
          <b-form-group
                 id="input-group-5"
                 label="Kiểu output:"
                 label-for="input-5"
           >
-             <vue-editor placeholder="Nhập kiểu output" id="input-5" v-model="form.output_format"></vue-editor>
+             <froala id="input-5" :config="config" placeholder="Nhập nội dung" v-model="form.output_format"></froala>
          </b-form-group>
          <b-form-group
                 id="input-group-4"
                 label="Giàng buộc:"
                 label-for="input-4"
           >
-             <vue-editor placeholder="Nhập giàng buộc" id="input-4" v-model="form.constraints"></vue-editor>
+             <froala id="input-4" :config="config" placeholder="Nhập nội dung" v-model="form.constraints"></froala>
          </b-form-group>
          <b-form-group
                 id="input-group-6"
@@ -170,15 +170,14 @@
 
 <script>
   import axios from 'axios';
-  import { VueEditor } from "vue2-editor";
 
   export default {
     name: 'Input',
-    components: {
-      VueEditor
-    },
     data() {
       return {
+          config: {
+              htmlRemoveTags: ['script', 'style', 'base'],
+          },
           options: [
               { value: null, text: 'Hãy chọn loại' },
               { value: 1, text: 'Java cơ bản' },
