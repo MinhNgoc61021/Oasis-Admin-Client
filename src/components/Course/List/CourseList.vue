@@ -167,8 +167,8 @@
               totalPage: 1,
               route: [
                   {
-                    text: 'Danh sách lớp môn học',
-                    to: { name: 'course-list' }
+                      text: 'Danh sách lớp môn học',
+                      to: { name: 'course-list' }
                   },
               ],
               fields: [
