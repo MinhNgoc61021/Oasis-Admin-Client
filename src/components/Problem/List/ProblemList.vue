@@ -133,25 +133,7 @@
                       </template>
                 </b-table>
                 <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
-                    <b-form @submit.prevent="submitSemesterUpdate">
-                      <b-form-group
-                        id="edit-input-group-3"
-                        label="Họ tên:"
-                        label-for="edit-input-3"
-                      >
-                        <b-form-input
-                          id="edit-input-3"
-                          v-model="EditModal.UpdateSemesterForm.name"
-                          type="text"
-                          size="sm"
-                          required
-                          placeholder="Nhập họ tên"
-                        ></b-form-input>
-                      </b-form-group>
-
-                      <b-alert :show="EditModal.UpdateSemesterForm.notFilled" fade variant="danger">Nhập thiếu thông tin!</b-alert>
-                      <b-button type="submit" size="sm" variant="outline-primary" style="float: right">Cập nhật</b-button>
-                    </b-form>
+                    <Edit :problem="EditModal.UpdateProblemForm.problem"></Edit>
                 </b-modal>
             </b-col>
         </b-row>
@@ -160,12 +142,17 @@
 
 <script>
     import axios from 'axios';
+    import Edit from "@/components/Problem/List/Edit";
     import { eventBus } from "@/main";
 
     export default {
         name: "ProblemList",
+        components: {
+            Edit,
+        },
         data() {
           return {
+              Edit,
               ProblemItems: [],
               perPage: 10,
               currentPage: 1,
@@ -207,9 +194,9 @@
               EditModal: {
                   id: 'edit-modal',
                   title: '',
-                  UpdateSemesterForm: {
-                      semester_id: '',
-                      name: '',
+                  UpdateProblemForm: {
+                      problem_id: '',
+                      problem: Object,
                       notFilled: false,
                   }
               }
@@ -249,60 +236,12 @@
                 }
             },
             async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin hoc kỳ ${item.name}`;
-                this.EditModal.UpdateSemesterForm.semester_id = item.semester_id;
-                this.EditModal.UpdateSemesterForm.name = item.name;
+                this.EditModal.title = `Sửa thông tin problem ${item.title}`;
+                this.EditModal.UpdateProblemForm.problem_id = item.problem_id;
+                this.EditModal.UpdateProblemForm.problem = item.problem;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
-            async submitSemesterUpdate() {
-                try {
-                    if (String(this.EditModal.UpdateSemesterForm.name).replace(' ', '') === ''
-                    ) {
-                        this.EditModal.UpdateSemesterForm.notFilled = true;
-                        setTimeout(() => {
-                            this.EditModal.UpdateSemesterForm.notFilled = false;
-                        }, 3000);
-                    }
-                    else {
-                        const response = await axios({
-                            url: `${process.env.VUE_APP_API_URL}/semester/update-record`,
-                            method: 'put',
-                            data: {
-                                semester_id: this.EditModal.UpdateSemesterForm.semester_id,
-                                update_name: this.EditModal.UpdateSemesterForm.name,
-                            },
-                            changeOrigin: true,
-                        });
-                        if (response.status === 200) {
-                            this.$bvToast.toast(`Cập nhật kỳ học ${this.EditModal.UpdateSemesterForm.name} thành công!`, {
-                                title: `Thành công`,
-                                variant: 'success',
-                                solid: true,
-                                appendToast: true,
-                            });
-                            this.$root.$emit('bv::hide::modal', this.EditModal.id);
 
-                        }
-                        else if (response.status === 202) {
-                            this.$bvToast.toast(`Trùng dữ liệu!`, {
-                                title: `Oops!`,
-                                variant: 'warning',
-                                solid: true,
-                                appendToast: true,
-                            })
-                        }
-                    }
-                } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e} khi cập nhật dữ liệu kỳ học ${this.EditModal.UpdateSemesterForm.name}!`, {
-                        title: `Thất bại`,
-                        variant: 'danger',
-                        solid: true,
-                        appendToast: true,
-                    })
-                } finally {
-                    this.getProblemRecordData();
-                }
-            },
             deleteProblem(item) {
                 this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa problem ${item.title}?`, {
                     title: 'Xác nhận xóa',
