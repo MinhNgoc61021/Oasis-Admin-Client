@@ -98,11 +98,11 @@
                                 <span>{{ row.item.category.name }}</span>
                             </b-list-group-item><b-list-group-item>
                                 <h6>JUnit:</h6>
-                                <span>{{ row.item.junit_rate }}</span>
+                                <span>{{ parseFloat(row.item.junit_rate).toFixed(1) }}</span>
                             </b-list-group-item>
                             <b-list-group-item>
                                 <h6>Parser:</h6>
-                                <span>{{ row.item.parser_rate }}</span>
+                                <span>{{ parseFloat(row.item.parser_rate).toFixed(1) }}</span>
                             </b-list-group-item>
                             <b-list-group-item>
                                 <h6>Chấm cấu trúc:</h6>
@@ -195,7 +195,6 @@
                   id: 'edit-modal',
                   title: '',
                   UpdateProblemForm: {
-                      problem_id: '',
                       problem: Object,
                       notFilled: false,
                   }
@@ -236,9 +235,9 @@
                 }
             },
             async updateModal(item, index, button) {
-                this.EditModal.title = `Sửa thông tin problem ${item.title}`;
-                this.EditModal.UpdateProblemForm.problem_id = item.problem_id;
-                this.EditModal.UpdateProblemForm.problem = item.problem;
+                console.log(item);
+                this.EditModal.title = `Sửa thông tin problem ${item.problem_id}`;
+                this.EditModal.UpdateProblemForm.problem = item;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
 
@@ -306,10 +305,9 @@
         },
         created() {
             this.getProblemRecordData();
-            eventBus.$on('semesterSearchSelected', (searchSelected) => {
-                this.ProblemItems = [];
-                this.ProblemItems.push(searchSelected);
-                this.totalPage = 1;
+            eventBus.$on('refreshProblemList', () => {
+                this.$root.$emit('bv::hide::modal', this.EditModal.id);
+                this.getProblemRecordData();
             });
         }
     }

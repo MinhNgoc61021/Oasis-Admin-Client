@@ -86,7 +86,7 @@
                      </template>
                  </b-table>
                  <b-modal :id="SubmitNewCourseModal.id" :title="SubmitNewCourseModal.title" centered hide-footer scrollable button-size="sm">
-                     <Input/>
+                     <Input :semestedID="selectedSemesterItem"/>
                  </b-modal>
                  <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable lazy button-size="sm">
                      <b-form @submit.prevent="submitCourseUpdate">
@@ -219,7 +219,7 @@
               busy: false,
               SubmitNewCourseModal: {
                   id: 'new-course-modal',
-                  title: 'Thêm lớp học mới',
+                  title: 'Thêm lớp môn học cho kỳ học hiện tại',
               },
               EditModal: {
                   id: 'edit-modal',

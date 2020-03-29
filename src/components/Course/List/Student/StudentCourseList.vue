@@ -297,6 +297,7 @@
                 this.AddStudentModal.SubmitStudentForm.student_id = searchSelected.student_id;
             });
             eventBus.$on('refreshStudentList', () => {
+                this.$root.$emit('bv::hide::modal', this.AddStudentModal.id);
                 this.getStudentCourseRecordData();
             })
         }

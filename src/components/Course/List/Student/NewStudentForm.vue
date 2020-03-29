@@ -153,11 +153,10 @@
                 this.form.username = this.form.code;
                 this.form.email = this.form.code + '@vnu.edu.vn';
                 if (this.form.code.length === 8) {
-                    this.courseExistence = this.studentCourseExistence().then((res) => {
+                    this.studentCourseExistence().then((res) => {
                         if (JSON.stringify(res[1]) !== '{}') { // Nếu sinh viên tồn tại
                             if (JSON.stringify(res[0]) !== '{}') {  // Nếu sinh viên đã có lớp học rồi
                                 this.form.state = true;
-
                                 if (parseInt(res[0].course_id) !== parseInt(this.form.course_id)) { // Nếu sinh viên đã có lớp học rồi nhưng ko đúng lớp cần thêm
                                     this.form.current_course_id = res[0].course_id;
                                     this.form.studentExistent = `Sinh viên có MSSV: ${this.form.code} đã có trong lớp khác: ${res[0].name} (${res[0].code})`;

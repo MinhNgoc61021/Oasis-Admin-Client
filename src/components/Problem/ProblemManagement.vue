@@ -1,6 +1,6 @@
 <template>
    <div>
-        <h3 class="mb-3"><b-icon icon="document-code"></b-icon> Quản lý problem</h3>
+        <h3 class="mb-3"><b-icon icon="file-code"></b-icon> Quản lý problem</h3>
         <b-card no-body>
             <b-tabs card lazy>
                 <b-tab title="Quản lý danh sách" active>

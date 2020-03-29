@@ -188,6 +188,24 @@
               { value: 6, text: 'Java Generic Programming' },
               { value: 7, text: 'Mẫu thiết kế' },
           ],
+          form: {
+              title: '',
+              problem_statement: '',
+              input_format: '',
+              constraints: '',
+              output_format: '',
+              junit_rate: '0.6',
+              mark_io: true,
+              mark_junit: true,
+              mark_parser: true,
+              parser_rate: '0.4',
+              level: '1',
+              point: 100,
+              submit_type: 'CODE',
+              sample_code: '',
+              category_id: null,
+              notFilled: false,
+          },
       }
     },
     methods: {
@@ -254,6 +272,25 @@
             });
         }
       },
+      onReset() {
+          // Reset our form values
+          this.form.title = '';
+          this.form.problem_statement = '';
+          this.form.input_format = '';
+          this.form.constraints = '';
+          this.form.output_format = '';
+          this.form.junit_rate = '0.6';
+          this.form.mark_io = true;
+          this.form.mark_junit = true;
+          this.form.mark_parser = true;
+          this.form.parser_rate = '0.4';
+          this.form.level = '1';
+          this.form.point = 100;
+          this.form.submit_type = 'CODE';
+          this.form.sample_code = '';
+          this.form.category_id = null;
+          this.form.notFilled = false;
+      }
     }
   }
 </script>
