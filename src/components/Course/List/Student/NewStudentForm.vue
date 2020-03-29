@@ -307,6 +307,14 @@
                                         this.onReset();
                                         this.refreshStudentList();
                                     }
+                                    else if (response.status === 202) {
+                                        this.$bvToast.toast(`Trùng lặp dữ liệu!`, {
+                                          title: `Oops`,
+                                          variant: 'warning',
+                                          solid: true,
+                                          appendToast: true,
+                                        });
+                                    }
                                 })
                             }
                             else if (this.form.studentNonExistent.includes('chưa có lớp học nào')) {

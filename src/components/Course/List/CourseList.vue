@@ -364,7 +364,7 @@
                 }
             },
             deleteCourse(item) {
-                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa môn học ${item.name}(${item.code})?`, {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa môn học ${item.name} (${item.code})?`, {
                     title: 'Xác nhận xóa',
                     size: 'md',
                     buttonSize: 'sm',
@@ -386,7 +386,7 @@
                                 },
                             });
                             if (response.status === 200) {
-                                this.$bvToast.toast(`Xóa môn học ${item.name}(${item.code})  thành công!`, {
+                                this.$bvToast.toast(`Xóa môn học ${item.name} (${item.code})  thành công!`, {
                                     title: `Thành công`,
                                     variant: 'success',
                                     solid: true,
@@ -445,7 +445,8 @@
             if (this.selectedSemesterItem !==  '' ) {
                 this.getCourseRecordData();
             }
-            eventBus.$on('updateCourseList', () => {
+            eventBus.$on('refreshCourseList', () => {
+                this.$root.$emit('bv::hide::modal', this.SubmitNewCourseModal.id);
                 this.getCourseRecordData();
             });
         }

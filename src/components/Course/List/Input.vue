@@ -95,7 +95,7 @@
                     this.form.description = res.description;
                     this.form.state = true;
                     this.form.Existent = `Lớp học ${this.form.code} đã có trong kỳ học khác.`;
-                    this.form.disableEdit = true;
+                    this.form.disableEdit = false;
                   }
                   else {
                     this.form.course_id = res.course_id;
@@ -117,10 +117,10 @@
                   this.form.description = res.description;
                   this.form.NonExistent = `Lớp học ${this.form.code} hiện tại chưa có kỳ học nào.`;
                   this.form.buttonType = 'Thêm';
-                  this.form.disableEdit = true;
+                  this.form.disableEdit = false;
                 }
               }
-              else { // Nếu sinh viên không tồn tại
+              else { // Nếu lớp không tồn tại
                 this.form.state = false;
                 this.form.NonExistent = `Lớp học ${this.form.code} hiện tại chưa có trong hệ thống. Hãy nhập vào lớp học này`;
                 this.form.submitDisable = false;
@@ -128,62 +128,12 @@
                 this.form.name = '';
                 this.form.description = '';
                 this.form.buttonType = 'Thêm';
+                this.form.disableEdit = false;
               }
           });
       }, 300),
     },
     methods: {
-      async onSubmit() {
-        try {
-          if ( String(this.form.code).replace(' ', '') === ''
-              || String(this.form.name).replace(' ', '') === ''
-              || this.form.semester === null
-          ) {
-              this.form.notFilled = true;
-              setTimeout(() => {
-                this.form.notFilled = false
-              }, 3000);
-          }
-          else {
-            const response = await axios({
-            url: `${process.env.VUE_APP_API_URL}/course/create-record`,
-            method: 'post',
-            changeOrigin: true,
-            data: {
-              new_code: this.form.code,
-              new_name: this.form.name,
-              new_description: this.form.description,
-              semester_id: this.form.semester,
-            },
-          });
-            if (response.status === 200) {
-              this.$bvToast.toast(`Tạo lớp môn học thành công!`, {
-                title: `Thành công`,
-                variant: 'success',
-                solid: true,
-                appendToast: true,
-              });
-              this.$root.$emit('bv::hide::modal', 'new-course-modal');
-              eventBus.$emit('updateCourseList');
-            }
-            else if (response.status === 202) {
-              this.$bvToast.toast(`Trùng lặp dữ liệu!`, {
-                title: `Oops`,
-                variant: 'warning',
-                solid: true,
-                appendToast: true,
-              });
-            }
-          }
-        } catch (e) {
-            this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi tạo lớp môn học!`, {
-                title: `Thất bại`,
-                variant: 'danger',
-                solid: true,
-                appendToast: true,
-            });
-        }
-      },
       async CourseExistence() {
           try {
             const response = await axios({
@@ -207,11 +157,166 @@
             })
           }
       },
+      onSubmit() {
+        try {
+          if (this.form.state === false) {
+            if ( String(this.form.code).replace(' ', '') === ''
+              || String(this.form.name).replace(' ', '') === ''
+              || this.form.semester === null )
+            {
+              this.form.notFilled = true;
+              setTimeout(() => {
+                this.form.notFilled = false
+              }, 3000);
+            }
+            else {
+              if (this.form.NonExistent.includes('chưa có trong hệ thống')) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn tạo và thêm lớp môn học ${this.form.name} vào lớp kỳ học này?`, {
+                  title: 'Xác nhận thêm lớp môn học',
+                  size: 'md',
+                  buttonSize: 'sm',
+                  okVariant: 'outline-danger',
+                  okTitle: 'Có',
+                  cancelTitle: 'Không',
+                  cancelVariant: 'outline-primary',
+                  footerClass: 'p-2',
+                  hideHeaderClose: false,
+                  centered: true,
+                }).then(async () => {
+                  const response = await axios({
+                    url: `${process.env.VUE_APP_API_URL}/course/create-record`,
+                    method: 'post',
+                    changeOrigin: true,
+                    data: {
+                      new_code: this.form.code,
+                      new_name: this.form.name,
+                      new_description: this.form.description,
+                      semester_id: this.form.semester,
+                     },
+                  });
+                  if (response.status === 200) {
+                    this.$bvToast.toast(`Tạo và thêm lớp môn học ${this.form.code} thành công vào kỳ học này!`, {
+                      title: `Thành công`,
+                      variant: 'success',
+                      solid: true,
+                      appendToast: true,
+                    });
+                    this.onReset();
+                    this.refreshCourseList();
+                  }
+                  else if (response.status === 202) {
+                    this.$bvToast.toast(`Trùng lặp dữ liệu!`, {
+                      title: `Oops`,
+                      variant: 'warning',
+                      solid: true,
+                      appendToast: true,
+                    });
+                  }
+                })
+              }
+              else if (this.form.studentNonExistent.includes('chưa có kỳ học nào')) {
+                this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn thêm lớp môn học ${this.form.code}?`, {
+                  title: 'Xác nhận thêm sinh viên',
+                  size: 'md',
+                  buttonSize: 'sm',
+                  okVariant: 'outline-danger',
+                  okTitle: 'Có',
+                  cancelTitle: 'Không',
+                  cancelVariant: 'outline-primary',
+                  footerClass: 'p-2',
+                  hideHeaderClose: false,
+                  centered: true,
+                }).then( async (val) => {
+                  if (val === true) {
+                    const response = await axios({
+                      url: `${process.env.VUE_APP_API_URL}/course/update-record`,
+                      method: 'post',
+                      changeOrigin: true,
+                      data: {
+                        course_id: this.form.course_id,
+                        update_code: this.form.code,
+                        update_name: this.form.name,
+                        update_description: this.form.description,
+                        semester_id: this.form.semester,
+                      },
+                    });
+                    if (response.status === 200) {
+                      this.$bvToast.toast(`Cập nhật và thêm lớp môn học ${this.form.code} thành công vào kỳ học này!`, {
+                        title: `Thành công`,
+                        variant: 'success',
+                        solid: true,
+                        appendToast: true,
+                      });
+                      this.onReset();
+                      this.refreshCourseList();
+                    }
+                  }
+                });
+              }
+            }
+          }
+          else {
+            this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn chuyển lớp ${this.form.code} sang kỳ học này?`, {
+              title: 'Xác nhận chuyển lớp môn học',
+              size: 'md',
+              buttonSize: 'sm',
+              okVariant: 'outline-primary',
+              okTitle: 'Có',
+              cancelTitle: 'Không',
+              cancelVariant: 'outline-danger',
+              footerClass: 'p-2',
+              hideHeaderClose: false,
+              centered: true,
+            }).then( async (val) => {
+              if (val === true) {
+                const response = await axios({
+                  url: `${process.env.VUE_APP_API_URL}/course/update-record`,
+                  method: 'put',
+                  changeOrigin: true,
+                  data: {
+                    course_id: this.form.course_id,
+                    update_code: this.form.code,
+                    update_name: this.form.name,
+                    update_description: this.form.description,
+                    semester_id: this.form.semester,
+                  },
+                });
+                if (response.status === 200) {
+                  this.$bvToast.toast(`Chuyển lớp ${this.form.code} thành công sang kỳ học này!`, {
+                    title: `Thành công`,
+                    variant: 'success',
+                    solid: true,
+                    appendToast: true,
+                  });
+                  this.onReset();
+                  this.refreshCourseList();
+                }
+              }
+            });
+          }
+        } catch (e) {
+          this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi tạo hoặc thêm lớp môn học!`, {
+            title: `Thất bại`,
+            variant: 'danger',
+            solid: true,
+            appendToast: true,
+          });
+        }
+      },
       onReset() {
         // Reset our form values
         this.form.code = '';
         this.form.name = '';
         this.form.description = '';
+        this.form.submitDisable = false;
+        this.form.disableEdit = false;
+        this.form.buttonType = 'Tạo';
+        this.form.NonExistent = '';
+        this.form.Existent = '';
+        this.form.state = false;
+      },
+      refreshCourseList() {
+        eventBus.$emit('refreshCourseList');
       }
     },
   }
