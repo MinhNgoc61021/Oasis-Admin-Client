@@ -2,12 +2,31 @@
     <div>
         <b-overlay :show="loading" rounded="sm">
             <b-form-group
-                :invalid-feedback="invalidStatement"
-              >
+                    label-for="course-input"
+                :invalid-feedback="invalidCourseStatement"
+            >
+                <b-form-select
+                        id="course-input"
+                         v-model="course_id"
+                         :options="courseOptions"
+                         size="sm"
+                         :state="courseState"
+                         value-field="course_id"
+                         text-field="code"
+                        >
+                     <template v-slot:first>
+                         <b-form-select-option value="null" disabled>-- Hãy chọn lớp môn học --</b-form-select-option>
+                     </template>
+                 </b-form-select>
+            </b-form-group>
+            <b-form-group
+                    :valid-feedback="validExcelStatement"
+                    :invalid-feedback="invalidExcelStatement"
+                  >
                 <b-form-file
                         size="sm"
                         v-model="file"
-                        :state="state"
+                        :state="excelState"
                         accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         placeholder="Chọn hoặc kéo thả file..."
                         drop-placeholder="Thả file ở đây..."
@@ -68,9 +87,14 @@
           return {
               file: null,
               show: false,
-              state: null,
-              invalidStatement: '',
+              excelState: null,
+              courseState: false,
+              invalidCourseStatement: '',
+              validExcelStatement: '',
+              invalidExcelStatement: 'Hãy chọn lớp môn học trước',
               data: [],
+              course_id: null,
+              courseOptions: [],
               loading: false,
               new_students_field: [
                   {
@@ -166,13 +190,27 @@
         watch: {
             file: function () {
                 this.show = true;
-                if (this.file.type === 'application/vnd.ms-excel' || this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                    this.uploadExcel();
+                if (this.course_id !== null) {
+                    if (this.file.type === 'application/vnd.ms-excel' || this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        this.uploadExcel();
+                        }
+                    else {
+                        this.excelState = false;
+                        this.invalidExcelStatement = 'Yêu cầu bạn tải file excel có format .xls hoặc .xlsx';
+                    }
                 }
                 else {
-                    this.invalidStatement = 'Yêu cầu bạn tải file excel có format .xls'
+                    this.excelState = false;
+                    this.invalidExcelStatement = 'Yêu cầu chọn lớp môn học trước.';
                 }
-
+            },
+            course_id: function () {
+                if (this.course_id !== null) {
+                    this.courseState = true;
+                    if (this.file !== null) {
+                        this.uploadExcel();
+                    }
+                }
             }
         },
         methods: {
@@ -181,19 +219,18 @@
                     this.loading = true;
                     let formData = new FormData();
                     formData.append('student_list_excel', this.file);
-                    const response = await axios.post(`${process.env.VUE_APP_API_URL}/student/import-excel`, formData, {
+                    formData.append('course_id', this.course_id);
+                    const response = await axios.post(`${process.env.VUE_APP_API_URL}/student/import-excel`, formData,{
                         headers: {
                           'Content-Type': 'multipart/form-data',
-                        }
+                        },
                     });
                     if (response.status === 200) {
                         console.log(response);
-                        this.$bvToast.toast(`Tại file ${this.file.name} lên thành công!`, {
-                            title: `Thành công`,
-                            variant: 'success',
-                            solid: true,
-                            appendToast: true,
-                        });
+                        this.excelState = true;
+                        this.validExcelStatement = `Tải file ${this.file.name} lên thành công!`;
+                        this.loading = false;
+
                         response.data.new_students.forEach((item) => {
                             this.new_students.push(item);
                         });
@@ -203,21 +240,35 @@
                         response.data.updated_students.forEach((item) => {
                             this.updated_students.push(item);
                         });
-                        this.state = true;
-                        this.loading = false;
                     }
                 } catch (e) {
-                    this.$bvToast.toast(`Gặp lỗi ${e.response.data.error_message} khi nhập file ${this.file.name}!`, {
-                        title: `Thất bại`,
-                        variant: 'danger',
-                        solid: true,
-                        appendToast: true,
-                    });
-                    this.state = false;
+                    this.excelState = false;
+                    this.invalidExcelStatement =`Gặp lỗi ${e.response.data.error_message} khi nhập file ${this.file.name}!`;
                     this.loading = false;
+                }
+            },
+            async getCourseRecordData() {
+                try {
+                    const response = await axios({
+                        url: `${process.env.VUE_APP_API_URL}/course/all-records`,
+                        method: 'get',
+                        changeOrigin: true,
+                    });
+                    if (response.status === 200) {
+                        this.courseOptions= [];
+                        response.data.records.forEach((item) => {
+                            this.courseOptions.push(item);
+                        });
+                    }
+                } catch (error) {
+                    this.semesterOptions = [];
+                    throw error;
                 }
             }
         },
+        created() {
+            this.getCourseRecordData();
+        }
     }
 </script>
 <style scoped>

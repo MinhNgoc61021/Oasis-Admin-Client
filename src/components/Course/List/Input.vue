@@ -96,6 +96,7 @@
                     this.form.state = true;
                     this.form.Existent = `Lớp học ${this.form.code} đã có trong kỳ học khác.`;
                     this.form.disableEdit = false;
+                    this.form.buttonType = 'Cập nhật';
                   }
                   else {
                     this.form.course_id = res.course_id;

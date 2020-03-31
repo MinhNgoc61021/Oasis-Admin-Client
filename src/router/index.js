@@ -25,11 +25,11 @@ export const router = new VueRouter({
           { path: '/semester-management', name: 'semester-management', component: SemesterManagement },
           { path: '/problem-management', name: 'problem-management', component: ProblemManagement },
           { path: '/course-management', name: 'course-management', redirect: '/course-management/course-list', component: CourseManagement,
-            children: [
-                { path: '/course-management/course-list', name: 'course-list', component: CourseList },
-                { path: '/course-management/student-list/id/:id/code/:code/name/:name', props: true, name: 'student-course-list', component: StudentCourseList },
-                { path: '/course-management/lecturer-list/id/:id/code/:code/name/:name', props: true, name: 'lecturer-course-list', component: LecturerCourseList },
-            ]
+              children: [
+                  { path: '/course-management/course-list', name: 'course-list', component: CourseList },
+                  { path: '/course-management/student-list/id/:id/code/:code/name/:name', props: true, name: 'student-course-list', component: StudentCourseList },
+                  { path: '/course-management/lecturer-list/id/:id/code/:code/name/:name', props: true, name: 'lecturer-course-list', component: LecturerCourseList },
+              ]
           },
       ],
 
