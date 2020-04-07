@@ -74,7 +74,7 @@
           description: '',
           notFilled: false,
           submitDisable: true,
-          state: false,
+          state: null,
           Existent: '',
           NonExistent: '',
           disableEdit: false,
@@ -84,6 +84,7 @@
     },
     watch: {
       'form.code': debounce (function () {
+        if (this.form.code.length !== 0) {
           this.CourseExistence().then((res) => {
               if (JSON.stringify(res) !== '{}') { // Nếu lớp tồn tại
                 if (String(res.semester).replace(' ', '') !== '') {  // Nếu lớp đã có kỳ học rồi
@@ -132,6 +133,17 @@
                 this.form.disableEdit = false;
               }
           });
+        }
+        else {
+          this.form.state = null;
+          this.form.NonExistent = ``;
+          this.form.submitDisable = false;
+          this.form.course_id = '';
+          this.form.name = '';
+          this.form.description = '';
+          this.form.buttonType = 'Thêm';
+          this.form.disableEdit = false;
+        }
       }, 300),
     },
     methods: {
@@ -312,7 +324,7 @@
         this.form.submitDisable = false;
         this.form.disableEdit = false;
         this.form.buttonType = 'Tạo';
-        this.form.NonExistent = '';
+        this.form.NonExistent = 'Nhập vào lớp môn học';
         this.form.Existent = '';
         this.form.state = false;
       },

@@ -139,7 +139,7 @@
                     is_lock: false,
                     notFilled: false,
                     submitDisable: true,
-                    state: false,
+                    state: null,
                     studentExistent: '',
                     studentNonExistent: 'Yêu cầu nhập đúng 8 ký tự số',
                     buttonType: 'Thêm',
@@ -214,9 +214,14 @@
                     });
                 }
                 else {
-                    this.form.state = false;
-                    this.form.studentExistent = '';
-                    this.form.studentNonExistent = 'Yêu cầu nhập đúng 8 ký tự số';
+                    if (this.form.code.length !== 0) {
+                      this.form.state = false;
+                      this.form.studentExistent = '';
+                      this.form.studentNonExistent = 'Yêu cầu nhập đúng 8 ký tự số';
+                    }
+                    else {
+                      this.form.state = null;
+                    }
                     this.form.submitDisable = true;
                     this.form.name = '';
                     this.form.dob = '';
@@ -414,6 +419,7 @@
                 this.form.is_lock = false;
                 this.form.buttonType = 'Thêm';
                 this.form.disableEdit = false;
+                this.form.state = null;
                 // eventBus.$emit('clearCourse');
             },
             refreshStudentList() {

@@ -10,6 +10,7 @@ import ProblemManagement from "@/components/Problem/ProblemManagement";
 import CourseList from "@/components/Course/List/CourseList";
 import StudentCourseList from "@/components/Course/List/Student/StudentCourseList";
 import LecturerCourseList from "@/components/Course/List/Lecturer/LecturerCourseList";
+import SignInForm from "@/components/SignIn/SignInForm";
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,7 @@ export const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    { path: '/', name: 'sign-in-form', component: SignInForm },
     { path: '/admin', name: 'admin', redirect: '/user-management', component: AdminPage,
       children: [
           { path: '/student-management', name: 'student-management', component: StudentManagement },

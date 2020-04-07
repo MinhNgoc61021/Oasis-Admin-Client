@@ -5,7 +5,7 @@
             <footer class="page-footer font-small blue">
                 <!-- Copyright -->
                 <div class="footer-copyright text-center mt-3 py-3"><b>© 2020 Copyright: </b>
-                  <a href="#">Oasis Admin</a>
+                  <a href="https://github.com/MinhNgoc61021/Oasis-Admin-Client">Oasis Admin</a>
                 </div>
                 <!-- Copyright -->
 
