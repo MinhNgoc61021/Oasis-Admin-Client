@@ -1,13 +1,13 @@
 <template>
     <b-row>
         <b-col align-self="start">
-            <b-navbar toggleable="sm" class="border-bottom" variant="light" fixed="top" type="light">
+            <b-navbar toggleable="sm" class="border-bottom" variant="light" fixed="top" type="light" >
                 <b-navbar-brand to="/user-management"><img :src="'/img/oasis.png'" height="35" width="auto" alt="OASIS Admin"></b-navbar-brand>
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-item-dropdown right>
+                    <b-nav-item-dropdown right no-caret>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
-                            <span>User</span>
+                            <b-avatar variant="dark" size="35px"></b-avatar> <span>bqcuong</span>
                         </template>
                         <b-dropdown-item>Profile</b-dropdown-item>
                         <b-dropdown-item>Đăng xuất</b-dropdown-item>

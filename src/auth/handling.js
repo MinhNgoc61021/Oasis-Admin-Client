@@ -13,9 +13,7 @@ export async function signIn(username, password) {
         });
         localStorage.setItem('jwt-from-api', JSON.stringify(response.data));
         return response;
-
     } catch (e) {
-        console.log(e);
         return e.response;
     }
 }

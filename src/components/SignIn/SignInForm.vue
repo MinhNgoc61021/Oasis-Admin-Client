@@ -28,10 +28,10 @@
           </b-form-group>
 
           <b-form-invalid-feedback :state="form.validation">
-            {{ form.invalidFeedback }}
+            <b-icon icon="exclamation-triangle"></b-icon> {{ form.invalidFeedback }}
           </b-form-invalid-feedback>
           <b-form-valid-feedback :state="form.validation">
-            {{ form.validFeedback }}
+            <b-icon icon="check-circle"></b-icon> {{ form.validFeedback }}
           </b-form-valid-feedback>
          <b-overlay
               :show="busy"
@@ -92,20 +92,34 @@
             this.form.validation = true;
             this.form.validFeedback = 'Đăng nhập thành công.';
             this.busy = false;
-            router.push('/admin');
+            return true;
           }
           else if (response.status === 401) {
             if (response.data.message === 'student-unauthorized') {
               this.form.validation = false;
               this.form.invalidFeedback = 'Sinh viên không được phép truy cập hệ thống này.';
               this.busy = false;
+              return false;
             }
             else {
               this.form.validation = false;
               this.form.invalidFeedback = 'Sai tài khoản hoặc mật khẩu.';
               this.busy = false;
+              return false;
             }
           }
+        }).catch((err) => {
+          console.log(err);
+          this.form.validation = false;
+          this.form.invalidFeedback = 'Hệ thống hiện tại không thể truy cập được.';
+          this.busy = false;
+          return false;
+        }).then((response) => {
+          setTimeout(() => {
+            if (response === true) {
+              router.push('/admin');
+            }
+          }, 800);
         });
       },
     }
