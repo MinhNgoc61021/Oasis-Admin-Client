@@ -11,6 +11,7 @@ import CourseList from "@/components/Course/List/CourseList";
 import StudentCourseList from "@/components/Course/List/Student/StudentCourseList";
 import LecturerCourseList from "@/components/Course/List/Lecturer/LecturerCourseList";
 import SignInForm from "@/components/SignIn/SignInForm";
+import {getToken} from "@/auth/jwt";
 
 Vue.use(VueRouter);
 
@@ -18,7 +19,7 @@ export const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    { path: '/', name: 'sign-in-form', component: SignInForm },
+    { path: '/sign-in', name: 'sign-in-form', component: SignInForm },
     { path: '/admin', name: 'admin', redirect: '/user-management', component: AdminPage,
       children: [
           { path: '/student-management', name: 'student-management', component: StudentManagement },
@@ -40,3 +41,40 @@ export const router = new VueRouter({
 
   ],
 });
+router.beforeEach ((to, from, next) => {
+
+    // redirect to register page if not logged in or trying to access a restricted page
+    // redirect to admin page if the user is an admin
+    // redirect to student page if the user is a student
+    const publicPages = ['/sign-in'];
+    const securePages = ['/admin', '/student-management', '/lecturer-management', '/user-management', '/semester-management', '/problem-management', '/course-management'];
+    const authRequired = !publicPages.includes(to.path);
+    const loggedIn = getToken();
+
+    // When logging in
+    if (loggedIn) {
+      if (loggedIn.type === 'Admin' || loggedIn.type === 'Lecture') {
+        if (!authRequired) { // When location is register page
+          return next('/admin');
+        }
+        else if (securePages.includes(to.path)) {
+          return next();
+        }
+        else { // Move to a new hook
+          return next();
+        }
+      }
+    }
+    // When not logging in
+    else if (!loggedIn) {
+      if (authRequired) { // When there is no register page
+        return next('/sign-in');
+      }
+      else { // Move to a new hook
+        return next();
+      }
+    }
+    //else next();
+
+});
+

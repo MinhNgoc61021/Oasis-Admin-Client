@@ -52,6 +52,7 @@
 
 <script>
   import {signIn} from "@/auth/handling";
+  import {router} from "@/router";
 
   export default {
     name: 'SignInForm',
@@ -89,13 +90,21 @@
         signIn(this.form.username, this.form.password).then((response) => {
           if (response.status === 200) {
             this.form.validation = true;
-            this.form.validFeedback = 'Đăng nhập thành công';
+            this.form.validFeedback = 'Đăng nhập thành công.';
             this.busy = false;
+            router.push('/admin');
           }
           else if (response.status === 401) {
-            this.form.validation = false;
-            this.form.invalidFeedback = 'Sai tài khoản hoặc mật khẩu';
-            this.busy = false;
+            if (response.data.message === 'student-unauthorized') {
+              this.form.validation = false;
+              this.form.invalidFeedback = 'Sinh viên không được phép truy cập hệ thống này.';
+              this.busy = false;
+            }
+            else {
+              this.form.validation = false;
+              this.form.invalidFeedback = 'Sai tài khoản hoặc mật khẩu.';
+              this.busy = false;
+            }
           }
         });
       },
