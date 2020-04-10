@@ -21,7 +21,6 @@ export async function signIn(username, password) {
 
 export async function getData() {
     try {
-        console.log('BEBE');
         return await axios({
             url: `${process.env.VUE_APP_API_URL}/auth/get-personal-data`,
             method: 'get',
