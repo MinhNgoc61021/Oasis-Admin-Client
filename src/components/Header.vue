@@ -7,10 +7,10 @@
                     <b-nav-item-dropdown right no-caret>
                         <!-- Using 'button-content' slot -->
                         <template v-slot:button-content>
-                            <b-avatar variant="dark" size="35px" :text="avatarTxt"></b-avatar><b> {{ personalData.username }}</b>
+                            <b-avatar variant="dark" size="35px" :text="avatarTxt"></b-avatar><b> {{ name }}</b>
                         </template>
-                        <b-dropdown-item disabled>{{ personalData.email }}</b-dropdown-item>
-                        <b-dropdown-item @click="sign_out">Đăng xuất</b-dropdown-item>
+                        <b-dropdown-item disabled>{{ email }}</b-dropdown-item>
+                        <b-dropdown-item @click="sign_out"><b-icon icon="box-arrow-right"></b-icon> Đăng xuất</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
             </b-navbar>
@@ -26,6 +26,8 @@
         data() {
             return {
                 avatarTxt: '',
+                name: '',
+                email: '',
             }
         },
         computed: {
@@ -36,6 +38,8 @@
         watch: {
           personalData: function () {
               this.toAvatar(this.personalData.name);
+              this.name = this.personalData.name;
+              this.email = this.personalData.email;
           }
         },
         methods: {
@@ -58,6 +62,8 @@
             }
             else if (this.personalData != null) {
                 this.toAvatar(this.personalData.name);
+                this.name = this.personalData.name;
+                this.email = this.personalData.email;
             }
         }
     }

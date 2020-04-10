@@ -75,6 +75,7 @@
 
 <script>
   import axios from 'axios';
+  import {authHeader} from "@/auth/jwt";
 
   export default {
     name: 'Input',
@@ -108,18 +109,19 @@
           }
           else {
             const response = await axios({
-            url: `${process.env.VUE_APP_API_URL}/user/create-record`,
-            method: 'post',
-            changeOrigin: true,
-            data: {
-              new_username: this.form.username,
-              new_name: this.form.name,
-              new_email: this.form.email,
-              new_permission: this.form.permission,
-              new_actived: this.form.actived,
-              new_is_lock: this.form.is_lock,
-            },
-          });
+              url: `${process.env.VUE_APP_API_URL}/user/create-record`,
+              method: 'post',
+              changeOrigin: true,
+              headers: { 'Authorization': authHeader() },
+              data: {
+                new_username: this.form.username,
+                new_name: this.form.name,
+                new_email: this.form.email,
+                new_permission: this.form.permission,
+                new_actived: this.form.actived,
+                new_is_lock: this.form.is_lock,
+              },
+            });
             if (response.status === 200) {
               this.$bvToast.toast(`Tạo người dùng thành công!`, {
                 title: `Thành công`,

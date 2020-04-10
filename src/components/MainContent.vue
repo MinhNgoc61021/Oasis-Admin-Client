@@ -8,7 +8,7 @@
                     <b-list-group-item to="/lecturer-management"><b-icon icon="people"></b-icon><span> Quản lý giảng viên</span></b-list-group-item>
                     <b-list-group-item to="/semester-management"><b-icon icon="archive"></b-icon><span> Quản lý kỳ học</span></b-list-group-item>
                     <b-list-group-item to="/course-management"><b-icon icon="book"></b-icon><span> Quản lý lớp môn học</span></b-list-group-item>
-                    <b-list-group-item to="/problem-management"><b-icon icon="file-code"></b-icon><span> Quản lý các problem</span></b-list-group-item>
+                    <b-list-group-item to="/problem-management"><b-icon icon="code-slash"></b-icon><span> Quản lý các problem</span></b-list-group-item>
                 </b-list-group>
             </div>
         </b-col>

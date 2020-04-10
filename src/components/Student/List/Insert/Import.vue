@@ -33,7 +33,7 @@
                 >
                </b-form-file>
             </b-form-group>
-            <div class="overflow-auto" style="max-height: 600px;">
+            <div class="overflow-auto" style="max-height: 600px;" v-show="show">
                 <b-table
                   small
                   hover
@@ -190,7 +190,6 @@
         },
         watch: {
             file: function () {
-                this.show = true;
                 if (this.course_id !== null) {
                     if (this.file.type === 'application/vnd.ms-excel' || this.file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
                         this.uploadExcel();
@@ -247,6 +246,8 @@
                     this.excelState = false;
                     this.invalidExcelStatement =`Gặp lỗi ${e.response.data.error_message} khi nhập file ${this.file.name}!`;
                     this.loading = false;
+                } finally {
+                    this.show = true;
                 }
             },
             async getCourseRecordData() {

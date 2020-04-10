@@ -1,7 +1,11 @@
 <template>
   <div class="ctn">
     <div class="form">
-      <b-card class="m-5 form-input" header="Đăng nhập">
+      <b-card class="m-5 form-input">
+        <template v-slot:header>
+          <img :src="'/img/oasis.png'" height="35" width="auto" alt="OASIS Admin" class="d-inline-block">
+        </template>
+
         <b-form @submit.prevent="onSubmit">
           <b-form-group
             id="input-group-1"
@@ -91,7 +95,6 @@
           if (response.status === 200) {
             this.form.validation = true;
             this.form.validFeedback = 'Đăng nhập thành công.';
-            this.busy = false;
             return true;
           }
           else if (response.status === 401) {
@@ -117,6 +120,7 @@
         }).then((response) => {
           setTimeout(() => {
             if (response === true) {
+              this.busy = true;
               router.push('/admin');
             }
           }, 800);
