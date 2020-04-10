@@ -168,6 +168,7 @@
 <script>
     import axios from "axios";
     import {eventBus} from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "Edit",
@@ -226,6 +227,7 @@
                         const response = await axios({
                             url: `${process.env.VUE_APP_API_URL}/problem/update-record`,
                             method: 'put',
+                            headers: { 'Authorization': authHeader() },
                             data: {
                                 problem_id: this.editForm.problem_id,
                                 update_title: this.editForm.title,

@@ -201,6 +201,7 @@
     import { eventBus } from "@/main";
     import Search from "@/components/Student/List/Search";
     import StudentCourseEdit from "@/components/Student/List/StudentCourseEdit";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "StudentList",
@@ -321,6 +322,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/student/records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             page_index: this.currentPage,
                             per_page: this.perPage,
@@ -360,6 +362,7 @@
                 const course = await axios({
                     url: `${process.env.VUE_APP_API_URL}/course/student-course`,
                     method: 'get',
+                    headers: { 'Authorization': authHeader() },
                     params: {
                         student_id: item.student_id,
                     },
@@ -392,6 +395,7 @@
                         const response = await axios({
                             url: `${process.env.VUE_APP_API_URL}/student/update-record`,
                             method: 'put',
+                            headers: { 'Authorization': authHeader() },
                             data: {
                                 user_id: this.EditModal.UpdateStudentForm.user_id,
                                 student_id: this.EditModal.UpdateStudentForm.student_id,
@@ -454,6 +458,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/student/delete-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     // delStudentCode: item.code,
                                     delUserID: item.user.user_id,

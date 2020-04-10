@@ -5,11 +5,6 @@
                 <component :is="Input"></component>
             </b-card-body>
         </b-tab>
-        <b-tab title="Import Excel">
-            <b-card-body>
-                <component :is="Import"></component>
-            </b-card-body>
-        </b-tab>
     </b-tabs>
 </template>
 

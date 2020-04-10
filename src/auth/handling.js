@@ -25,7 +25,7 @@ export async function getData() {
         return await axios({
             url: `${process.env.VUE_APP_API_URL}/auth/get-personal-data`,
             method: 'get',
-            headers: {'Authorization': authHeader()} ,
+            headers: { 'Authorization': authHeader() },
             changeOrigin: true,
         });
     } catch (e) {

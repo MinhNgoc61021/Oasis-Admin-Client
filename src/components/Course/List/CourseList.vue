@@ -147,6 +147,7 @@
     import { mapState, mapActions } from 'vuex';
     import Input from '../List/Input';
     import {eventBus} from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "CourseList",
@@ -254,6 +255,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/semester/all-records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         changeOrigin: true,
                     });
                     if (response.status === 200) {
@@ -273,6 +275,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/course/records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             semester_id: this.selectedSemesterItem,
                             page_index: this.currentPage,
@@ -325,6 +328,7 @@
                         const response = await axios({
                             url: `${process.env.VUE_APP_API_URL}/course/update-record`,
                             method: 'put',
+                            headers: { 'Authorization': authHeader() },
                             data: {
                                 course_id: this.EditModal.UpdateCourseForm.course_id,
                                 update_name: this.EditModal.UpdateCourseForm.name,
@@ -381,6 +385,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/course/delete-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     delCourseID: item.course_id,
                                 },

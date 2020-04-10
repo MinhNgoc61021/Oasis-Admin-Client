@@ -23,6 +23,7 @@
     import debounce from 'lodash/debounce';
     import axios from 'axios';
     import { eventBus } from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "Search",
@@ -56,13 +57,14 @@
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: `${process.env.VUE_APP_API_URL}/lecturer/search`,
-                        method: 'get',
-                        changeOrigin: true,
-                        params: {
-                            searchName: this.searchName,
-                        },
-                    });
+                            url: `${process.env.VUE_APP_API_URL}/lecturer/search`,
+                            method: 'get',
+                            headers: { 'Authorization': authHeader() },
+                            changeOrigin: true,
+                            params: {
+                                searchName: this.searchName,
+                            },
+                        });
                         if (response.status === 200) {
                             // console.log(response.data.search_results);
                             response.data.search_results.forEach((item) => {

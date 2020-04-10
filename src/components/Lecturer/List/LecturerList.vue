@@ -149,6 +149,7 @@
     import axios from 'axios';
     import { eventBus } from "@/main";
     import Search from "@/components/Lecturer/List/Search";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "LecturerList",
@@ -240,6 +241,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/lecturer/records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             page_index: this.currentPage,
                             per_page: this.perPage,
@@ -281,6 +283,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/lecturer/update-record`,
                         method: 'put',
+                        headers: { 'Authorization': authHeader() },
                         data: {
                             user_id: this.EditModal.UpdateLecturerForm.user_id,
                             update_username: this.EditModal.UpdateLecturerForm.username,
@@ -338,6 +341,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/lecturer/delete-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     delUserID: item.user_id,
                                 },

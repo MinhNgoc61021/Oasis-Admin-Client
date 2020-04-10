@@ -166,6 +166,7 @@
     import axios from 'axios';
     import { eventBus } from "@/main";
     import Search from "@/components/User/List/Search";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "UserList",
@@ -260,6 +261,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/user/records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             page_index: this.currentPage,
                             per_page: this.perPage,
@@ -295,6 +297,7 @@
                 const permission = await axios({
                     url:   `${process.env.VUE_APP_API_URL}/user/user-role`,
                     method: 'get',
+                    headers: { 'Authorization': authHeader() },
                     params: {
                         user_id: item.user_id,
                     },
@@ -328,6 +331,7 @@
                         const response = await axios({
                             url: `${process.env.VUE_APP_API_URL}/user/update-record`,
                             method: 'put',
+                            headers: { 'Authorization': authHeader() },
                             data: {
                                 user_id: this.EditModal.UpdateUserForm.user_id,
                                 update_username: this.EditModal.UpdateUserForm.username,
@@ -387,6 +391,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/user/delete-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     delUserID: item.user_id,
                                 },

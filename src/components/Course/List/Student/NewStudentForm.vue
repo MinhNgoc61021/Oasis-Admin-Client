@@ -115,6 +115,7 @@
     import axios from "axios";
     import debounce from 'lodash/debounce';
     import { eventBus } from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "NewStudentForm",
@@ -239,6 +240,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/student/search-from-course-existence`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         changeOrigin: true,
                         params: {
                             searchCode: this.form.code,
@@ -289,6 +291,7 @@
                                     const response = await axios({
                                         url: `${process.env.VUE_APP_API_URL}/student/create-record`,
                                         method: 'post',
+                                        headers: { 'Authorization': authHeader() },
                                         changeOrigin: true,
                                         data: {
                                             new_code: this.form.code,
@@ -339,6 +342,7 @@
                                         const response = await axios({
                                             url: `${process.env.VUE_APP_API_URL}/student/create-student-course-record`,
                                             method: 'post',
+                                            headers: { 'Authorization': authHeader() },
                                             changeOrigin: true,
                                             data: {
                                                 student_id: this.form.student_id,
@@ -377,6 +381,7 @@
                                 const response = await axios({
                                     url: `${process.env.VUE_APP_API_URL}/student/update-student-course-record`,
                                     method: 'put',
+                                    headers: { 'Authorization': authHeader() },
                                     changeOrigin: true,
                                     data: {
                                         student_id: this.form.student_id,

@@ -80,6 +80,7 @@
 
 <script>
     import axios from "axios";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "Import",
@@ -222,7 +223,8 @@
                     formData.append('course_id', this.course_id);
                     const response = await axios.post(`${process.env.VUE_APP_API_URL}/student/import-excel`, formData,{
                         headers: {
-                          'Content-Type': 'multipart/form-data',
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': authHeader(),
                         },
                     });
                     if (response.status === 200) {
@@ -252,6 +254,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/course/all-records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         changeOrigin: true,
                     });
                     if (response.status === 200) {

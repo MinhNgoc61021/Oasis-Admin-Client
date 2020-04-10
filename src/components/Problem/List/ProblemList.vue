@@ -144,6 +144,7 @@
     import axios from 'axios';
     import Edit from "@/components/Problem/List/Edit";
     import { eventBus } from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "ProblemList",
@@ -208,6 +209,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/problem/records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             page_index: this.currentPage,
                             per_page: this.perPage,
@@ -259,6 +261,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/problem/delete-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     delProblemID: item.problem_id,
                                 },

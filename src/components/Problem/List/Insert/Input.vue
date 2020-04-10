@@ -170,6 +170,7 @@
 
 <script>
   import axios from 'axios';
+  import {authHeader} from "@/auth/jwt";
 
   export default {
     name: 'Input',
@@ -224,27 +225,28 @@
           }
           else {
             const response = await axios({
-            url: `${process.env.VUE_APP_API_URL}/problem/create-record`,
-            method: 'post',
-            changeOrigin: true,
-            data: {
-                new_title: this.form.title,
-                new_problem_statement: this.form.problem_statement,
-                new_input_format: this.form.input_format,
-                new_output_format: this.form.output_format,
-                new_constraints: this.form.constraints,
-                new_junit_rate: this.form.junit_rate,
-                new_mark_io: this.form.mark_io,
-                new_mark_junit: this.form.mark_junit,
-                new_level: this.form.level,
-                new_point: this.form.point,
-                new_submit_type: this.form.submit_type,
-                new_sample_code: this.form.sample_code,
-                category_id: this.form.category_id,
-                new_mark_parser: this.form.mark_parser,
-                new_parser_rate: this.form.parser_rate,
-            },
-          });
+                url: `${process.env.VUE_APP_API_URL}/problem/create-record`,
+                method: 'post',
+                changeOrigin: true,
+                headers: { 'Authorization': authHeader() },
+                data: {
+                    new_title: this.form.title,
+                    new_problem_statement: this.form.problem_statement,
+                    new_input_format: this.form.input_format,
+                    new_output_format: this.form.output_format,
+                    new_constraints: this.form.constraints,
+                    new_junit_rate: this.form.junit_rate,
+                    new_mark_io: this.form.mark_io,
+                    new_mark_junit: this.form.mark_junit,
+                    new_level: this.form.level,
+                    new_point: this.form.point,
+                    new_submit_type: this.form.submit_type,
+                    new_sample_code: this.form.sample_code,
+                    category_id: this.form.category_id,
+                    new_mark_parser: this.form.mark_parser,
+                    new_parser_rate: this.form.parser_rate,
+                },
+              });
             if (response.status === 200) {
               this.$bvToast.toast(`Tạo problem thành công!`, {
                 title: `Thành công`,

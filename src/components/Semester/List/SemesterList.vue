@@ -89,6 +89,7 @@
 <script>
     import axios from 'axios';
     import { eventBus } from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "SemesterList",
@@ -137,6 +138,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/semester/records`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             page_index: this.currentPage,
                             per_page: this.perPage,
@@ -182,6 +184,7 @@
                         const response = await axios({
                             url: `${process.env.VUE_APP_API_URL}/semester/update-record`,
                             method: 'put',
+                            headers: { 'Authorization': authHeader() },
                             data: {
                                 semester_id: this.EditModal.UpdateSemesterForm.semester_id,
                                 update_name: this.EditModal.UpdateSemesterForm.name,
@@ -236,6 +239,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/semester/delete-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     delSemesterID: item.semester_id,
                                 },

@@ -115,6 +115,7 @@
   import axios from 'axios';
   import { eventBus } from "@/main";
   import CourseInput from "@/components/Student/List/Insert/CourseInput";
+  import {authHeader} from "@/auth/jwt";
 
   export default {
     name: 'Input',
@@ -169,6 +170,7 @@
               url: `${process.env.VUE_APP_API_URL}/student/create-record`,
               method: 'post',
               changeOrigin: true,
+              headers: { 'Authorization': authHeader() },
               data: {
                 new_code: this.form.code,
                 new_username: this.form.username,

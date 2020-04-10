@@ -24,6 +24,7 @@
     import debounce from 'lodash/debounce';
     import axios from 'axios';
     import { eventBus } from "@/main";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "SearchLecturerByCourse",
@@ -63,14 +64,15 @@
                     this.searchResults = [];
                     try {
                         const response = await axios({
-                        url: `${process.env.VUE_APP_API_URL}/lecturer/search-${this.location}`,
-                        method: 'get',
-                        changeOrigin: true,
-                        params: {
-                            course_id: this.current_course,
-                            searchName: this.searchName,
-                        },
-                    });
+                            url: `${process.env.VUE_APP_API_URL}/lecturer/search-${this.location}`,
+                            method: 'get',
+                            headers: { 'Authorization': authHeader() },
+                            changeOrigin: true,
+                            params: {
+                                course_id: this.current_course,
+                                searchName: this.searchName,
+                            },
+                        });
                         if (response.status === 200) {
                             // console.log(response.data.search_results);
                             response.data.search_results.forEach((item) => {

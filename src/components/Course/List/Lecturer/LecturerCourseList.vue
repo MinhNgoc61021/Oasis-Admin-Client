@@ -85,6 +85,7 @@
     import axios from 'axios';
     import { eventBus } from "@/main";
     import SearchLecturerByCourse from "@/components/Course/List/Lecturer/SearchLecturerByCourse";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         name: "LecturerCourseList",
@@ -186,6 +187,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/lecturer/records-by-course`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             course_id: this.course_id,
                             page_index: this.currentPage,
@@ -225,6 +227,7 @@
                       const response = await axios({
                           url: `${process.env.VUE_APP_API_URL}/lecturer/create-lecturer-course-record`,
                           method: 'post',
+                          headers: { 'Authorization': authHeader() },
                           changeOrigin: true,
                           data: {
                               new_user_id: this.AddLecturerModal.SubmitLecturerForm.user_id,
@@ -278,6 +281,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/lecturer/delete-lecturer-course-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     delUserID: item.user_id,
                                     course_id: this.course_id,

@@ -5,26 +5,20 @@
                 <component :is="Input"></component>
             </b-card-body>
         </b-tab>
-        <b-tab title="Import Excel">
-            <b-card-body>
-                <component :is="Import"></component>
-            </b-card-body>
-        </b-tab>
     </b-tabs>
 </template>
 
 <script>
     import Input from '@/components/User/List/Insert/Input';
-    import Import from '@/components/User/List/Insert/Import';
 
     export default {
         name: "Insert",
         component: {
-            Import, Input
+            Input
         },
         data() {
             return {
-                Import, Input
+                Input
             }
         },
     }

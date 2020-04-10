@@ -60,6 +60,7 @@
   import axios from 'axios';
   import { eventBus } from "@/main";
   import debounce from 'lodash/debounce';
+  import {authHeader} from "@/auth/jwt";
 
   export default {
     name: 'Input',
@@ -152,6 +153,7 @@
             const response = await axios({
               url: `${process.env.VUE_APP_API_URL}/course/existent-course`,
               method: 'get',
+              headers: { 'Authorization': authHeader() },
               changeOrigin: true,
               params: {
                 searchCode: this.form.code,
@@ -199,6 +201,7 @@
                   const response = await axios({
                     url: `${process.env.VUE_APP_API_URL}/course/create-record`,
                     method: 'post',
+                    headers: { 'Authorization': authHeader() },
                     changeOrigin: true,
                     data: {
                       new_code: this.form.code,
@@ -244,6 +247,7 @@
                     const response = await axios({
                       url: `${process.env.VUE_APP_API_URL}/course/update-record`,
                       method: 'post',
+                      headers: { 'Authorization': authHeader() },
                       changeOrigin: true,
                       data: {
                         course_id: this.form.course_id,
@@ -285,6 +289,7 @@
                 const response = await axios({
                   url: `${process.env.VUE_APP_API_URL}/course/update-record`,
                   method: 'put',
+                  headers: { 'Authorization': authHeader() },
                   changeOrigin: true,
                   data: {
                     course_id: this.form.course_id,

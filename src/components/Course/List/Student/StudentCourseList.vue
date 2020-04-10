@@ -78,6 +78,7 @@
     import { eventBus } from "@/main";
     import SearchStudentByCourse from "@/components/Course/List/Student/SearchStudentByCourse";
     import NewStudentForm from "@/components/Course/List/Student/NewStudentForm";
+    import {authHeader} from "@/auth/jwt";
 
     export default {
         props: ['id', 'code', 'name'],
@@ -188,6 +189,7 @@
                     const response = await axios({
                         url: `${process.env.VUE_APP_API_URL}/student/records-by-course`,
                         method: 'get',
+                        headers: { 'Authorization': authHeader() },
                         params: {
                             course_id: this.course_id,
                             page_index: this.currentPage,
@@ -233,6 +235,7 @@
                             const response = await axios({
                                 url: `${process.env.VUE_APP_API_URL}/student/delete-student-course-record`,
                                 method: 'delete',
+                                headers: { 'Authorization': authHeader() },
                                 data: {
                                     // delStudentCode: item.code,
                                     student_id: item.student_id,
