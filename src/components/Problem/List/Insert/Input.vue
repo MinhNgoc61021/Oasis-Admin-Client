@@ -11,7 +11,7 @@
                   size="sm"
                   v-model="form.title"
                   type="text"
-                  placeholder="Nhập tiêu đề:"
+                  placeholder="Nhập tiêu đề"
               ></b-form-input>
           </b-form-group>
 
@@ -20,28 +20,28 @@
                 label="Nội dung:"
                 label-for="input-2"
          >
-             <froala :tag="input" :config="config" id="input-2" placeholder="Nhập nội dung" v-model="form.problem_statement"></froala>
+             <editor id="input-2" ref="problem_statement" height="400px" mode="markdown" @change="getStatement" :options="editorOptions"/>
          </b-form-group>
          <b-form-group
                 id="input-group-3"
                 label="Kiểu input:"
                 label-for="input-3"
          >
-             <froala id="input-3" :config="config" placeholder="Nhập nội dung" v-model="form.input_format"></froala>
-         </b-form-group>
-         <b-form-group
-                id="input-group-5"
-                label="Kiểu output:"
-                label-for="input-5"
-          >
-             <froala id="input-5" :config="config" placeholder="Nhập nội dung" v-model="form.output_format"></froala>
+             <editor id="input-3" ref="input_format" height="400px" mode="markdown" @change="getInputFormat" :options="editorOptions"/>
          </b-form-group>
          <b-form-group
                 id="input-group-4"
-                label="Giàng buộc:"
+                label="Kiểu output:"
                 label-for="input-4"
           >
-             <froala id="input-4" :config="config" placeholder="Nhập nội dung" v-model="form.constraints"></froala>
+             <editor id="input-4" ref="output_format" height="400px" mode="markdown" @change="getOutputFormat" :options="editorOptions"/>
+         </b-form-group>
+         <b-form-group
+                id="input-group-5"
+                label="Giàng buộc:"
+                label-for="input-5"
+          >
+             <editor id="input-5" ref="constraints"  height="400px" mode="markdown" @change="getConstraints" :options="editorOptions"/>
          </b-form-group>
          <b-form-group
                 id="input-group-6"
@@ -171,13 +171,21 @@
 <script>
   import axios from 'axios';
   import {authHeader} from "@/auth/jwt";
+  import 'codemirror/lib/codemirror.css';
+  import '@toast-ui/editor/dist/toastui-editor.css';
+  import { Editor } from '@toast-ui/vue-editor';
 
   export default {
     name: 'Input',
+    components: {
+        editor: Editor
+    },
     data() {
       return {
-          config: {
-              htmlRemoveTags: ['script', 'style', 'base'],
+          editorOptions: {
+              language: 'vi-VN',
+              hideModeSwitch: true,
+              usageStatistics: false,
           },
           options: [
               { value: null, text: 'Hãy chọn loại' },
@@ -210,8 +218,26 @@
       }
     },
     methods: {
+      getStatement() {
+        this.form.problem_statement = this.$refs.problem_statement.invoke('getMarkdown');
+      },
+      getInputFormat() {
+        this.form.input_format = this.$refs.input_format.invoke('getMarkdown');
+      },
+      getOutputFormat() {
+        this.form.output_format = this.$refs.output_format.invoke('getMarkdown');
+      },
+      getConstraints() {
+        this.form.constraints = this.$refs.constraints.invoke('getMarkdown');
+      },
+      clearEditor() {
+          this.$refs.problem_statement.invoke('reset');
+          this.$refs.input_format.invoke('reset');
+          this.$refs.output_format.invoke('reset');
+          this.$refs.constraints.invoke('reset');
+      },
       async onSubmit() {
-          console.log(this.form);
+        console.log(this.form);
         try {
           if (String(this.form.title).replace(' ', '') === ''
               || String(this.form.problem_statement).replace(' ', '') === ''
@@ -292,6 +318,7 @@
           this.form.sample_code = '';
           this.form.category_id = null;
           this.form.notFilled = false;
+          this.clearEditor();
       }
     }
   }

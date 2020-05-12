@@ -51,7 +51,10 @@
                     <template v-slot:cell(actions)="row">
                         <div class="text-center text-danger my-2" style="min-width: 220px;">
                             <b-button size="sm" variant="outline-success" @click="row.toggleDetails" class="mr-1">
-                              {{ row.detailsShowing ? 'Ẩn' : 'Hiện' }} chi tiết
+                              {{ row.detailsShowing ? 'Ẩn' : 'Hiện' }}
+                            </b-button>
+                            <b-button size="sm" variant="outline-primary" @click="uploadCodeModal(row.item, row.index, $event.target)" class="mr-1">
+                                <b-icon icon="upload"></b-icon>
                             </b-button>
                             <b-button variant="outline-warning" size="sm" @click="updateModal(row.item, row.index, $event.target)" class="mr-1">
                                 <b-icon icon="pencil"></b-icon>
@@ -132,8 +135,11 @@
                         </b-card>
                       </template>
                 </b-table>
-                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm">
+                <b-modal :id="EditModal.id" :title="EditModal.title" centered hide-footer scrollable button-size="sm" size="xl">
                     <Edit :problem="EditModal.UpdateProblemForm.problem"></Edit>
+                </b-modal>
+                <b-modal :id="UploadCodeModal.id" :title="UploadCodeModal.title" centered hide-footer scrollable button-size="sm">
+                    <UploadCode :problem="UploadCodeModal.UploadCodeForm.problem"></UploadCode>
                 </b-modal>
             </b-col>
         </b-row>
@@ -145,15 +151,17 @@
     import Edit from "@/components/Problem/List/Edit";
     import { eventBus } from "@/main";
     import {authHeader} from "@/auth/jwt";
+    import UploadCode from "@/components/Problem/List/Insert/UploadCode";
 
     export default {
         name: "ProblemList",
         components: {
+            UploadCode,
             Edit,
         },
         data() {
           return {
-              Edit,
+              Edit, UploadCode,
               ProblemItems: [],
               perPage: 10,
               currentPage: 1,
@@ -199,6 +207,14 @@
                       problem: Object,
                       notFilled: false,
                   }
+              },
+              UploadCodeModal: {
+                  id: 'upload-code-modal',
+                  title: '',
+                  UploadCodeForm: {
+                      problem: Object,
+                      notFilled: false,
+                  }
               }
           }
         },
@@ -236,13 +252,16 @@
 
                 }
             },
-            async updateModal(item, index, button) {
-                console.log(item);
+            updateModal(item, index, button) {
                 this.EditModal.title = `Sửa thông tin problem ${item.problem_id}`;
                 this.EditModal.UpdateProblemForm.problem = item;
                 this.$root.$emit('bv::show::modal', this.EditModal.id, button);
             },
-
+            uploadCodeModal(item, index, button) {
+                this.UploadCodeModal.title = `Tải code mẫu cho problem ${item.problem_id}`;
+                this.UploadCodeModal.UploadCodeForm.problem = item;
+                this.$root.$emit('bv::show::modal', this.UploadCodeModal.id, button);
+            },
             deleteProblem(item) {
                 this.$bvModal.msgBoxConfirm(`Bạn có chắc chắn xóa problem ${item.title}?`, {
                     title: 'Xác nhận xóa',
