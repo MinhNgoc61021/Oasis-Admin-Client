@@ -75,22 +75,22 @@
                             </b-list-group-item>
                             <b-list-group-item>
                                 <h6>Nội dung:</h6>
-                                <span v-if="String(row.item.problem_statement).replace(' ', '') !== '' && row.item.problem_statement !== null ">{{row.item.problem_statement}}</span>
+                                <vue-markdown v-if="String(row.item.problem_statement).replace(' ', '') !== '' && row.item.problem_statement !== null ">{{row.item.problem_statement}}</vue-markdown>
                                 <span v-else>Không có</span>
                             </b-list-group-item>
                             <b-list-group-item>
                                 <h6>Input:</h6>
-                                <span v-if="String(row.item.input_format).replace(' ', '') !== '' && row.item.input_format !== null ">{{row.item.input_format}}</span>
+                                <vue-markdown v-if="String(row.item.input_format).replace(' ', '') !== '' && row.item.input_format !== null ">{{row.item.input_format}}</vue-markdown>
                                 <span v-else>Không có</span>
                             </b-list-group-item>
                             <b-list-group-item>
                                 <h6>Output:</h6>
-                                <span v-if="String(row.item.output_format).replace(' ', '') !== '' && row.item.output_format !== null ">{{row.item.output_format}}</span>
+                                <vue-markdown v-if="String(row.item.output_format).replace(' ', '') !== '' && row.item.output_format !== null ">{{row.item.output_format}}</vue-markdown>
                                 <span v-else>Không có</span>
                             </b-list-group-item>
                               <b-list-group-item>
                                 <h6>Giàng buộc:</h6>
-                                  <span v-if="String(row.item.constraints).replace(' ', '') !== '' && row.item.constraints !== null">{{row.item.constraints}}</span>
+                                  <vue-markdown v-if="String(row.item.constraints).replace(' ', '') !== '' && row.item.constraints !== null">{{row.item.constraints}}</vue-markdown>
                                   <span v-else>Không có</span>
                             </b-list-group-item>
                             <b-list-group-item>
@@ -152,12 +152,14 @@
     import { eventBus } from "@/main";
     import {authHeader} from "@/auth/jwt";
     import UploadCode from "@/components/Problem/List/Insert/UploadCode";
+    import VueMarkdown from 'vue-markdown';
 
     export default {
         name: "ProblemList",
         components: {
             UploadCode,
             Edit,
+            VueMarkdown,
         },
         data() {
           return {
