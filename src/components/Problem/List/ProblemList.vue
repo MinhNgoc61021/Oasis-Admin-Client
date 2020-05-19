@@ -183,14 +183,6 @@
                       sortable: true,
                   },
                   {
-                      key: 'problem_statement',
-                      label: 'Nội dung',
-                      sortable: true,
-                      tdStyle: {
-                          color: 'red',
-                      },
-                  },
-                  {
                       key: 'category.name',
                       label: 'Phân loại',
                       sortable: true,
