@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
-import {getData} from "@/auth/handling";
-import {removeToken} from "@/auth/jwt";
-import { router } from '../router/index.js';
+import { getData } from "@/auth/handling";
+import { removeToken } from "@/auth/jwt";
+import { router } from '../middleware/router';
 
 Vue.use(Vuex);
 export const store = new Vuex.Store ({

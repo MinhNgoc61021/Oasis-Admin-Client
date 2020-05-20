@@ -51,7 +51,7 @@
                     <template v-slot:cell(actions)="row">
                         <div class="text-center text-danger my-2" style="min-width: 220px;">
                             <b-button size="sm" variant="outline-success" @click="row.toggleDetails" class="mr-1">
-                              {{ row.detailsShowing ? 'Ẩn' : 'Hiện' }}
+                              {{ row.detailsShowing ? 'Ẩn' : 'Hiện' }} chi tiết
                             </b-button>
                             <b-button size="sm" variant="outline-primary" @click="uploadCodeModal(row.item, row.index, $event.target)" class="mr-1">
                                 <b-icon icon="upload"></b-icon>

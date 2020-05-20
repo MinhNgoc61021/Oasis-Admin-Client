@@ -20,7 +20,7 @@
 
 <script>
     import LecturerList from "@/components/Lecturer/List/LecturerList";
-    import Input from '@/components/Lecturer/List/Insert';
+    import Input from '@/components/Lecturer/List/Input';
 
     export default {
         name: "LecturerManagement",

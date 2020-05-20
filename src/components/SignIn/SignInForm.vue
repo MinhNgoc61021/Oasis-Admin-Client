@@ -56,7 +56,7 @@
 
 <script>
   import {signIn} from "@/auth/handling";
-  import {router} from "@/router";
+  import {router} from "@/middleware/router";
 
   export default {
     name: 'SignInForm',

@@ -11,7 +11,7 @@ import CourseList from "@/components/Course/List/CourseList";
 import StudentCourseList from "@/components/Course/List/Student/StudentCourseList";
 import LecturerCourseList from "@/components/Course/List/Lecturer/LecturerCourseList";
 import SignInForm from "@/components/SignIn/SignInForm";
-import {getToken} from "@/auth/jwt";
+import { getToken } from "@/auth/jwt";
 
 Vue.use(VueRouter);
 
@@ -29,7 +29,7 @@ export const router = new VueRouter({
           { path: '/problem-management', name: 'problem-management', component: ProblemManagement },
           { path: '/course-management', name: 'course-management', redirect: '/course-management/course-list', component: CourseManagement,
               children: [
-                  { path: '/course-management/course-list', name: 'course-list', component: CourseList },
+                  { path: '', name: 'course-list', component: CourseList },
                   { path: '/course-management/student-list/id/:id/code/:code/name/:name', props: true, name: 'student-course-list', component: StudentCourseList },
                   { path: '/course-management/lecturer-list/id/:id/code/:code/name/:name', props: true, name: 'lecturer-course-list', component: LecturerCourseList },
               ]
