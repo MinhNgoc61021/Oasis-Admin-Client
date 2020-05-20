@@ -49,11 +49,11 @@ router.beforeEach ((to, from, next) => {
     const publicPages = ['/sign-in'];
     const securePages = ['/admin', '/student-management', '/lecturer-management', '/user-management', '/semester-management', '/problem-management', '/course-management'];
     const authRequired = !publicPages.includes(to.path);
-    const loggedIn = getToken();
+    const signedIn = getToken();
 
     // When logging in
-    if (loggedIn) {
-      if (loggedIn.type === 'Admin' || loggedIn.type === 'Lecture') {
+    if (signedIn) {
+      if (signedIn.type === 'Admin' || signedIn.type === 'Lecture') {
         if (!authRequired) { // When location is register page
           return next('/admin');
         }
@@ -66,7 +66,7 @@ router.beforeEach ((to, from, next) => {
       }
     }
     // When not logging in
-    else if (!loggedIn) {
+    else if (!signedIn) {
       if (authRequired) { // When there is no register page
         return next('/sign-in');
       }
